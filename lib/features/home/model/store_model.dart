@@ -9,7 +9,7 @@ class Store {
 
   factory Store.fromJson(Map<String, dynamic> json) {
     var categories = List<Category>.from(
-        json['categories'].entries.map((e) => Category.fromJson(e)));
+        json['categories'].map((e) => Category.fromJson(e)));
     var products = List<Product>.from(
         (json['products'] as List).map((product) => Product.fromJson(
               product,

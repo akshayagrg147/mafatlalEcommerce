@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/core/size_config.dart';
@@ -23,14 +24,19 @@ class CategoryWidget extends StatelessWidget {
             Container(
               height: 60 * SizeConfig.widthMultiplier,
               width: 60 * SizeConfig.widthMultiplier,
+              padding: EdgeInsets.all(12 * SizeConfig.heightMultiplier),
               decoration: BoxDecoration(
                   color: AppColors.kOrange.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(12)),
+              child: CachedNetworkImage(
+                imageUrl: category.imgUrl,
+                fit: BoxFit.contain,
+              ),
             ),
             SizedBox(
               height: 6 * SizeConfig.heightMultiplier,
             ),
-            Text(category.category)
+            Text(category.name)
           ],
         ),
       ),

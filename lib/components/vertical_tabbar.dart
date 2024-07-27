@@ -8,7 +8,7 @@ class VerticalTabs extends StatefulWidget {
   final double tabsWidth;
   final double indicatorWidth;
   final IndicatorSide indicatorSide;
-  final List<String> tabs;
+  final List<Widget> tabs;
   final List<Widget> contents;
   final TextDirection direction;
   final Color indicatorColor;
@@ -119,7 +119,7 @@ class _VerticalTabsState extends State<VerticalTabs>
                       child: ListView.builder(
                         itemCount: widget.tabs.length,
                         itemBuilder: (context, index) {
-                          String tab = widget.tabs[index];
+                          Widget tab = widget.tabs[index];
 
                           double? left, right;
                           if (widget.direction == TextDirection.rtl) {
@@ -176,10 +176,11 @@ class _VerticalTabsState extends State<VerticalTabs>
                                   child: Container(
                                     color: Colors.transparent,
                                     padding: const EdgeInsets.all(10.0),
-                                    child: Text(tab,
+                                    child: DefaultTextStyle(
                                         style: _selectedIndex == index
                                             ? widget.selectedTabTextStyle
-                                            : widget.unSelectedTabTextStyle),
+                                            : widget.unSelectedTabTextStyle,
+                                        child: tab),
                                   ),
                                 ),
                               ],

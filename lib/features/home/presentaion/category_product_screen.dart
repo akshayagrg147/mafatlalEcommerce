@@ -5,6 +5,7 @@ import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/size_config.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/subcat_products_view.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/subcategory_grid_tile.dart';
 
 class CategoryProductScreen extends StatelessWidget {
   static const String route = "/categoryProductScreen";
@@ -15,7 +16,7 @@ class CategoryProductScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${category.category}\t", style: AppTextStyle.f16BlackW400),
+        title: Text("${category.name}\t", style: AppTextStyle.f16BlackW400),
       ),
       body: VerticalTabs(
         backgroundColor: AppColors.kWhite,
@@ -28,7 +29,9 @@ class CategoryProductScreen extends StatelessWidget {
         indicatorSide: IndicatorSide.end,
         contentScrollAxis: Axis.vertical,
         changePageDuration: const Duration(milliseconds: 500),
-        tabs: category.subCategories.map((e) => e.name).toList(),
+        tabs: category.subCategories
+            .map((e) => SubCategoryGridTile(subCategory: e))
+            .toList(),
         contents: category.subCategories
             .map((e) => SubCategoryProductTab(subCategory: e))
             .toList(),
