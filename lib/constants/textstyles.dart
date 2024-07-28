@@ -69,6 +69,10 @@ class AppTextStyle {
       fontWeight: FontWeight.w500);
   static TextStyle get f10WhiteW600 => TextStyle(
       color: AppColors.kWhite,
+      fontSize: 10 * SizeConfig.textMultiplier,
+      fontWeight: FontWeight.w600);
+  static TextStyle get f8WhiteW600 => TextStyle(
+      color: AppColors.kWhite,
       fontSize: 8 * SizeConfig.textMultiplier,
       fontWeight: FontWeight.w600);
   static TextStyle get f32BlackW600 => TextStyle(

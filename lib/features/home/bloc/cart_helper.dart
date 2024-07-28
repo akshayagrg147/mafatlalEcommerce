@@ -31,6 +31,12 @@ class CartHelper {
     return (_cartBox.get(productId) ?? {})['quantity'] ?? 0;
   }
 
+  static int getAllProductQuantity() {
+    final quantity = getAllProducts().fold(0,
+        (previousValue, element) => (element['quantity'] ?? 0) + previousValue);
+    return quantity;
+  }
+
   static String? getProductSize(
     int productId,
   ) {

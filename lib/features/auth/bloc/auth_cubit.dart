@@ -17,10 +17,14 @@ class AuthCubit extends Cubit<AuthState> {
   User? get currentUser => _currentUser;
 
   void getCurrentUser() {
-    _currentUser = SharedPreferencesHelper.instance.getCurrentUser();
-    if (currentUser != null) {
-      emit(GetCurrentUserSuccessState());
-    } else {
+    try {
+      _currentUser = SharedPreferencesHelper.instance.getCurrentUser();
+      if (currentUser != null) {
+        emit(GetCurrentUserSuccessState());
+      } else {
+        emit(GetCurrentUserFailedState());
+      }
+    } catch (e) {
       emit(GetCurrentUserFailedState());
     }
   }

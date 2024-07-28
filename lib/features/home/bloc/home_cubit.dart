@@ -141,9 +141,20 @@ class HomeCubit extends Cubit<HomeState> {
   void placeOrder() async {
     try {
       emit(PlaceOrderLoadingState());
-      // final response = await HomeRepo.getCartProducts(productIds)
+      final response =
+          await HomeRepo.placeOrder(cartProducts, address: _deliveryAddress!);
+      if (response.status) {
+        CartHelper.clear();
+        emit(PlaceOrderSuccessState());
+      } else {
+        emit(PlaceOrderFailedState(message: response.message));
+      }
     } on DioException catch (e) {
-    } catch (e) {}
+      emit(PlaceOrderFailedState(
+          message: e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(PlaceOrderFailedState(message: AppStrings.somethingWentWrong));
+    }
   }
 
   void clear() {

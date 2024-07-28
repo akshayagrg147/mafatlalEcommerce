@@ -1,3 +1,4 @@
+import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_model.dart';
@@ -33,22 +34,22 @@ class HomeRepo {
 
   static Future<ApiResponse<Map>> placeOrder(List<Product> products,
       {required Address address}) async {
+    final num price = products.fold(
+        0,
+        (previousValue, element) =>
+            previousValue + (element.price * element.quantity));
     final data = {
-      // "user_id" : CubitsInjector.authCubit.currentUser.,
-      "price": "1499",
-      "address": "199, New shivpuri, Ghaziabad",
-      "state": "U.P.",
-      "pincode": "245101",
-      "district": "Ghaziabad",
-      "city": "Ghaziabad",
-      "products": [
-        {"product_id": 3, "size": "XL", "quantity": 2, "price": 498},
-        {"product_id": 4, "size": "L", "quantity": 5, "price": 299}
-      ]
+      "user_id": CubitsInjector.authCubit.currentUser!.id,
+      "price": price,
+      "address": address.address,
+      "state": address.state,
+      "pincode": address.pincode,
+      "district": address.district,
+      "city": address.city,
+      "products": products.map((e) => e.toCartProductJson()).toList()
     };
-    final response = await DioUtil().getInstance()?.post(
-          ApiRoutes.placeOrder,
-        );
+    final response =
+        await DioUtil().getInstance()?.post(ApiRoutes.placeOrder, data: data);
     return ApiResponse<Map>.fromJson(response?.data, (data) => data);
   }
 }

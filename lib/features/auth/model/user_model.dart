@@ -1,26 +1,22 @@
 import 'dart:convert';
 
+import 'package:mafatlal_ecommerce/helper/enums.dart';
+
 class User {
+  final int id;
+  final UserType userType;
   final String email;
   final String fullName;
-  final int userType;
   final String state;
   final String district;
-  final DateTime createdOn;
-  final String createdBy;
-  final DateTime updatedOn;
-  final String updatedBy;
 
   User({
+    required this.id,
+    required this.userType,
     required this.email,
     required this.fullName,
-    required this.userType,
     required this.state,
     required this.district,
-    required this.createdOn,
-    required this.createdBy,
-    required this.updatedOn,
-    required this.updatedBy,
   });
 
   factory User.fromJsonString(String data) {
@@ -29,29 +25,23 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
+      id: json['id'],
+      userType: UserType.fromCode(json['user_type']),
       email: json['email'],
       fullName: json['full_name'],
-      userType: json['user_type'],
       state: json['state'],
       district: json['district'],
-      createdOn: DateTime.parse(json['created_on']),
-      createdBy: json['created_by'],
-      updatedOn: DateTime.parse(json['updated_on']),
-      updatedBy: json['updated_by'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'email': email,
       'full_name': fullName,
-      'user_type': userType,
+      'user_type': userType.code,
       'state': state,
       'district': district,
-      'created_on': createdOn.toIso8601String(),
-      'created_by': createdBy,
-      'updated_on': updatedOn.toIso8601String(),
-      'updated_by': updatedBy,
     };
   }
 

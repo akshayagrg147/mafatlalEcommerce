@@ -7,8 +7,8 @@ import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/core/size_config.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_address.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/order_success_widget.dart';
 import 'package:mafatlal_ecommerce/helper/toast_utils.dart';
 
 class CheckOutBottomWidget extends StatelessWidget {
@@ -117,9 +117,7 @@ class CheckOutBottomWidget extends StatelessWidget {
                   ToastUtils.showErrorToast(state.message);
                 }
                 if (state is PlaceOrderSuccessState) {
-                  Navigator.popUntil(context,
-                      (route) => route.settings.name == HomeScreen.route);
-                  ToastUtils.showSuccessToast("Order placed Successfully");
+                  Navigator.pushNamed(context, OrderSuccess.route);
                 }
               },
               buildWhen: (previous, current) => current is UpdateAddressState,
@@ -127,6 +125,7 @@ class CheckOutBottomWidget extends StatelessWidget {
                 if (CubitsInjector.homeCubit.deliveryAddress != null) {
                   return CustomElevatedButton(
                     lable: 'Place Order',
+                    textStyle: AppTextStyle.f16WhiteW600,
                     padding: EdgeInsets.symmetric(
                         vertical: 8 * SizeConfig.heightMultiplier),
                     onPressed: () {

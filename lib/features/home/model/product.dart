@@ -53,6 +53,15 @@ class Product {
       'price': price,
     };
   }
+
+  Map<String, dynamic> toCartProductJson() {
+    return {
+      'product_id': productId,
+      'size': selectedSize ?? "",
+      'quantity': quantity,
+      'price': price,
+    };
+  }
 }
 
 class SizeAvailable {

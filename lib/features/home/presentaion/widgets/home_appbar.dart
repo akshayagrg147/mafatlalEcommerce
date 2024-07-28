@@ -3,7 +3,7 @@ import 'package:mafatlal_ecommerce/constants/app_strings.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/size_config.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/cart_btn.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Function()? onMenuTap;
@@ -55,17 +55,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           hintText: AppStrings.searchHint,
         ),
       ),
-      actions: [
-        IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, CartScreen.route);
-            },
-            icon: Icon(
-              Icons.shopping_cart,
-              color: AppColors.kOrange,
-              size: 35 * SizeConfig.imageSizeMultiplier,
-            ))
-      ],
+      actions: [const CartBtn()],
     );
   }
 }

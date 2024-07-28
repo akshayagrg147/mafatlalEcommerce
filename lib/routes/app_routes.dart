@@ -9,6 +9,7 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/category_product_sc
 import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/product_details.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/search_screen.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/order_success_widget.dart';
 
 class GenerateRoute {
   static Route<dynamic>? Function(RouteSettings)? onGenerateRoute =
@@ -45,6 +46,9 @@ class GenerateRoute {
       case CartScreen.route:
         return MaterialPageRoute(
             settings: settings, builder: (_) => const CartScreen());
+      case OrderSuccess.route:
+        return MaterialPageRoute(
+            settings: settings, builder: (_) => const OrderSuccess());
       default:
         return null;
     }
