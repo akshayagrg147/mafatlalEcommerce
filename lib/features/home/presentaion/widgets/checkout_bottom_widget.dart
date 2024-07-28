@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
+import 'package:mafatlal_ecommerce/components/loading_animation.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
@@ -118,6 +119,9 @@ class CheckOutBottomWidget extends StatelessWidget {
                 }
                 if (state is PlaceOrderSuccessState) {
                   Navigator.pushNamed(context, OrderSuccess.route);
+                }
+                if (state is PlaceOrderLoadingState) {
+                  LoadingAnimation.show(context);
                 }
               },
               buildWhen: (previous, current) => current is UpdateAddressState,

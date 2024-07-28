@@ -9,7 +9,11 @@ class LoadingAnimation extends StatelessWidget {
         context: context,
         barrierDismissible: isDismissable,
         builder: (context) {
-          return const LoadingAnimation();
+          return WillPopScope(
+              onWillPop: () async {
+                return isDismissable;
+              },
+              child: const LoadingAnimation());
         });
   }
 
