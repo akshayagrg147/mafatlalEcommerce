@@ -1,10 +1,8 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 
 class CartHelper {
   static void init() async {
-    final appDocumentDir = await getApplicationDocumentsDirectory();
-    await Hive.initFlutter(appDocumentDir.path);
+    await Hive.initFlutter();
 
     Hive.openBox('cart');
   }

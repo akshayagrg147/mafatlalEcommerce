@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 
 class AddToCartWidget extends StatelessWidget {
@@ -23,17 +22,15 @@ class AddToCartWidget extends StatelessWidget {
           CartHelper.addProduct(productId, productSize, 1);
         },
         child: Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: 8 * SizeConfig.widthMultiplier,
-              vertical: 3 * SizeConfig.heightMultiplier),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.kBlack),
-            color: AppColors.kWhite,
+            border: Border.all(color: AppColors.kRed),
+            color: AppColors.kRed.withOpacity(.05),
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Text(
             'Add',
-            style: AppTextStyle.f14BlackW500,
+            style: AppTextStyle.f14KRedOutfitW500,
           ),
         ),
       );
@@ -41,17 +38,15 @@ class AddToCartWidget extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.kOrange,
+        color: AppColors.kRed,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           GestureDetector(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 5 * SizeConfig.widthMultiplier,
-                  vertical: 4 * SizeConfig.heightMultiplier),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
               child: const Icon(
                 Icons.remove,
                 color: AppColors.kWhite,
@@ -67,14 +62,12 @@ class AddToCartWidget extends StatelessWidget {
           ),
           Text(
             '$quantity',
-            style: AppTextStyle.f12WhiteW500,
+            style: AppTextStyle.f12outfitWhiteW600,
           ),
           GestureDetector(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 5 * SizeConfig.widthMultiplier,
-                  vertical: 4 * SizeConfig.heightMultiplier),
-              child: const Icon(
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+              child: Icon(
                 Icons.add,
                 color: AppColors.kWhite,
               ),

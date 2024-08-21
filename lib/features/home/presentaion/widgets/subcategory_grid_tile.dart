@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
 import 'package:mafatlal_ecommerce/features/home/model/subcategory_model.dart';
 
 class SubCategoryGridTile extends StatelessWidget {
@@ -14,10 +13,10 @@ class SubCategoryGridTile extends StatelessWidget {
       children: [
         CachedNetworkImage(
           imageUrl: subCategory.imgUrl,
-          height: 40 * SizeConfig.heightMultiplier,
+          height: 40,
         ),
         SizedBox(
-          height: 6 * SizeConfig.heightMultiplier,
+          height: 6,
         ),
         Text(subCategory.name)
       ],

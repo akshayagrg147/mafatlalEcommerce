@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
+import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/checkout_bottom_widget.dart';
@@ -34,14 +34,16 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Align(
       alignment: Alignment.centerRight,
       child: SizedBox(
-        width: SizeConfig.screenWidth > 1000
-            ? 1000 * SizeConfig.widthMultiplier
-            : double.maxFinite,
+        width: size.width > 800 ? 500 : double.maxFinite,
         child: Scaffold(
             appBar: AppBar(
+              elevation: 5,
+              backgroundColor: AppColors.kWhite,
+              surfaceTintColor: AppColors.kWhite,
               title: Text("My Cart", style: AppTextStyle.f16BlackW400),
             ),
             bottomSheet: BlocBuilder<HomeCubit, HomeState>(
@@ -85,16 +87,20 @@ class _CartScreenState extends State<CartScreen> {
                   );
                 }
                 return ListView.separated(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 16 * SizeConfig.widthMultiplier,
-                        vertical: 20 * SizeConfig.heightMultiplier),
-                    itemCount: CubitsInjector.homeCubit.cartProducts.length,
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                    itemCount: CubitsInjector.homeCubit.cartProducts.length + 1,
                     separatorBuilder: (context, index) {
                       return SizedBox(
-                        height: 15 * SizeConfig.heightMultiplier,
+                        height: 15,
                       );
                     },
                     itemBuilder: (context, index) {
+                      if (index >=
+                          CubitsInjector.homeCubit.cartProducts.length) {
+                        return const SizedBox(
+                          height: 200,
+                        );
+                      }
                       return ProductListTile(
                         product: CubitsInjector.homeCubit.cartProducts[index],
                       );

@@ -1,3 +1,5 @@
+import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
+import 'package:mafatlal_ecommerce/features/home/model/order.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 
 abstract class HomeState {}
@@ -75,3 +77,25 @@ class UpdateCartBillingState extends HomeState {
 
   UpdateCartBillingState({required this.itemCount, required this.amount});
 }
+
+class FetchOrdersLoadingState extends HomeState {}
+
+class FetchOrdersSuccessState extends HomeState {
+  final List<Order> orders;
+
+  FetchOrdersSuccessState({required this.orders});
+}
+
+class FetchOrdersFailedState extends HomeState {
+  final String message;
+
+  FetchOrdersFailedState({required this.message});
+}
+
+class UpdateHomeWidgetState extends HomeState {
+  final Category category;
+
+  UpdateHomeWidgetState({required this.category});
+}
+
+class ShowHomeWidget extends HomeState {}

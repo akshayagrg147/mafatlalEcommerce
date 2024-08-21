@@ -19,9 +19,9 @@ class LoadingAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: CupertinoActivityIndicator(
-        color: AppColors.kOrange,
+        color: AppColors.kRed,
       ),
     );
   }

@@ -8,7 +8,6 @@ import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/state_district.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
@@ -18,17 +17,28 @@ class AddEditAddress extends StatefulWidget {
   const AddEditAddress({super.key, this.address});
 
   static void show(context, {Address? address}) {
-    if (SizeConfig.screenWidth > 1000) {
+    final size = MediaQuery.of(context).size;
+    if (size.width > 800) {
       showDialog(
           context: context,
           builder: (context) {
             return Center(
-              child: Container(
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(16)),
+              child: Material(
+                borderRadius:
+                    BorderRadius.circular(16), // Add border radius here
+                color: Colors
+                    .transparent, // Set background color to transparent to see the Container's color
+                child: Container(
+                  width: 400, // Adjust width as needed
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Background color for the dialog
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   child: AddEditAddress(
                     address: address,
-                  )),
+                  ),
+                ),
+              ),
             );
           });
     } else {
@@ -77,9 +87,7 @@ class _AddEditAddressState extends State<AddEditAddress> {
       margin: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-      padding: EdgeInsets.symmetric(
-          horizontal: 16 * SizeConfig.widthMultiplier,
-          vertical: 14 * SizeConfig.heightMultiplier),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Form(
         key: _formKey,
         child: Column(
@@ -105,7 +113,7 @@ class _AddEditAddressState extends State<AddEditAddress> {
               ],
             ),
             SizedBox(
-              height: 18 * SizeConfig.heightMultiplier,
+              height: 18,
             ),
             CustomTextField(
               hint: "Street Address",
@@ -118,7 +126,7 @@ class _AddEditAddressState extends State<AddEditAddress> {
               },
             ),
             SizedBox(
-              height: 12 * SizeConfig.heightMultiplier,
+              height: 12,
             ),
             Row(
               children: [
@@ -149,7 +157,7 @@ class _AddEditAddressState extends State<AddEditAddress> {
                   ),
                 ),
                 SizedBox(
-                  width: 16 * SizeConfig.widthMultiplier,
+                  width: 16,
                 ),
                 Expanded(
                   flex: 1,
@@ -178,7 +186,7 @@ class _AddEditAddressState extends State<AddEditAddress> {
               ],
             ),
             SizedBox(
-              height: 12 * SizeConfig.heightMultiplier,
+              height: 12,
             ),
             Row(
               children: [
@@ -196,7 +204,7 @@ class _AddEditAddressState extends State<AddEditAddress> {
                   ),
                 ),
                 SizedBox(
-                  width: 16 * SizeConfig.widthMultiplier,
+                  width: 16,
                 ),
                 Expanded(
                   flex: 1,
@@ -221,7 +229,7 @@ class _AddEditAddressState extends State<AddEditAddress> {
               ],
             ),
             SizedBox(
-              height: 20 * SizeConfig.heightMultiplier,
+              height: 20,
             ),
             CustomElevatedButton(
               onPressed: () {
@@ -237,8 +245,8 @@ class _AddEditAddressState extends State<AddEditAddress> {
                 }
               },
               lable: "Save Address",
-              padding: EdgeInsets.symmetric(
-                  vertical: 8 * SizeConfig.heightMultiplier),
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              backgroundColor: AppColors.kRed,
               textStyle: AppTextStyle.f16WhiteW600,
             )
           ],

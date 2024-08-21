@@ -12,13 +12,13 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Size preferredSize;
 
   HomeAppBar({Key? key, this.onMenuTap})
-      : preferredSize = Size.fromHeight(65 * SizeConfig.heightMultiplier),
+      : preferredSize = Size.fromHeight(65),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      toolbarHeight: 65 * SizeConfig.heightMultiplier,
+      toolbarHeight: 65,
       elevation: 0,
       backgroundColor: Colors.transparent,
       leading: GestureDetector(
@@ -26,20 +26,20 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Icon(
           Icons.menu,
           color: AppColors.kGrey,
-          size: 40 * SizeConfig.imageSizeMultiplier,
+          size: 40,
         ),
       ),
       title: TextField(
         decoration: InputDecoration(
           filled: true,
           contentPadding: EdgeInsets.symmetric(
-            horizontal: 5 * SizeConfig.widthMultiplier,
-            vertical: 8 * SizeConfig.heightMultiplier,
+            horizontal: 5,
+            vertical: 8,
           ),
           fillColor: AppColors.kGrey200,
           prefixIcon: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: 12 * SizeConfig.widthMultiplier,
+              horizontal: 12,
             ),
             child: Icon(
               Icons.search_sharp,
@@ -55,7 +55,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           hintText: AppStrings.searchHint,
         ),
       ),
-      actions: [const CartBtn()],
+      actions: [
+        const CartBtn(),
+        SizedBox(
+          width: 15,
+        )
+      ],
     );
   }
 }

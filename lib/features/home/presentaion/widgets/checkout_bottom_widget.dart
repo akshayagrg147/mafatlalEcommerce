@@ -5,7 +5,6 @@ import 'package:mafatlal_ecommerce/components/loading_animation.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_address.dart';
@@ -22,9 +21,7 @@ class CheckOutBottomWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.maxFinite,
-      padding: EdgeInsets.symmetric(
-          horizontal: 16 * SizeConfig.widthMultiplier,
-          vertical: 12 * SizeConfig.heightMultiplier),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
           color: AppColors.kWhite,
           borderRadius: const BorderRadius.only(
@@ -46,7 +43,7 @@ class CheckOutBottomWidget extends StatelessWidget {
             style: AppTextStyle.f16BlackW600,
           ),
           SizedBox(
-            height: 10 * SizeConfig.heightMultiplier,
+            height: 10,
           ),
           Row(
             children: [
@@ -55,7 +52,7 @@ class CheckOutBottomWidget extends StatelessWidget {
                 color: AppColors.kBlack,
               ),
               SizedBox(
-                width: 10 * SizeConfig.widthMultiplier,
+                width: 10,
               ),
               Text(
                 "Items Total",
@@ -69,7 +66,7 @@ class CheckOutBottomWidget extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 10 * SizeConfig.heightMultiplier,
+            height: 10,
           ),
           Row(
             children: [
@@ -78,7 +75,7 @@ class CheckOutBottomWidget extends StatelessWidget {
                 color: AppColors.kBlack,
               ),
               SizedBox(
-                width: 10 * SizeConfig.widthMultiplier,
+                width: 10,
               ),
               Text(
                 "No. of Items",
@@ -92,7 +89,7 @@ class CheckOutBottomWidget extends StatelessWidget {
             ],
           ),
           Divider(
-            height: 30 * SizeConfig.heightMultiplier,
+            height: 30,
           ),
           BlocBuilder<HomeCubit, HomeState>(
               buildWhen: (previous, current) => current is UpdateAddressState,
@@ -102,15 +99,15 @@ class CheckOutBottomWidget extends StatelessWidget {
                 }
                 return CustomElevatedButton(
                   lable: 'Add Address',
-                  padding: EdgeInsets.symmetric(
-                      vertical: 8 * SizeConfig.heightMultiplier),
+                  backgroundColor: AppColors.kRed,
+                  padding: const EdgeInsets.symmetric(vertical: 20),
                   onPressed: () {
                     AddEditAddress.show(context);
                   },
                 );
               }),
           SizedBox(
-            height: 10 * SizeConfig.heightMultiplier,
+            height: 10,
           ),
           BlocConsumer<HomeCubit, HomeState>(
               listener: (context, state) {
@@ -118,7 +115,7 @@ class CheckOutBottomWidget extends StatelessWidget {
                   ToastUtils.showErrorToast(state.message);
                 }
                 if (state is PlaceOrderSuccessState) {
-                  Navigator.pushNamed(context, OrderSuccess.route);
+                  Navigator.pushReplacementNamed(context, OrderSuccess.route);
                 }
                 if (state is PlaceOrderLoadingState) {
                   LoadingAnimation.show(context);
@@ -129,9 +126,9 @@ class CheckOutBottomWidget extends StatelessWidget {
                 if (CubitsInjector.homeCubit.deliveryAddress != null) {
                   return CustomElevatedButton(
                     lable: 'Place Order',
+                    backgroundColor: AppColors.kRed,
                     textStyle: AppTextStyle.f16WhiteW600,
-                    padding: EdgeInsets.symmetric(
-                        vertical: 8 * SizeConfig.heightMultiplier),
+                    padding: EdgeInsets.symmetric(vertical: 8),
                     onPressed: () {
                       CubitsInjector.homeCubit.placeOrder();
                     },
@@ -140,7 +137,7 @@ class CheckOutBottomWidget extends StatelessWidget {
                 return const SizedBox.shrink();
               }),
           SizedBox(
-            height: 10 * SizeConfig.heightMultiplier,
+            height: 10,
           )
         ],
       ),
@@ -157,7 +154,7 @@ class CheckOutBottomWidget extends StatelessWidget {
           style: AppTextStyle.f16BlackW600,
         ),
         SizedBox(
-          height: 10 * SizeConfig.heightMultiplier,
+          height: 10,
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +164,7 @@ class CheckOutBottomWidget extends StatelessWidget {
               color: AppColors.kBlack,
             ),
             SizedBox(
-              width: 10 * SizeConfig.widthMultiplier,
+              width: 10,
             ),
             Expanded(
               child: Text(
@@ -177,7 +174,7 @@ class CheckOutBottomWidget extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 10 * SizeConfig.widthMultiplier,
+              width: 10,
             ),
             TextButton(
               child: Text(

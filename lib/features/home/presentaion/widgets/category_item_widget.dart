@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
+import 'package:mafatlal_ecommerce/constants/textstyles.dart';
+import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/category_product_screen.dart';
 
@@ -11,32 +12,41 @@ class CategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, CategoryProductScreen.route,
-            arguments: category);
+        if (MediaQuery.of(context).size.width > 800) {
+          CubitsInjector.homeCubit.showCategoryWidget(category);
+        } else {
+          Navigator.pushNamed(context, CategoryProductScreen.route,
+              arguments: category);
+        }
       },
       child: SizedBox(
-        height: 90 * SizeConfig.widthMultiplier,
-        width: 60 * SizeConfig.widthMultiplier,
+        height: 150,
+        width: 100,
         child: Column(
           children: [
             Container(
-              height: 60 * SizeConfig.widthMultiplier,
-              width: 60 * SizeConfig.widthMultiplier,
-              padding: EdgeInsets.all(12 * SizeConfig.heightMultiplier),
+              height: 100,
+              width: 100,
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
               decoration: BoxDecoration(
-                  color: AppColors.kOrange.withOpacity(0.4),
+                  color: AppColors.kRed.withOpacity(0.07),
                   borderRadius: BorderRadius.circular(12)),
               child: CachedNetworkImage(
                 imageUrl: category.imgUrl,
-                fit: BoxFit.contain,
+                fit: BoxFit.fill,
               ),
             ),
-            SizedBox(
-              height: 6 * SizeConfig.heightMultiplier,
+            const SizedBox(
+              height: 6,
             ),
-            Text(category.name)
+            Text(
+              category.name,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: AppTextStyle.f14BlackW500,
+            )
           ],
         ),
       ),

@@ -8,6 +8,7 @@ import 'package:mafatlal_ecommerce/constants/state_district.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
+import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_model.dart';
 import 'package:mafatlal_ecommerce/features/home/repo/home_repo.dart';
@@ -21,6 +22,7 @@ class HomeCubit extends Cubit<HomeState> {
   Address? _deliveryAddress;
   Address? get deliveryAddress => _deliveryAddress;
   StreamSubscription<BoxEvent>? _cartStream;
+  bool isCategoryScreenShown = false;
   final List<Product> cartProducts = [];
 
   void updateState(String state) {
@@ -102,6 +104,20 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  void fetchOrderhistory() async {
+    try {
+      emit(FetchOrdersLoadingState());
+      final response = await HomeRepo.fetchOrderHistory();
+
+      emit(FetchOrdersSuccessState(orders: response.data ?? []));
+    } on DioException catch (e) {
+      emit(FetchOrdersFailedState(
+          message: e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(FetchOrdersFailedState(message: AppStrings.somethingWentWrong));
+    }
+  }
+
   void initializeCartStream() {
     _cartStream = CartHelper.watchCart().listen((event) {
       final productId = event.key;
@@ -155,6 +171,14 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       emit(PlaceOrderFailedState(message: AppStrings.somethingWentWrong));
     }
+  }
+
+  void showCategoryWidget(Category category) {
+    emit(UpdateHomeWidgetState(category: category));
+  }
+
+  void showHomeWidget() {
+    emit(ShowHomeWidget());
   }
 
   void clear() {

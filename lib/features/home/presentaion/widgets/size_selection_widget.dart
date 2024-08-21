@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
 
 class SizeSelection extends StatefulWidget {
   final List<String> sizesAvailable;
@@ -28,7 +27,7 @@ class _SizeSelectionState extends State<SizeSelection> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 20 * SizeConfig.heightMultiplier,
+      height: 30,
       child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
@@ -36,8 +35,8 @@ class _SizeSelectionState extends State<SizeSelection> {
                 isSelected: selectedSize == widget.sizesAvailable[index]);
           },
           separatorBuilder: (context, index) {
-            return SizedBox(
-              width: 5 * SizeConfig.widthMultiplier,
+            return const SizedBox(
+              width: 7,
             );
           },
           itemCount: widget.sizesAvailable.length),
@@ -52,19 +51,19 @@ class _SizeSelectionState extends State<SizeSelection> {
         setState(() {});
       },
       child: Container(
-        height: 20 * SizeConfig.heightMultiplier,
-        width: 18 * SizeConfig.heightMultiplier,
+        height: 30,
+        width: 30,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            color: isSelected ? AppColors.kOrange : null,
+            color: isSelected ? AppColors.kRed : null,
             border: Border.all(
-                color: !isSelected ? AppColors.kBlack : AppColors.kOrange)),
+                color: !isSelected ? AppColors.kGrey : AppColors.kRed)),
         child: Center(
           child: Text(
             size,
             style: !isSelected
-                ? AppTextStyle.f10BlackW500
-                : AppTextStyle.f10WhiteW600,
+                ? AppTextStyle.f12OutfitBlackW500
+                : AppTextStyle.f12outfitWhiteW600,
           ),
         ),
       ),

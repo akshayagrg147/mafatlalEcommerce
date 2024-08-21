@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
 
 class CustomDropDown<T> extends StatelessWidget {
   final String label;
@@ -24,9 +23,7 @@ class CustomDropDown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width == null
-          ? SizeConfig.getMaxWidth()
-          : width! * SizeConfig.widthMultiplier,
+      width: width == null ? double.maxFinite : width!,
       child: DropdownButtonHideUnderline(
         child: DropdownButtonFormField<T>(
           focusColor: AppColors.kWhite,
@@ -37,51 +34,52 @@ class CustomDropDown<T> extends StatelessWidget {
           decoration: InputDecoration(
             focusColor: AppColors.kWhite,
             hoverColor: AppColors.kGrey,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
             border: const OutlineInputBorder(
                 borderSide: BorderSide(
                   width: 1.0,
                   color: AppColors.kGrey,
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(20))),
+                borderRadius: BorderRadius.all(Radius.circular(12))),
             enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
                   width: 1.0,
                   color: AppColors.kGrey,
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(20))),
+                borderRadius: BorderRadius.all(Radius.circular(12))),
             disabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(width: 1.0),
-                borderRadius: BorderRadius.all(Radius.circular(20))),
-            errorStyle: AppTextStyle.f12RedW500,
+                borderRadius: BorderRadius.all(Radius.circular(12))),
+            errorStyle: AppTextStyle.f12RedAccentW500,
             fillColor: AppColors.kWhite,
             filled: true,
             errorBorder: const OutlineInputBorder(
               borderSide: BorderSide(
                 width: 1.0,
-                color: AppColors.kRed,
+                color: AppColors.kRedAccent,
               ),
-              borderRadius: BorderRadius.all(Radius.circular(20)),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(width: 1.0, color: AppColors.kOrange),
-              borderRadius: BorderRadius.all(Radius.circular(20)),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(width: 1.0, color: AppColors.kRed),
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
             ),
             focusedErrorBorder: const OutlineInputBorder(
               borderSide: BorderSide(width: 1.0),
-              borderRadius: BorderRadius.all(Radius.circular(20)),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
           ),
-          hint: Text(label, style: AppTextStyle.f14GreyW500),
+          hint: Text(label, style: AppTextStyle.f14OutfitGreyW500),
           iconEnabledColor: AppColors.kBlack,
           icon: const Icon(Icons.keyboard_arrow_down),
-          menuMaxHeight: 400 * SizeConfig.heightMultiplier,
+          menuMaxHeight: 400,
           items: items
               .map((item) => DropdownMenuItem<T>(
                     value: item,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 12 * SizeConfig.widthMultiplier,
-                          vertical: 8 * SizeConfig.heightMultiplier),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
                       child: Text(labelFormat(item),
                           style: AppTextStyle.f16BlackW600),
                     ),
@@ -99,62 +97,6 @@ class CustomDropDown<T> extends StatelessWidget {
           onChanged: onChanged,
         ),
       ),
-
-      // DropdownButtonFormField<T>(
-      //   decoration: InputDecoration(
-      //     enabled: true,
-      //     labelText: label,
-      //     labelStyle: AppTextStyle.f14GreyW500,
-      //     border: const OutlineInputBorder(
-      //         borderSide: BorderSide(
-      //           width: 1.0,
-      //           color: AppColors.kGrey,
-      //         ),
-      //         borderRadius: BorderRadius.all(Radius.circular(20))),
-      //     enabledBorder: const OutlineInputBorder(
-      //         borderSide: BorderSide(
-      //           width: 1.0,
-      //           color: AppColors.kGrey,
-      //         ),
-      //         borderRadius: BorderRadius.all(Radius.circular(20))),
-      //     disabledBorder: const OutlineInputBorder(
-      //         borderSide: BorderSide(width: 1.0),
-      //         borderRadius: BorderRadius.all(Radius.circular(20))),
-      //     errorStyle: AppTextStyle.f16RedW500,
-      //     errorBorder: const OutlineInputBorder(
-      //       borderSide: BorderSide(
-      //         width: 1.0,
-      //         color: AppColors.kRed,
-      //       ),
-      //       borderRadius: BorderRadius.all(Radius.circular(20)),
-      //     ),
-      //     focusedBorder: const OutlineInputBorder(
-      //       borderSide: BorderSide(width: 1.0, color: AppColors.kOrange),
-      //       borderRadius: BorderRadius.all(Radius.circular(20)),
-      //     ),
-      //     focusedErrorBorder: const OutlineInputBorder(
-      //       borderSide: BorderSide(width: 1.0),
-      //       borderRadius: BorderRadius.all(Radius.circular(20)),
-      //     ),
-      //   ),
-      //   value: selectedValue,
-      //   onChanged: onChanged,
-      //   validator: validator,
-      //   isDense: true,
-      //   hint: Text(
-      //     label,
-      //     style: AppTextStyle.f16GreyW500,
-      //   ),
-      //   items: List<DropdownMenuItem<T>>.from(items.map((T value) {
-      //     return DropdownMenuItem<T>(
-      //       value: value,
-      //       child: Text(
-      //         labelFormat(value),
-      //         style: AppTextStyle.f16BlackW400,
-      //       ),
-      //     );
-      //   })),
-      // ),
     );
   }
 }

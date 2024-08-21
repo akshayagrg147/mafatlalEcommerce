@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
 
 enum IndicatorSide { start, end }
 
@@ -99,9 +98,6 @@ class _VerticalTabsState extends State<VerticalTabs>
     return Directionality(
       textDirection: widget.direction,
       child: Container(
-        width: SizeConfig.screenWidth > 1000
-            ? 1000 * SizeConfig.widthMultiplier
-            : double.maxFinite,
         color: widget.backgroundColor ?? Theme.of(context).canvasColor,
         child: Column(
           mainAxisSize: MainAxisSize.min,

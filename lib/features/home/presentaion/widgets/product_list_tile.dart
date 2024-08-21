@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_to_cart_btn.dart';
@@ -17,7 +16,7 @@ class ProductListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100 * SizeConfig.heightMultiplier,
+      height: 120,
       width: double.maxFinite,
       decoration: BoxDecoration(
           color: AppColors.kWhite,
@@ -30,35 +29,31 @@ class ProductListTile extends StatelessWidget {
                 blurRadius: 5,
                 offset: const Offset(2, 2))
           ]),
-      padding: EdgeInsets.symmetric(
-          horizontal: 6 * SizeConfig.widthMultiplier,
-          vertical: 5 * SizeConfig.heightMultiplier),
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 80 * SizeConfig.widthMultiplier,
-            height: double.maxFinite,
-            child: CachedNetworkImage(
-              imageUrl: product.productImage ?? "",
-            ),
+          CachedNetworkImage(
+            imageUrl: product.productImage ?? "",
+            fit: BoxFit.fitHeight,
           ),
           SizedBox(
-            width: 10 * SizeConfig.widthMultiplier,
+            width: 10,
           ),
           SizedBox(
-            width: 150 * SizeConfig.widthMultiplier,
+            width: 150,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: 5,
+                ),
                 Text(
                   product.productName,
                   maxLines: 2,
                   style: AppTextStyle.f14BlackW500,
                 ),
-                SizedBox(
-                  height: 8 * SizeConfig.heightMultiplier,
-                ),
+                const Spacer(),
                 SizeSelection(
                     sizesAvailable: product.sizeAvailable.sizes ?? [],
                     selectedSize: product.selectedSize,
@@ -70,11 +65,11 @@ class ProductListTile extends StatelessWidget {
                       }
                     }),
                 SizedBox(
-                  height: 8 * SizeConfig.heightMultiplier,
+                  height: 8,
                 ),
                 Text(
                   "₹${product.price}",
-                  style: AppTextStyle.f12BlackW500,
+                  style: AppTextStyle.f16OutfitBlackW500,
                 ),
               ],
             ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
+import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/subcategory_model.dart';
@@ -30,24 +30,21 @@ class SubCategoryProductTab extends StatelessWidget {
         }
         if (state is FetchSubcategoryProductsSuccessState &&
             state.products.isNotEmpty) {
-          return Container(
-              padding: EdgeInsets.only(
-                  left: 8 * SizeConfig.widthMultiplier,
-                  right: 8 * SizeConfig.widthMultiplier,
-                  top: 12 * SizeConfig.heightMultiplier,
-                  bottom: 5 * SizeConfig.heightMultiplier),
-              color: AppColors.kGrey50,
-              child: SingleChildScrollView(
-                physics: const ClampingScrollPhysics(),
-                child: Wrap(
-                  runSpacing: 8 * SizeConfig.heightMultiplier,
-                  spacing: 8 * SizeConfig.widthMultiplier,
-                  children: List.generate(
-                      state.products.length,
-                      (index) => ProductGridTile.subList(
-                          product: state.products[index])),
-                ),
-              ));
+          return Expanded(
+            child: Container(
+                padding: const EdgeInsets.only(
+                    left: 8, right: 8, top: 12, bottom: 5),
+                color: AppColors.kGrey50,
+                child: GridView.count(
+                    crossAxisCount: ResponsiveWidget.getGridCount(context),
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 0.7,
+                    children: List.generate(
+                        state.products.length,
+                        (index) => ProductGridTile.subList(
+                            product: state.products[index])))),
+          );
         }
         return Center(
           child: Text(

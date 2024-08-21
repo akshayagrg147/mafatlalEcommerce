@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:mafatlal_ecommerce/helper/shared_preference_helper.dart';
 import 'package:mafatlal_ecommerce/services/navigation_service.dart';
 
 export 'package:dio/src/dio_exception.dart';
@@ -21,10 +20,10 @@ class DioUtil {
     return dio
       ..interceptors
           .add(InterceptorsWrapper(onRequest: (options, handler) async {
-        final token = SharedPreferencesHelper.instance.getAccessToken();
-        if (token != null) {
-          options.headers["Authorization"] = "Bearer $token";
-        }
+        // final token = SharedPreferencesHelper.instance.getAccessToken();
+        // if (token != null) {
+        //   options.headers["Authorization"] = "Bearer $token";
+        // }
         log(options.queryParameters.toString());
         options.headers["Access-Control-Allow-Origin"] = "*";
         options.headers['ngrok-skip-browser-warning'] = 'true';

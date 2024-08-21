@@ -8,6 +8,8 @@ class AppColors {
   static const Color kOrange = Colors.orange;
   static const Color kWhite = Colors.white;
   static const Color kTransparent = Colors.transparent;
-  static const Color kRed = Colors.red;
+  static Color kRed = Colors.red.shade900;
+  static const Color kRedAccent = Colors.redAccent;
   static const Color kGreen = Colors.green;
+  static const Color kblueLight = Color(0xFFEDF5FE);
 }

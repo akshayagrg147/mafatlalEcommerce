@@ -3,6 +3,7 @@ import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/order_history.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key});
@@ -46,10 +47,11 @@ class HomeDrawer extends StatelessWidget {
             ),
             onTap: () {
               Navigator.pop(context);
+              Navigator.pushNamed(context, OrdersHistory.route);
             },
           ),
           ListTile(
-            leading: const Icon(
+            leading: Icon(
               Icons.logout,
               color: AppColors.kRed,
               size: 30,
@@ -82,7 +84,7 @@ void _showLogoutConfirmationDialog(BuildContext context) {
           TextButton(
             child: Text(
               'Cancel',
-              style: AppTextStyle.f14GreyW500,
+              style: AppTextStyle.f14OutfitGreyW500,
             ),
             onPressed: () {
               Navigator.of(context).pop();

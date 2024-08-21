@@ -1,5 +1,6 @@
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
+import 'package:mafatlal_ecommerce/features/home/model/order.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_model.dart';
 import 'package:mafatlal_ecommerce/routes/api_routes.dart';
@@ -51,5 +52,13 @@ class HomeRepo {
     final response =
         await DioUtil().getInstance()?.post(ApiRoutes.placeOrder, data: data);
     return ApiResponse<Map>.fromJson(response?.data, (data) => data);
+  }
+
+  static Future<ApiResponse<List<Order>>> fetchOrderHistory() async {
+    final response = await DioUtil().getInstance()?.get(ApiRoutes.orderHistory,
+        queryParameters: {'user_id': CubitsInjector.authCubit.currentUser!.id});
+
+    return ApiResponse<List<Order>>.fromJson(response?.data,
+        (data) => List<Order>.from(data.map((e) => Order.fromJson(e))));
   }
 }

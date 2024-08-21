@@ -16,4 +16,7 @@ class ApiRoutes {
   //cart
   static const String getCartProducts = "$baseUrl/product_info_list";
   static const String placeOrder = "$baseUrl/place_order";
+
+  //order history
+  static const String orderHistory = "$baseUrl/order_history";
 }

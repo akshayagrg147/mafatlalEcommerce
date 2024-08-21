@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField(
@@ -49,9 +48,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width == null
-          ? SizeConfig.getMaxWidth()
-          : width! * SizeConfig.widthMultiplier,
+      width: width == null ? double.maxFinite : width!,
       child: TextFormField(
         textCapitalization: textCapitalization,
         inputFormatters: formatters,
@@ -77,51 +74,48 @@ class CustomTextField extends StatelessWidget {
             fillColor: AppColors.kWhite,
             errorText: errorText,
             prefixIcon: prefixWidget,
-            prefixIconConstraints:
-                const BoxConstraints(minWidth: 0, minHeight: 0),
             counterText: "",
             counterStyle: const TextStyle(fontSize: 0),
-            contentPadding: EdgeInsets.symmetric(
-                horizontal: 20 * SizeConfig.widthMultiplier,
-                vertical: 12 * SizeConfig.heightMultiplier),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             floatingLabelBehavior: FloatingLabelBehavior.always,
             border: const OutlineInputBorder(
                 borderSide: BorderSide(
                   width: 1.0,
                   color: AppColors.kGrey,
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(20))),
+                borderRadius: BorderRadius.all(Radius.circular(12))),
             enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
                   width: 1.0,
                   color: AppColors.kGrey,
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(20))),
+                borderRadius: BorderRadius.all(Radius.circular(12))),
             disabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(width: 1.0),
-                borderRadius: BorderRadius.all(Radius.circular(20))),
+                borderRadius: BorderRadius.all(Radius.circular(12))),
             hintText: hint,
-            errorStyle: AppTextStyle.f12RedW500,
+            errorStyle: AppTextStyle.f12RedAccentW500,
             errorBorder: const OutlineInputBorder(
               borderSide: BorderSide(
                 width: 1.0,
-                color: AppColors.kRed,
+                color: AppColors.kRedAccent,
               ),
-              borderRadius: BorderRadius.all(Radius.circular(20)),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(width: 1.0, color: AppColors.kOrange),
-              borderRadius: BorderRadius.all(Radius.circular(20)),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(width: 1.0, color: AppColors.kRed),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             focusedErrorBorder: const OutlineInputBorder(
               borderSide: BorderSide(width: 1.0),
-              borderRadius: BorderRadius.all(Radius.circular(20)),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             suffixIcon: Padding(
-              padding: EdgeInsets.only(right: 12 * SizeConfig.widthMultiplier),
+              padding: EdgeInsets.only(right: 12),
               child: suffixWidget,
             ),
-            hintStyle: AppTextStyle.f14GreyW500),
+            hintStyle: AppTextStyle.f14OutfitGreyW500),
       ),
     );
   }
