@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+import 'package:mafatlal_ecommerce/core/size_config.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_cubit.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_state.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/drawer.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_appbar.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_body.dart';
@@ -71,6 +73,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           )),
+      bottomNavigationBar: PreferredSize(
+        preferredSize: Size.fromWidth(SizeConfig.screenWidth),
+        child: Footer(),
+      ),
     );
   }
 
@@ -93,6 +99,10 @@ class _HomeScreenState extends State<HomeScreen> {
           child: HomeBody(
             isWeb: false,
           )),
+      bottomNavigationBar: PreferredSize(
+        preferredSize: Size.fromWidth(SizeConfig.screenWidth),
+        child: Footer(),
+      ),
     ));
   }
 }

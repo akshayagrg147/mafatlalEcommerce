@@ -1,5 +1,5 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
 import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
@@ -8,11 +8,13 @@ import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/category_item_widget.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_banner.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/product_grid_tile.dart';
 
 class HomeBody extends StatelessWidget {
   final bool isWeb;
+
   const HomeBody({super.key, required this.isWeb});
 
   @override
@@ -53,68 +55,57 @@ class HomeBody extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(
-                height: 40,
-              ),
+              const SizedBox(height: 40),
               CarouselSlider(
-                items: [0, 1, 2, 3]
-                    .map(
-                      (e) => HomeBanner(),
-                    )
-                    .toList(),
+                items: [0, 1, 2, 3].map((e) => HomeBanner()).toList(),
                 options: CarouselOptions(
                     viewportFraction: 1,
                     height:
                         ResponsiveWidget.isSmallScreen(context) ? 200 : 400.0,
                     autoPlay: true),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               SizedBox(
                 height: 150,
                 child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount:
-                        CubitsInjector.homeCubit.storeData!.categories.length,
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(
-                        width: 25,
-                      );
-                    },
-                    itemBuilder: (context, index) {
-                      return CategoryWidget(
-                          category: CubitsInjector
-                              .homeCubit.storeData!.categories[index]);
-                    }),
+                  scrollDirection: Axis.horizontal,
+                  itemCount:
+                      CubitsInjector.homeCubit.storeData!.categories.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(width: 25),
+                  itemBuilder: (context, index) {
+                    return CategoryWidget(
+                      category:
+                          CubitsInjector.homeCubit.storeData!.categories[index],
+                    );
+                  },
+                ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               const Text(
                 "Trending Items",
                 style: AppTextStyle.f22BlackW600,
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               GridView.count(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 crossAxisCount: ResponsiveWidget.getGridCount(context),
                 childAspectRatio: 0.7,
                 mainAxisSpacing: 18,
                 crossAxisSpacing: 18,
                 children: List.generate(
-                    CubitsInjector.homeCubit.storeData!.products.length,
-                    // CubitsInjector.homeCubit.storeData!.products.length,
-                    (index) {
-                  return ProductGridTile(
-                    product:
-                        CubitsInjector.homeCubit.storeData!.products[index],
-                  );
-                }),
-              )
+                  CubitsInjector.homeCubit.storeData!.products.length,
+                  (index) {
+                    return ProductGridTile(
+                      product:
+                          CubitsInjector.homeCubit.storeData!.products[index],
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 40), // Add space before footer
+              Footer(), // Add your footer widget here
             ],
           ),
         );
