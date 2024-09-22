@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mafatlal_ecommerce/components/custom_btn.dart';
 import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/order_history.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/cart_btn.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/search_field.dart';
@@ -49,7 +51,7 @@ class _HeaderState extends State<Header> {
             SizedBox(
               width: width * 0.3,
               child: SearchInput(
-                  textController: TextEditingController(),
+                  textController: CubitsInjector.homeCubit.searchController,
                   hintText: "Search here"),
             ),
             Padding(
@@ -57,7 +59,19 @@ class _HeaderState extends State<Header> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  accountHeader(),
+                  if (CubitsInjector.authCubit.currentUser != null)
+                    accountHeader()
+                  else
+                    CustomElevatedButton(
+                        width: 150,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        onPressed: () {
+                          Navigator.pushNamed(context, LoginScreen.route);
+                        },
+                        backgroundColor: AppColors.kBlack,
+                        textColor: AppColors.kWhite,
+                        label: "Login"),
                   Container(
                     width: 2,
                     height: 40,

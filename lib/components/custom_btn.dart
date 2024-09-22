@@ -4,7 +4,7 @@ import 'package:mafatlal_ecommerce/core/size_config.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final VoidCallback onPressed;
-  final String lable;
+  final String label;
   final Color backgroundColor;
   final Color textColor;
   final double borderRadius;
@@ -13,7 +13,7 @@ class CustomElevatedButton extends StatelessWidget {
   final double? width;
   const CustomElevatedButton({
     required this.onPressed,
-    required this.lable,
+    required this.label,
     this.backgroundColor = AppColors.kOrange,
     this.textColor = AppColors.kWhite,
     this.borderRadius = 8.0,
@@ -38,7 +38,7 @@ class CustomElevatedButton extends StatelessWidget {
           textStyle: textStyle,
         ),
         child: Text(
-          lable,
+          label,
           style: textStyle,
         ),
       ),

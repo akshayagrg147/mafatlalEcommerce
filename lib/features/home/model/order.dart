@@ -8,7 +8,8 @@ class Order {
   final String? productImage;
   final String? description;
   final String orderStatus;
-  final Address deliveryAddress;
+  final Address? shipping;
+  final Address? billing;
   final DateTime createdOn;
   final String? createdBy;
   final DateTime? updatedOn;
@@ -22,31 +23,28 @@ class Order {
     this.productImage,
     this.description,
     required this.orderStatus,
-    required this.deliveryAddress,
+    this.shipping,
     required this.createdOn,
+    this.billing,
     this.createdBy,
     this.updatedOn,
     this.updatedBy,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
-    final state = json['delievery_state'];
-    final address = json['delievery_address'];
-    final district = json['delievery_district'];
-    final city = json['delievery_city'];
-    final pincode = json['delievery_pincode'].toString();
+    final shippingAddress =
+        json['shipping'] != null ? Address.fromJson(json['shipping']) : null;
+    final billingAdress = json['billing'] != null
+        ? Address.fromJson(json['billing'])
+        : shippingAddress;
     return Order(
       orderId: json['order_id'],
       productQuantity: json['product_quantity'],
       userId: json['user_id'],
       price: json['price'],
       orderStatus: json['order_status'],
-      deliveryAddress: Address(
-          address: address ?? "",
-          state: state ?? "",
-          pincode: pincode ?? "",
-          district: district ?? "",
-          city: city ?? ""),
+      shipping: shippingAddress,
+      billing: billingAdress,
       createdOn: DateTime.parse(json['created_on']),
       createdBy: json['created_by']?.toString(),
       updatedOn: json['updated_on'] != null

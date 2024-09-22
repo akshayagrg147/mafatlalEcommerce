@@ -21,6 +21,11 @@ class AppTextStyle {
       color: AppColors.kOrange, fontSize: 12, fontWeight: FontWeight.w600);
   static TextStyle f14OutfitGreyW500 = GoogleFonts.outfit(
       color: AppColors.kGrey, fontSize: 14, fontWeight: FontWeight.w500);
+  static TextStyle f16OutfitGreyW500 = GoogleFonts.outfit(
+      color: AppColors.kGrey, fontSize: 16, fontWeight: FontWeight.w500);
+  static TextStyle f14OutfitBlackW500 = GoogleFonts.outfit(
+      color: AppColors.kBlack, fontSize: 14, fontWeight: FontWeight.w500);
+
   static TextStyle f14BlackW500 = GoogleFonts.outfit(
       color: AppColors.kBlack, fontSize: 14, fontWeight: FontWeight.w500);
   static TextStyle f14KRedOutfitW500 = GoogleFonts.outfit(
@@ -49,6 +54,8 @@ class AppTextStyle {
       color: AppColors.kWhite, fontSize: 10, fontWeight: FontWeight.w600);
   static TextStyle f12outfitWhiteW600 = GoogleFonts.outfit(
       color: AppColors.kWhite, fontSize: 12, fontWeight: FontWeight.w600);
+  static TextStyle f12outfitGreyW600 = GoogleFonts.outfit(
+      color: AppColors.kGrey, fontSize: 12, fontWeight: FontWeight.w600);
   static TextStyle f10outfitWhiteW600 = GoogleFonts.outfit(
       color: AppColors.kWhite, fontSize: 10, fontWeight: FontWeight.w600);
   static TextStyle f10outfitGreyW500 = GoogleFonts.outfit(

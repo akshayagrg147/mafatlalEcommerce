@@ -2,6 +2,12 @@
   "configVersion": 2,
   "packages": [
     {
+      "name": "amazon_cognito_identity_dart_2",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/amazon_cognito_identity_dart_2-3.6.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.13"
+    },
+    {
       "name": "archive",
       "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/archive-3.6.1",
       "packageUri": "lib/",
@@ -18,6 +24,12 @@
       "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/async-2.11.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
+    },
+    {
+      "name": "aws_s3_upload_lite",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/aws_s3_upload_lite-0.0.7",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
     },
     {
       "name": "bloc",
@@ -50,6 +62,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "carousel_slider",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/carousel_slider-5.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "characters",
       "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/characters-1.3.0",
       "packageUri": "lib/",
@@ -68,6 +86,18 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "convert",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/convert-3.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "cross_file",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/cross_file-0.3.3+8",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
       "name": "crypto",
       "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/crypto-3.0.3",
       "packageUri": "lib/",
@@ -78,6 +108,12 @@
       "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.8",
       "packageUri": "lib/",
       "languageVersion": "3.1"
+    },
+    {
+      "name": "data_table_2",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/data_table_2-2.5.12",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "dio",
@@ -98,6 +134,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "equatable",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/equatable-2.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "fake_async",
       "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/fake_async-1.3.1",
       "packageUri": "lib/",
@@ -114,6 +156,30 @@
       "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/file-7.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "file_selector_linux",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/file_selector_linux-0.9.2+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "file_selector_macos",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/file_selector_macos-0.9.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "file_selector_platform_interface",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/file_selector_platform_interface-2.6.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "file_selector_windows",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/file_selector_windows-0.9.3+2",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
     },
     {
       "name": "fixnum",
@@ -144,6 +210,12 @@
       "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/flutter_lints-2.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.19"
+    },
+    {
+      "name": "flutter_plugin_android_lifecycle",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.19",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
     },
     {
       "name": "flutter_screenutil",
@@ -212,10 +284,64 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "image_picker",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/image_picker-1.0.8",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "image_picker_android",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/image_picker_android-0.8.9+6",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "image_picker_for_web",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/image_picker_for_web-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "image_picker_ios",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/image_picker_ios-0.8.9+2",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "image_picker_linux",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/image_picker_linux-0.2.1+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "image_picker_macos",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/image_picker_macos-0.2.1+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "image_picker_platform_interface",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/image_picker_platform_interface-2.9.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "image_picker_windows",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/image_picker_windows-0.2.1+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "intl",
       "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/intl-0.19.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "js",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/js-0.7.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
     },
     {
       "name": "lints",
@@ -246,6 +372,12 @@
       "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/meta-1.10.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "mime",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/mime-1.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
     },
     {
       "name": "nested",
@@ -368,10 +500,22 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "recase",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/recase-4.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "rxdart",
       "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/rxdart-0.27.7",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "searchable_paginated_dropdown",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/searchable_paginated_dropdown-1.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "shared_preferences",
@@ -542,7 +686,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-08-21T03:51:29.181407Z",
+  "generated": "2024-09-07T08:04:22.964960Z",
   "generator": "pub",
   "generatorVersion": "3.2.6"
 }

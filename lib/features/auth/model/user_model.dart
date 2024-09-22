@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:mafatlal_ecommerce/features/home/model/address.dart';
 import 'package:mafatlal_ecommerce/helper/enums.dart';
 
 class User {
@@ -9,6 +10,8 @@ class User {
   final String fullName;
   final String state;
   final String district;
+  final Address? billingAddress;
+  final Address? shippingAddress;
 
   User({
     required this.id,
@@ -17,6 +20,8 @@ class User {
     required this.fullName,
     required this.state,
     required this.district,
+    this.billingAddress,
+    this.shippingAddress,
   });
 
   factory User.fromJsonString(String data) {
@@ -25,13 +30,17 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'],
-      userType: UserType.fromCode(json['user_type']),
-      email: json['email'],
-      fullName: json['full_name'],
-      state: json['state'],
-      district: json['district'],
-    );
+        id: json['id'],
+        userType: UserType.fromCode(json['user_type']),
+        email: json['email'],
+        fullName: json['full_name'],
+        state: json['state'],
+        district: json['district'],
+        billingAddress:
+            json['billing'] != null ? Address.fromJson(json['billing']) : null,
+        shippingAddress: json['shipping'] != null
+            ? Address.fromJson(json['shipping'])
+            : null);
   }
 
   Map<String, dynamic> toJson() {
@@ -42,6 +51,8 @@ class User {
       'user_type': userType.code,
       'state': state,
       'district': district,
+      'billing': billingAddress?.toJson(),
+      'shipping': shippingAddress?.toJson(),
     };
   }
 

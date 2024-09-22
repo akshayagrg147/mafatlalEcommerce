@@ -4,6 +4,9 @@ class AppColors {
   static const Color kBlack = Colors.black;
   static const Color kGrey = Colors.grey;
   static Color kGrey200 = Colors.grey.shade200;
+  static Color kGrey400 = Colors.grey.shade400;
+  static Color kGrey100 = Colors.grey.shade100;
+  static Color kGrey900 = Colors.grey.shade900;
   static Color kGrey50 = Colors.grey.shade50;
   static const Color kOrange = Colors.orange;
   static const Color kWhite = Colors.white;

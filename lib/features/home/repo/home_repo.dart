@@ -1,5 +1,6 @@
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
+import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/order.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_model.dart';
@@ -7,10 +8,10 @@ import 'package:mafatlal_ecommerce/routes/api_routes.dart';
 import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
 
 class HomeRepo {
-  static Future<ApiResponse<Store>> getStoreData() async {
-    final response = await DioUtil()
-        .getInstance()
-        ?.get(ApiRoutes.fetchStoreDetails, queryParameters: {'user_id': 1});
+  static Future<ApiResponse<Store>> getStoreData(int? userId) async {
+    final response = await DioUtil().getInstance()?.get(
+        ApiRoutes.fetchStoreDetails,
+        queryParameters: userId != null ? {'user_id': userId} : null);
     return ApiResponse<Store>.fromJson(
         response?.data, (data) => Store.fromJson(data));
   }
@@ -24,6 +25,14 @@ class HomeRepo {
         (data) => List<Product>.from(data.map((e) => Product.fromJson(e))));
   }
 
+  static Future<ApiResponse<Product>> fetchProductDetails(int productId) async {
+    final response = await DioUtil()
+        .getInstance()
+        ?.get(ApiRoutes.getProductInfo, queryParameters: {'id': productId});
+    return ApiResponse<Product>.fromJson(
+        response?.data, (data) => Product.fromJson(data));
+  }
+
   static Future<ApiResponse<List<Product>>> getCartProducts(
       List<int> productIds) async {
     final response = await DioUtil()
@@ -34,7 +43,8 @@ class HomeRepo {
   }
 
   static Future<ApiResponse<Map>> placeOrder(List<Product> products,
-      {required Address address}) async {
+      {required Address shippingAddress,
+      required Address billingAddress}) async {
     final num price = products.fold(
         0,
         (previousValue, element) =>
@@ -42,11 +52,8 @@ class HomeRepo {
     final data = {
       "user_id": CubitsInjector.authCubit.currentUser!.id,
       "price": price,
-      "address": address.address,
-      "state": address.state,
-      "pincode": address.pincode,
-      "district": address.district,
-      "city": address.city,
+      "shipping": shippingAddress.toJson(),
+      "billing": billingAddress.toJson(),
       "products": products.map((e) => e.toCartProductJson()).toList()
     };
     final response =
@@ -60,5 +67,39 @@ class HomeRepo {
 
     return ApiResponse<List<Order>>.fromJson(response?.data,
         (data) => List<Order>.from(data.map((e) => Order.fromJson(e))));
+  }
+
+  static Future<void> saveAddress(Address address,
+      {required int userId, required bool isShipping}) async {
+    final Map<String, dynamic> data = {
+      "user_id": userId,
+    };
+    if (isShipping) {
+      data['shipping'] = address.toJson();
+    } else {
+      data['billing'] = address.toJson();
+    }
+
+    await DioUtil().getInstance()?.post(ApiRoutes.address, data: data);
+  }
+
+  static Future<void> updateAddress(Address address,
+      {required int userId, required bool isShipping}) async {
+    final Map<String, dynamic> data = address.toJson();
+
+    data["user_id"] = userId;
+    data['address_type'] = isShipping ? 'shipping' : 'billing';
+
+    await DioUtil().getInstance()?.patch(ApiRoutes.address, data: data);
+  }
+
+  static Future<ApiResponse<List<Category>>> search(String searchQuery) async {
+    final response = await DioUtil()
+        .getInstance()
+        ?.get(ApiRoutes.search, queryParameters: {'search': searchQuery});
+    return ApiResponse<List<Category>>.fromJson(response?.data, (data) {
+      final categories = data['categories'] ?? [];
+      return List<Category>.from(categories.map((e) => Category.fromJson(e)));
+    });
   }
 }

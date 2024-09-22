@@ -5,6 +5,9 @@ import 'package:mafatlal_ecommerce/components/loading_animation.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+import 'package:mafatlal_ecommerce/features/auth/bloc/auth_cubit.dart';
+import 'package:mafatlal_ecommerce/features/auth/bloc/auth_state.dart';
+import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_address.dart';
@@ -91,18 +94,54 @@ class CheckOutBottomWidget extends StatelessWidget {
           Divider(
             height: 30,
           ),
-          BlocBuilder<HomeCubit, HomeState>(
-              buildWhen: (previous, current) => current is UpdateAddressState,
+          if (CubitsInjector.authCubit.currentUser != null)
+            BlocBuilder<AuthCubit, AuthState>(
+                buildWhen: (previous, current) =>
+                    current is FetchCurrentUserSuccessState,
+                builder: (context, state) {
+                  if (CubitsInjector.authCubit.currentUser?.shippingAddress !=
+                      null) {
+                    return addressWidget(context);
+                  }
+                  return CustomElevatedButton(
+                    label: 'Add Shipping Address',
+                    backgroundColor: AppColors.kRed,
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    onPressed: () {
+                      AddEditAddress.show(context, isShipping: true);
+                    },
+                  );
+                })
+          else
+            CustomElevatedButton(
+              label: 'Login To Proceed',
+              backgroundColor: AppColors.kRed,
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              onPressed: () {
+                Navigator.pushNamed(context, LoginScreen.route);
+              },
+            ),
+          SizedBox(
+            height: 10,
+          ),
+          BlocBuilder<AuthCubit, AuthState>(
+              buildWhen: (previous, current) =>
+                  current is FetchCurrentUserSuccessState,
               builder: (context, state) {
-                if (CubitsInjector.homeCubit.deliveryAddress != null) {
-                  return addressWidget(context);
+                if (CubitsInjector.authCubit.currentUser?.shippingAddress ==
+                    null) {
+                  return const SizedBox.shrink();
+                }
+                if (CubitsInjector.authCubit.currentUser?.billingAddress !=
+                    null) {
+                  return addressWidget(context, isShipping: false);
                 }
                 return CustomElevatedButton(
-                  lable: 'Add Address',
+                  label: 'Add Billing Address',
                   backgroundColor: AppColors.kRed,
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   onPressed: () {
-                    AddEditAddress.show(context);
+                    AddEditAddress.show(context, isShipping: false);
                   },
                 );
               }),
@@ -121,14 +160,18 @@ class CheckOutBottomWidget extends StatelessWidget {
                   LoadingAnimation.show(context);
                 }
               },
-              buildWhen: (previous, current) => current is UpdateAddressState,
+              buildWhen: (previous, current) =>
+                  current is FetchCurrentUserSuccessState,
               builder: (context, state) {
-                if (CubitsInjector.homeCubit.deliveryAddress != null) {
+                if (CubitsInjector.authCubit.currentUser?.shippingAddress !=
+                        null &&
+                    CubitsInjector.authCubit.currentUser?.billingAddress !=
+                        null) {
                   return CustomElevatedButton(
-                    lable: 'Place Order',
+                    label: 'Place Order',
                     backgroundColor: AppColors.kRed,
                     textStyle: AppTextStyle.f16WhiteW600,
-                    padding: EdgeInsets.symmetric(vertical: 8),
+                    padding: EdgeInsets.symmetric(vertical: 20),
                     onPressed: () {
                       CubitsInjector.homeCubit.placeOrder();
                     },
@@ -144,13 +187,13 @@ class CheckOutBottomWidget extends StatelessWidget {
     );
   }
 
-  Widget addressWidget(BuildContext context) {
+  Widget addressWidget(BuildContext context, {bool isShipping = true}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          "Deliver To",
+          isShipping ? "Deliver To" : "Billing Address",
           style: AppTextStyle.f16BlackW600,
         ),
         SizedBox(
@@ -168,7 +211,13 @@ class CheckOutBottomWidget extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                CubitsInjector.homeCubit.deliveryAddress?.addressString ?? "",
+                (isShipping
+                            ? CubitsInjector
+                                .authCubit.currentUser?.shippingAddress
+                            : CubitsInjector
+                                .authCubit.currentUser?.billingAddress)
+                        ?.addressString ??
+                    "",
                 textAlign: TextAlign.left,
                 style: AppTextStyle.f14BlackW500,
               ),
@@ -184,7 +233,9 @@ class CheckOutBottomWidget extends StatelessWidget {
               ),
               onPressed: () {
                 AddEditAddress.show(context,
-                    address: CubitsInjector.homeCubit.deliveryAddress);
+                    address:
+                        CubitsInjector.authCubit.currentUser?.shippingAddress,
+                    isShipping: isShipping);
               },
             ),
           ],

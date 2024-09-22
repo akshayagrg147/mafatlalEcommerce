@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mafatlal_ecommerce/features/admin_home/presentation/admin_home.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/forgot_password_screen.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/sign_up_screen.dart';
@@ -7,6 +8,7 @@ import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/category_product_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/order_details_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/order_history.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/product_details.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/search_screen.dart';
@@ -34,7 +36,10 @@ class GenerateRoute {
             settings: settings, builder: (_) => const HomeScreen());
       case ProductDetailsScreen.route:
         return MaterialPageRoute(
-            settings: settings, builder: (_) => const ProductDetailsScreen());
+            settings: settings,
+            builder: (_) => ProductDetailsScreen(
+                  productId: settings.arguments as int,
+                ));
       case SearchScreen.route:
         return MaterialPageRoute(
             settings: settings, builder: (_) => const SearchScreen());
@@ -53,6 +58,16 @@ class GenerateRoute {
       case OrdersHistory.route:
         return TransparentRouteBuilder(
             settings: settings, builder: (_) => const OrdersHistory());
+      case OrderDetailsScreen.route:
+        return TransparentRouteBuilder(
+            settings: settings,
+            builder: (_) => OrderDetailsScreen(
+                  orderId: settings.arguments as int,
+                ));
+      //admin
+      case AdminHome.route:
+        return MaterialPageRoute(
+            settings: settings, builder: (_) => const AdminHome());
       default:
         return null;
     }

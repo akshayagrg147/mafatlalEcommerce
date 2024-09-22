@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
-import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+import 'package:mafatlal_ecommerce/features/auth/bloc/auth_cubit.dart';
+import 'package:mafatlal_ecommerce/features/auth/bloc/auth_state.dart';
+import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
-import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/category_product_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/drawer.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_appbar.dart';
@@ -33,9 +33,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveWidget(
-      largeScreen: largeScreen(),
-      smallScreen: smallScreen(),
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is LogoutState) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, LoginScreen.route, (route) => false);
+        }
+      },
+      child: ResponsiveWidget(
+        largeScreen: largeScreen(),
+        smallScreen: smallScreen(),
+      ),
     );
   }
 
@@ -46,59 +54,23 @@ class _HomeScreenState extends State<HomeScreen> {
         child: const Header(),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: BlocConsumer<HomeCubit, HomeState>(
-          listener: (context, state) {},
-          buildWhen: (previous, current) =>
-              current is UpdateHomeWidgetState || current is ShowHomeWidget,
-          builder: (context, state) {
-            if (state is UpdateHomeWidgetState) {
-              return Align(
-                alignment: Alignment.topCenter,
-                child: SizedBox(
-                  width: 1280,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                CubitsInjector.homeCubit.showHomeWidget();
-                              },
-                              icon: Icon(Icons.arrow_back)),
-                          SizedBox(
-                            width: 50,
-                          ),
-                          Text(
-                            state.category.name,
-                            style: AppTextStyle.f16OutfitBlackW500,
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Expanded(
-                        child: CategoryProductScreen(
-                          category: state.category,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-            return HomeBody(
-              isWeb: true,
-            );
-          },
-        ),
-      ),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              width: 1280,
+              child: Navigator(
+                key: CubitsInjector.homeCubit.homeNavigatorKey,
+                initialRoute: "/",
+                onGenerateRoute: (settings) {
+                  if (settings.name == "/") {
+                    return MaterialPageRoute(
+                        builder: (_) => const HomeBody(isWeb: true));
+                  }
+                },
+              ),
+            ),
+          )),
     );
   }
 
@@ -108,7 +80,11 @@ class _HomeScreenState extends State<HomeScreen> {
       key: _homeKey,
       appBar: HomeAppBar(
         onMenuTap: () {
-          _homeKey.currentState?.openDrawer();
+          if (CubitsInjector.authCubit.currentUser != null) {
+            _homeKey.currentState?.openDrawer();
+          } else {
+            Navigator.pushNamed(context, LoginScreen.route);
+          }
         },
       ),
       drawer: const HomeDrawer(),

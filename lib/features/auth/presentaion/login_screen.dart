@@ -11,10 +11,12 @@ import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+import 'package:mafatlal_ecommerce/features/admin_home/presentation/admin_home.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_cubit.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_state.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/sign_up_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
+import 'package:mafatlal_ecommerce/helper/enums.dart';
 import 'package:mafatlal_ecommerce/helper/toast_utils.dart';
 import 'package:mafatlal_ecommerce/helper/validators.dart';
 
@@ -147,7 +149,11 @@ class _LoginScreenState extends State<LoginScreen> {
               listener: (context, state) {
                 if (state is LoginSuccessState) {
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                      HomeScreen.route, (route) => false);
+                      CubitsInjector.authCubit.currentUser?.userType ==
+                              UserType.admin
+                          ? AdminHome.route
+                          : HomeScreen.route,
+                      (route) => false);
                 }
                 if (state is LoginFailedState) {
                   ToastUtils.showErrorToast(state.message);
@@ -172,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           pwd: _pwdController.text);
                     }
                   },
-                  lable: AppStrings.signIn,
+                  label: AppStrings.signIn,
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   textStyle: AppTextStyle.f16WhiteW600,
                 );

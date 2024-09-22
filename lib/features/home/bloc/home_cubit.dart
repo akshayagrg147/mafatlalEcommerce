@@ -1,17 +1,21 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mafatlal_ecommerce/constants/app_strings.dart';
 import 'package:mafatlal_ecommerce/constants/state_district.dart';
+import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+import 'package:mafatlal_ecommerce/features/admin_orders/repo/admin_orders_repo.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_model.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/search_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/repo/home_repo.dart';
+import 'package:mafatlal_ecommerce/helper/enums.dart';
 import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -19,11 +23,66 @@ class HomeCubit extends Cubit<HomeState> {
 
   Store? _storeData;
   Store? get storeData => _storeData;
-  Address? _deliveryAddress;
-  Address? get deliveryAddress => _deliveryAddress;
-  StreamSubscription<BoxEvent>? _cartStream;
+
   bool isCategoryScreenShown = false;
   final List<Product> cartProducts = [];
+  final searchController = TextEditingController();
+  // Timer? _timer;
+
+  bool isSearchScreenShown = false;
+
+  final homeNavigatorKey = GlobalKey<NavigatorState>();
+
+  void disposeSearch() {
+    searchController.clear();
+    // searchController.removeListener(searchDebouncer);
+    isSearchScreenShown = false;
+    // _timer = null;
+  }
+
+  // void initializeSearch() {
+  //   if (_timer == null) {
+  //
+  //     searchController.addListener(searchDebouncer);
+  //     emit(SearchInitialState());
+  //   }
+  // }
+
+  // void searchDebouncer() {
+  //   if (_timer != null) {
+  //     _timer!.cancel();
+  //   }
+  //   _timer = Timer(
+  //     const Duration(milliseconds: 500),
+  //     () {
+  //       searchOrganisation(searchController.text);
+  //     },
+  //   );
+  // }
+
+  void searchOrganisation(String searchText) async {
+    try {
+      emit(SearchLoadingState());
+
+      await Future.delayed(const Duration(milliseconds: 200));
+      final response = await HomeRepo.search(searchText);
+      if (isSearchScreenShown == false) {
+        homeNavigatorKey.currentState!.push(MaterialPageRoute(
+            builder: (_) => SearchScreen(
+                  categories: response.data ?? [],
+                )));
+        isSearchScreenShown = true;
+      }
+      emit(SearchSuccessState(
+        organisations: response.data ?? [],
+      ));
+    } on DioException catch (e) {
+      emit(SearchFailedState(
+          message: e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(SearchFailedState(message: AppStrings.somethingWentWrong));
+    }
+  }
 
   void updateState(String state) {
     final districtList = StateDistricts.getDistrictList(state);
@@ -34,15 +93,28 @@ class HomeCubit extends Cubit<HomeState> {
     emit(UpdateDistrictState(district));
   }
 
-  void updateAddress(Address address) {
-    _deliveryAddress = address;
-    emit(UpdateAddressState());
+  void saveAddress(Address address,
+      {required bool isUpdate, bool isShipping = true}) async {
+    try {
+      emit(SaveAddressLoadingState());
+      final userId = CubitsInjector.authCubit.currentUser!.id;
+      final response = (await HomeRepo.saveAddress(address,
+          userId: userId, isShipping: isShipping));
+      CubitsInjector.authCubit.fetchCurrentUser();
+      emit(UpdateAddressState());
+    } on DioException catch (e) {
+      emit(SaveAddressFailedState(
+          e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(SaveAddressFailedState(AppStrings.somethingWentWrong));
+    }
   }
 
   void fetchStoreData() async {
     try {
       emit(FetchStoreDataLoadingState());
-      final response = await HomeRepo.getStoreData();
+      final response =
+          await HomeRepo.getStoreData(CubitsInjector.authCubit.currentUser?.id);
       if (response.data != null) {
         _storeData = response.data;
         emit(FetchStoreDataSuccessState());
@@ -88,11 +160,42 @@ class HomeCubit extends Cubit<HomeState> {
         emit(FetchCartSuccessState());
         return;
       }
+
       final response = await HomeRepo.getCartProducts(productIds);
+
       if (response.data != null) {
-        cartProducts.addAll(response.data!);
+        final localItems = CartHelper.getAllProducts();
+
+        for (var product in response.data!) {
+          final cartItems =
+              localItems.where((e) => product.productId == e['productId']);
+
+          for (var cartItem in cartItems) {
+            final variantTitle = product.variant?.variantTitle;
+            final selectedVariantString = cartItem[variantTitle];
+            final selectedVariant =
+                product.variant?.variantOptions.firstWhereOrNull(
+              (option) => option.name == selectedVariantString,
+            );
+
+            final cartProduct = Product(
+              productId: product.productId,
+              productName: product.productName,
+              productCategory: product.productCategory,
+              productImage: product.productImage,
+              price: product.price,
+              quantity: cartItem['quantity'] ?? 0,
+              variant: selectedVariant != null
+                  ? product.variant!.copyWith(selectedVariant)
+                  : product.variant,
+            );
+
+            cartProducts.add(cartProduct);
+          }
+        }
+
         emit(FetchCartSuccessState());
-        _UpdateCartBilling();
+        updateCartBilling();
       } else {
         emit(FetchCartFailedState(message: response.message));
       }
@@ -101,6 +204,33 @@ class HomeCubit extends Cubit<HomeState> {
           message: e.response?.statusMessage ?? AppStrings.somethingWentWrong));
     } catch (e) {
       emit(FetchCartFailedState(message: AppStrings.somethingWentWrong));
+    }
+  }
+
+  void updateCartProductList(int productId, {Variant? variant}) {
+    if (variant != null) {
+      cartProducts.removeWhere((element) =>
+          element.productId == productId &&
+          element.variant?.selectedVariant.name ==
+              variant.selectedVariant.name);
+    } else {
+      cartProducts.removeWhere((element) => element.productId == productId);
+    }
+    emit(FetchCartSuccessState());
+    updateCartBilling();
+  }
+
+  void fetchProductDetails(int productId) async {
+    try {
+      emit(FetchProductDetailsLoadingState());
+      final response = await HomeRepo.fetchProductDetails(productId);
+      emit(FetchProductDetailsSuccessState(product: response.data!));
+    } on DioException catch (e) {
+      emit(FetchProductDetailsFailedState(
+          message: e.message ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(FetchProductDetailsFailedState(
+          message: AppStrings.somethingWentWrong));
     }
   }
 
@@ -118,47 +248,42 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  void initializeCartStream() {
-    _cartStream = CartHelper.watchCart().listen((event) {
-      final productId = event.key;
-      final data = event.value ?? {};
-      final quantity = data['quantity'] ?? 0;
-
-      if (quantity <= 0) {
-        cartProducts.removeWhere((element) => element.productId == productId);
-        emit(FetchCartSuccessState());
-      } else {
-        cartProducts
-            .firstWhere((element) => element.productId == productId)
-            .quantity = quantity;
-      }
-      _UpdateCartBilling();
-    });
+  void fetchOrderDetails(int orderId) async {
+    try {
+      emit(FetchOrderDetailsLoadingState());
+      final response = await AdminOrderRepo.fetchOrderDetails(orderId);
+      emit(FetchOrderDetailsSuccessState(orderDetails: response.data!));
+    } on DioException catch (e) {
+      emit(FetchOrderDetailsFailedState());
+    } catch (e) {
+      emit(FetchOrderDetailsFailedState());
+    }
   }
 
-  void _UpdateCartBilling() {
+  void updateCartBilling() {
     final cartProductsCount = cartProducts.fold(
         0, (previousValue, element) => previousValue + element.quantity);
     final num cartAmount = cartProducts.fold(
         0,
         (previousValue, element) =>
-            previousValue + (element.price * element.quantity));
+            previousValue + (element.getPrice() * element.quantity));
     log("${cartProductsCount}  ${cartAmount}");
     emit(UpdateCartBillingState(
         itemCount: cartProductsCount, amount: cartAmount));
   }
 
   void resetCart() {
-    _cartStream?.cancel();
-    _cartStream = null;
     cartProducts.clear();
   }
 
   void placeOrder() async {
     try {
       emit(PlaceOrderLoadingState());
-      final response =
-          await HomeRepo.placeOrder(cartProducts, address: _deliveryAddress!);
+      final response = await HomeRepo.placeOrder(cartProducts,
+          shippingAddress:
+              CubitsInjector.authCubit.currentUser!.shippingAddress!,
+          billingAddress:
+              CubitsInjector.authCubit.currentUser!.billingAddress!);
       if (response.status) {
         CartHelper.clear();
         emit(PlaceOrderSuccessState());
@@ -183,8 +308,15 @@ class HomeCubit extends Cubit<HomeState> {
 
   void clear() {
     _storeData = null;
-    _cartStream = null;
     cartProducts.clear();
-    _deliveryAddress = null;
+  }
+
+  void updateProductVariant(int productId,
+      {required VariantOption selectedVariant}) async {
+    emit(UpdateProductVariantLoadingState(
+        id: productId, selectedVariant: selectedVariant));
+    await Future.delayed(const Duration(milliseconds: 100));
+    emit(UpdateProductVariantState(
+        id: productId, selectedVariant: selectedVariant));
   }
 }

@@ -22,7 +22,6 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     CubitsInjector.homeCubit.fetchCartProducts();
-    CubitsInjector.homeCubit.initializeCartStream();
     super.initState();
   }
 

@@ -1,10 +1,11 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 
 class CartHelper {
-  static void init() async {
+  static Future<void> init() async {
     await Hive.initFlutter();
 
-    Hive.openBox('cart');
+    await Hive.openBox('cart');
   }
 
   static void clear() {
@@ -13,20 +14,26 @@ class CartHelper {
 
   static final Box _cartBox = Hive.box('cart');
 
-  static void addProduct(int productId, String? size, int quantity) {
-    final product = {
+  static void addProduct(int productId, int quantity, {Variant? variant}) {
+    final Map<String, dynamic> product = {
       'productId': productId,
-      'size': size,
       'quantity': quantity,
     };
+    String id = "$productId";
+    if (variant != null) {
+      product[variant.variantTitle] = variant.selectedVariant.name;
+      id += "_${variant.variantTitle}.${variant.selectedVariant.name}";
+    }
 
-    _cartBox.put(productId, product);
+    _cartBox.put(id, product);
   }
 
-  static int getProductQuantity(
-    int productId,
-  ) {
-    return (_cartBox.get(productId) ?? {})['quantity'] ?? 0;
+  static int getProductQuantity(int productId, {Variant? variant}) {
+    String id = "$productId";
+    if (variant != null) {
+      id += "_${variant.variantTitle}.${variant.selectedVariant.name}";
+    }
+    return (_cartBox.get(id) ?? {})['quantity'] ?? 0;
   }
 
   static int getAllProductQuantity() {
@@ -35,31 +42,43 @@ class CartHelper {
     return quantity;
   }
 
-  static String? getProductSize(
-    int productId,
-  ) {
-    return (_cartBox.get(productId) ?? {})['size'];
-  }
+  // static String? getProductSize(
+  //   int productId,
+  // ) {
+  //   return (_cartBox.get(productId) ?? {})['size'];
+  // }
 
-  static void updateProduct(int productId, String? size, int quantity) {
-    final product = {
+  static void updateProduct(int productId, int quantity, {Variant? variant}) {
+    final Map<String, dynamic> product = {
       'productId': productId,
-      'size': size,
       'quantity': quantity,
     };
+    String id = "$productId";
+    if (variant != null) {
+      product[variant.variantTitle] = variant.selectedVariant.name;
+      id += "_${variant.variantTitle}.${variant.selectedVariant.name}";
+    }
 
-    _cartBox.put(productId, product);
+    _cartBox.put(id, product);
   }
 
-  static void removeProduct(int productId) {
-    _cartBox.delete(productId);
+  static void removeProduct(int productId, {Variant? variant}) {
+    String id = "$productId";
+    if (variant != null) {
+      id += "_${variant.variantTitle}.${variant.selectedVariant.name}";
+    }
+    _cartBox.delete(id);
   }
 
-  static Stream<BoxEvent> watchCart([int? productId]) {
+  static Stream<BoxEvent> watchCart([int? productId, Variant? variant]) {
     if (productId == null) {
       return _cartBox.watch();
     }
-    return _cartBox.watch(key: productId);
+    String id = "$productId";
+    if (variant != null) {
+      id += "_${variant.variantTitle}.${variant.selectedVariant.name}";
+    }
+    return _cartBox.watch(key: id);
   }
 
   static List<Map> getAllProducts() {
@@ -67,6 +86,6 @@ class CartHelper {
   }
 
   static List<int> getAllProductIds() {
-    return _cartBox.keys.cast<int>().toList();
+    return _cartBox.values.map((e) => e['productId'] as int).toSet().toList();
   }
 }

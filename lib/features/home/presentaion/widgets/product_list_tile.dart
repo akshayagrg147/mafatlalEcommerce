@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
+import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_to_cart_btn.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/size_selection_widget.dart';
 
 class ProductListTile extends StatelessWidget {
   final Product product;
@@ -29,70 +29,110 @@ class ProductListTile extends StatelessWidget {
                 blurRadius: 5,
                 offset: const Offset(2, 2))
           ]),
-      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          CachedNetworkImage(
-            imageUrl: product.productImage ?? "",
-            fit: BoxFit.fitHeight,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 5),
+            child: CachedNetworkImage(
+              imageUrl: product.productImage ?? "",
+              errorWidget: (context, url, error) => CachedNetworkImage(
+                imageUrl:
+                    "https://image.spreadshirtmedia.com/image-server/v1/products/T1412A330PA3703PT17X246Y19D1040247317W6640H6184/views/1,width=550,height=550,appearanceId=330,backgroundColor=F2F2F2,modelId=5186,crop=list/42-dont-panic-life-universe-everything-mens-pique-polo-shirt.jpg",
+                fit: BoxFit.fill,
+              ),
+              fit: BoxFit.fitHeight,
+              width: 120,
+            ),
           ),
-          SizedBox(
-            width: 10,
-          ),
-          SizedBox(
-            width: 150,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  product.productName,
-                  maxLines: 2,
-                  style: AppTextStyle.f14BlackW500,
-                ),
-                const Spacer(),
-                SizeSelection(
-                    sizesAvailable: product.sizeAvailable.sizes ?? [],
-                    selectedSize: product.selectedSize,
-                    onSizeSelected: (size) {
-                      product.selectedSize = size;
-                      if (product.quantity > 0) {
-                        CartHelper.updateProduct(
-                            product.productId, size, product.quantity);
-                      }
-                    }),
-                SizedBox(
-                  height: 8,
-                ),
-                Text(
-                  "₹${product.price}",
-                  style: AppTextStyle.f16OutfitBlackW500,
-                ),
-              ],
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 5),
+            child: SizedBox(
+              width: 150,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    product.productName,
+                    maxLines: 2,
+                    style: AppTextStyle.f14BlackW500,
+                  ),
+                  const Spacer(),
+                  if (product.variant != null)
+                    Text(
+                      "${product.variant!.selectedVariant.name}",
+                      style: AppTextStyle.f16OutfitBlackW500,
+                    ),
+                  if (product.variant != null)
+                    SizedBox(
+                      height: 5,
+                    ),
+                  Text(
+                    "₹${product.getPrice()}",
+                    style: AppTextStyle.f16OutfitBlackW500,
+                  ),
+                ],
+              ),
             ),
           ),
           const Spacer(),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: StreamBuilder<BoxEvent>(
-                stream: CartHelper.watchCart(product.productId),
-                builder: (context, eventSnapshot) {
-                  if (eventSnapshot.hasData) {
-                    final data = eventSnapshot.data?.value ?? {};
-                    if (product.productId == eventSnapshot.data?.key) {
-                      product.quantity = data['quantity'] ?? 0;
-                      product.selectedSize = data['size'];
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  CartHelper.removeProduct(product.productId,
+                      variant: product.variant);
+                  CubitsInjector.homeCubit.updateCartProductList(
+                      product.productId,
+                      variant: product.variant);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border(
+                        left: BorderSide(color: AppColors.kGrey400, width: 2),
+                        bottom: BorderSide(color: AppColors.kGrey400, width: 2),
+                      )),
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+                  child: Icon(
+                    Icons.delete,
+                    color: AppColors.kRed,
+                    size: 20,
+                  ),
+                ),
+              ),
+              StreamBuilder<BoxEvent>(
+                  stream:
+                      CartHelper.watchCart(product.productId, product.variant),
+                  builder: (context, eventSnapshot) {
+                    if (eventSnapshot.hasData) {
+                      final data = eventSnapshot.data?.value ?? {};
+                      String id = "${product.productId}";
+                      if (product.variant != null) {
+                        id +=
+                            "_${product.variant!.variantTitle}.${product.variant!.selectedVariant.name}";
+                      }
+                      if (id == eventSnapshot.data?.key) {
+                        product.quantity = data['quantity'] ?? 0;
+                        CubitsInjector.homeCubit.updateCartBilling();
+                      }
                     }
-                  }
-                  return AddToCartWidget(
-                    quantity: product.quantity,
-                    productId: product.productId,
-                    productSize: product.selectedSize,
-                  );
-                }),
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 5),
+                      child: AddToCartWidget(
+                        quantity: product.quantity,
+                        productId: product.productId,
+                        variant: product.variant,
+                        isCart: true,
+                      ),
+                    );
+                  }),
+            ],
           )
         ],
       ),

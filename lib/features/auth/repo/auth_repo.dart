@@ -8,13 +8,15 @@ class AuthRepo {
       required String pwd,
       required String name,
       required String state,
-      required String district}) async {
+      required String district,
+      required String gstNo}) async {
     final data = {
       "email": email,
       "name": name,
       "password": pwd,
       "state": state,
-      "district": district
+      "district": district,
+      "gst": gstNo
     };
 
     final response =
@@ -34,6 +36,16 @@ class AuthRepo {
 
     final response =
         await DioUtil().getInstance()!.post(ApiRoutes.login, data: data);
+    return ApiResponse<User>.fromJson(
+        response.data, (data) => User.fromJson(data));
+  }
+
+  static Future<ApiResponse<User>> fetchCurrentUser({
+    required int userId,
+  }) async {
+    final response = await DioUtil()
+        .getInstance()!
+        .get(ApiRoutes.getCurrentUser, queryParameters: {'user_id': userId});
     return ApiResponse<User>.fromJson(
         response.data, (data) => User.fromJson(data));
   }

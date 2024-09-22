@@ -1,29 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
+import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 
 class SizeSelection extends StatefulWidget {
-  final List<String> sizesAvailable;
-  final String? selectedSize;
-  final Function(String size) onSizeSelected;
+  final Variant variant;
+  final Function(VariantOption option) onVariantSelected;
   const SizeSelection(
-      {super.key,
-      required this.sizesAvailable,
-      this.selectedSize,
-      required this.onSizeSelected});
+      {super.key, required this.variant, required this.onVariantSelected});
 
   @override
   State<SizeSelection> createState() => _SizeSelectionState();
 }
 
 class _SizeSelectionState extends State<SizeSelection> {
-  String? selectedSize;
-  @override
-  void initState() {
-    selectedSize = widget.selectedSize;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -31,24 +21,27 @@ class _SizeSelectionState extends State<SizeSelection> {
       child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
-            return size(widget.sizesAvailable[index],
-                isSelected: selectedSize == widget.sizesAvailable[index]);
+            return size(widget.variant.variantOptions[index],
+                isSelected: widget.variant.selectedVariant ==
+                    widget.variant.variantOptions[index]);
           },
           separatorBuilder: (context, index) {
             return const SizedBox(
               width: 7,
             );
           },
-          itemCount: widget.sizesAvailable.length),
+          itemCount: widget.variant.variantOptions.length),
     );
   }
 
-  Widget size(String size, {bool isSelected = false}) {
+  Widget size(VariantOption option, {bool isSelected = false}) {
     return InkWell(
       onTap: () {
-        selectedSize = size;
-        widget.onSizeSelected(size);
-        setState(() {});
+        if (!isSelected) {
+          widget.onVariantSelected(option);
+          widget.variant.selectedVariant = option;
+          setState(() {});
+        }
       },
       child: Container(
         height: 30,
@@ -60,7 +53,7 @@ class _SizeSelectionState extends State<SizeSelection> {
                 color: !isSelected ? AppColors.kGrey : AppColors.kRed)),
         child: Center(
           child: Text(
-            size,
+            option.name,
             style: !isSelected
                 ? AppTextStyle.f12OutfitBlackW500
                 : AppTextStyle.f12outfitWhiteW600,

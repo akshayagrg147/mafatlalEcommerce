@@ -32,6 +32,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
   final TextEditingController _rePwdController = TextEditingController();
+  final TextEditingController _gstController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? selectedState;
   String? selectedDistrict;
@@ -42,6 +43,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       largeScreen: largScreenForm(),
       smallScreen: smallScreenForm(),
     );
+  }
+
+  String? gstNumberValidator(String? value) {
+    // GST number must be 15 characters long and alphanumeric
+    if (value == null || value.isEmpty) {
+      return 'GST number is required';
+    } else if (value.length != 15) {
+      return 'GST number must be 15 characters long';
+    } else if (!RegExp(
+            r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$')
+        .hasMatch(value)) {
+      return 'Invalid GST number format';
+    }
+    return null;
   }
 
   Widget largScreenForm() {
@@ -248,6 +263,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ],
                   ),
                   const SizedBox(
+                    height: 20,
+                  ),
+                  CustomTextField(
+                    hint: "Gst No.",
+                    suffixWidget: const Icon(Icons.numbers),
+                    formatters: [
+                      LengthLimitingTextInputFormatter(
+                          15), // Limit input to 15 characters
+                      FilteringTextInputFormatter.allow(RegExp(r'[A-Z0-9]')),
+                    ],
+                    validation: gstNumberValidator,
+                    textEditingController: _gstController,
+                  ),
+                  const SizedBox(
                     height: 26,
                   ),
                   BlocConsumer<AuthCubit, AuthState>(
@@ -278,10 +307,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 pwd: _pwdController.text,
                                 name: _nameController.text,
                                 state: selectedState!,
-                                district: selectedDistrict!);
+                                district: selectedDistrict!,
+                                gstNo: _gstController.text);
                           }
                         },
-                        lable: AppStrings.signUp,
+                        label: AppStrings.signUp,
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         textStyle: AppTextStyle.f16WhiteW600,
                       );
@@ -464,6 +494,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       },
                     ),
                     const SizedBox(
+                      height: 20,
+                    ),
+                    CustomTextField(
+                      hint: "Gst No.",
+                      suffixWidget: const Icon(Icons.numbers),
+                      formatters: [
+                        LengthLimitingTextInputFormatter(
+                            15), // Limit input to 15 characters
+                        FilteringTextInputFormatter.allow(RegExp(r'[A-Z0-9]')),
+                      ],
+                      validation: gstNumberValidator,
+                      textEditingController: _gstController,
+                    ),
+                    const SizedBox(
                       height: 40,
                     ),
                     BlocConsumer<AuthCubit, AuthState>(
@@ -493,10 +537,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   pwd: _pwdController.text,
                                   name: _nameController.text,
                                   state: selectedState!,
-                                  district: selectedDistrict!);
+                                  district: selectedDistrict!,
+                                  gstNo: _gstController.text);
                             }
                           },
-                          lable: AppStrings.signUp,
+                          label: AppStrings.signUp,
                           padding: const EdgeInsets.symmetric(vertical: 20),
                           textStyle: AppTextStyle.f16WhiteW600,
                         );

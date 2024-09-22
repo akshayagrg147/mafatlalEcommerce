@@ -25,7 +25,7 @@ class DioUtil {
         //   options.headers["Authorization"] = "Bearer $token";
         // }
         log(options.queryParameters.toString());
-        options.headers["Access-Control-Allow-Origin"] = "*";
+        // options.headers["Access-Control-Allow-Origin"] = "*";
         options.headers['ngrok-skip-browser-warning'] = 'true';
 
         return handler.next(options); //modify your request
@@ -80,21 +80,21 @@ class ApiResponse<T> {
   final bool status;
   final T? data;
   final String message;
-
-  ApiResponse({
-    required this.status,
-    required this.data,
-    required this.message,
-  });
+  final int totalPages;
+  ApiResponse(
+      {required this.status,
+      required this.data,
+      required this.message,
+      required this.totalPages});
 
   factory ApiResponse.fromJson(
       Map<String, dynamic> json, T Function(dynamic) create) {
     return ApiResponse(
-      status: json['status'] is String
-          ? json['status'] == 'Success'
-          : json['status'] == true,
-      data: json['data'] != null ? create(json['data']) : null,
-      message: json['message'],
-    );
+        status: json['status'] is String
+            ? json['status'] == 'Success'
+            : json['status'] == true,
+        data: json['data'] != null ? create(json['data']) : null,
+        message: json['message'],
+        totalPages: json['total_pages'] ?? 0);
   }
 }

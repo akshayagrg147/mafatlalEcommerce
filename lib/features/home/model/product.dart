@@ -4,80 +4,98 @@ class Product {
   final int productId;
   final String productName;
   final String productCategory;
-  final SizeAvailable sizeAvailable;
+  final Variant? variant;
   final String? productImage;
   final num price;
-  int quantity;
-  String? selectedSize;
+  late int quantity;
 
-  Product({
-    required this.productId,
-    required this.productName,
-    required this.productCategory,
-    required this.sizeAvailable,
-    this.productImage,
-    required this.quantity,
-    this.selectedSize,
-    required this.price,
-  });
+  Product(
+      {required this.productId,
+      required this.productName,
+      required this.productCategory,
+      this.variant,
+      this.productImage,
+      required this.price,
+      this.quantity = 0});
+
+  num getPrice() {
+    if (variant != null) {
+      return variant!.selectedVariant.price;
+    }
+    return price;
+  }
+
+  factory Product.nullProduct() =>
+      Product(productId: -1, productName: "", productCategory: "", price: 0);
 
   factory Product.fromJson(
     Map<String, dynamic> json,
   ) {
     final id = json['product_id'] ?? json['id'];
-    final sizesAvailable = SizeAvailable.fromJson(json['size_available']);
-    final cartQuantity = CartHelper.getProductQuantity(id);
-    String? selectedSize = CartHelper.getProductSize(id);
-    if ((sizesAvailable.sizes ?? []).isNotEmpty && selectedSize == null) {
-      selectedSize = sizesAvailable.sizes!.first;
+    final variants = (json['size_available'] as Map);
+    Variant? variant;
+    if (variants.isNotEmpty) {
+      variant = Variant.fromJson(variants.entries.first);
     }
 
+    final quantity = CartHelper.getProductQuantity(id, variant: variant);
+
     return Product(
-        productId: id,
-        productName: json['product_name'] ?? json['name'],
-        productCategory: json['product_category'],
-        sizeAvailable: sizesAvailable,
-        productImage: json['product_image'],
-        price: num.tryParse(json['price'] ?? "0") ?? 0,
-        quantity: cartQuantity,
-        selectedSize: selectedSize);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'product_id': productId,
-      'product_name': productName,
-      'product_category': productCategory,
-      'size_available': sizeAvailable.toJson(),
-      'product_image': productImage,
-      'price': price,
-    };
-  }
-
-  Map<String, dynamic> toCartProductJson() {
-    return {
-      'product_id': productId,
-      'size': selectedSize ?? "",
-      'quantity': quantity,
-      'price': price,
-    };
-  }
-}
-
-class SizeAvailable {
-  List<String>? sizes;
-
-  SizeAvailable({this.sizes});
-
-  factory SizeAvailable.fromJson(Map<String, dynamic> json) {
-    return SizeAvailable(
-      sizes: List<String>.from(json['size'] ?? []),
+      productId: id,
+      productName: json['product_name'] ?? json['name'],
+      productCategory: json['product_category'],
+      variant: variant,
+      productImage: json['product_image'],
+      quantity: quantity,
+      price: num.tryParse(json['price'] ?? "0") ?? 0,
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'size': sizes,
+  Map<String, dynamic> toCartProductJson() {
+    final Map<String, dynamic> map = {
+      'product_id': productId,
+      'quantity': quantity,
+      'price': price
     };
+    if (variant != null) {
+      map[variant!.variantTitle] = variant!.selectedVariant.name;
+      map['price'] = variant!.selectedVariant.price;
+    }
+    return map;
   }
+}
+
+class Variant {
+  final String variantTitle;
+  final List<VariantOption> variantOptions;
+  late VariantOption selectedVariant;
+
+  Variant({
+    required this.variantTitle,
+    required this.variantOptions,
+    required this.selectedVariant,
+  });
+
+  factory Variant.fromJson(MapEntry json) {
+    final options = List<VariantOption>.from((json.value as Map).entries.map(
+        (e) => VariantOption(name: e.key.toString(), price: e.value as int)));
+    return Variant(
+        variantTitle: json.key,
+        variantOptions: options,
+        selectedVariant: options.first);
+  }
+
+  copyWith(VariantOption selectedVariant) {
+    return Variant(
+        variantTitle: variantTitle,
+        variantOptions: variantOptions,
+        selectedVariant: selectedVariant);
+  }
+}
+
+class VariantOption {
+  final String name;
+  final int price;
+
+  VariantOption({required this.name, required this.price});
 }

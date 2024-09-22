@@ -6,6 +6,7 @@ import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/order.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/order_details_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/delivery_status.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/rounded_shoppingbag.dart';
 import 'package:mafatlal_ecommerce/helper/utils.dart';
@@ -73,49 +74,62 @@ class _OrdersHistoryState extends State<OrdersHistory> {
                       padding: EdgeInsets.symmetric(vertical: 15),
                       itemBuilder: (context, index) {
                         final order = orders[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            children: [
-                              const RoundedShoppingBag(),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "ORD${order.orderId} . ₹${order.price}",
-                                    style: AppTextStyle.f16OutfitBlackW500,
-                                  ),
-                                  Text(
-                                    "Placed on ${Utils.formatDateTime(order.createdOn)}",
-                                    style: AppTextStyle.f10outfitGreyW500,
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              DeliveryStatus(status: order.orderStatus),
-                              const Spacer(),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: AppColors.kGrey),
-                                    color: AppColors.kWhite,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Text(
-                                    'View Details',
-                                    style: AppTextStyle.f14OutfitGreyW500,
-                                  ),
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                                OrderDetailsScreen.route,
+                                arguments: order.orderId);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const RoundedShoppingBag(),
+                                SizedBox(
+                                  width: 20,
                                 ),
-                              )
-                            ],
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "ORD${order.orderId} . ₹${order.price}",
+                                      style: AppTextStyle.f16OutfitBlackW500,
+                                    ),
+                                    Text(
+                                      "Placed on ${Utils.formatDateTime(order.createdOn)}",
+                                      style: AppTextStyle.f10outfitGreyW500,
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                DeliveryStatus(status: order.orderStatus),
+                                const Spacer(),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                        OrderDetailsScreen.route,
+                                        arguments: order.orderId);
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: AppColors.kGrey),
+                                      color: AppColors.kWhite,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Text(
+                                      'View Details',
+                                      style: AppTextStyle.f14OutfitGreyW500,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         );
                       },

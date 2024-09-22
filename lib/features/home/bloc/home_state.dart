@@ -1,3 +1,4 @@
+import 'package:mafatlal_ecommerce/features/admin_orders/model/order_detail.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/order.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
@@ -51,6 +52,10 @@ class UpdateDistrictState extends HomeState {
 
 class UpdateAddressState extends HomeState {}
 
+class AddressLoadingState extends HomeState {}
+
+class AddressFailedState extends HomeState {}
+
 class PlaceOrderLoadingState extends HomeState {}
 
 class PlaceOrderSuccessState extends HomeState {}
@@ -99,3 +104,65 @@ class UpdateHomeWidgetState extends HomeState {
 }
 
 class ShowHomeWidget extends HomeState {}
+
+class UpdateProductVariantState extends HomeState {
+  final int id;
+  final VariantOption selectedVariant;
+
+  UpdateProductVariantState({required this.id, required this.selectedVariant});
+}
+
+class UpdateProductVariantLoadingState extends HomeState {
+  final int id;
+  final VariantOption selectedVariant;
+
+  UpdateProductVariantLoadingState(
+      {required this.id, required this.selectedVariant});
+}
+
+class SaveAddressLoadingState extends HomeState {}
+
+class SaveAddressFailedState extends HomeState {
+  final String message;
+
+  SaveAddressFailedState(this.message);
+}
+
+class SearchInitialState extends HomeState {}
+
+class SearchLoadingState extends HomeState {}
+
+class SearchSuccessState extends HomeState {
+  final List<Category> organisations;
+
+  SearchSuccessState({required this.organisations});
+}
+
+class SearchFailedState extends HomeState {
+  final String message;
+
+  SearchFailedState({required this.message});
+}
+
+class FetchOrderDetailsLoadingState extends HomeState {}
+
+class FetchOrderDetailsSuccessState extends HomeState {
+  final OrderDetailModel orderDetails;
+
+  FetchOrderDetailsSuccessState({required this.orderDetails});
+}
+
+class FetchOrderDetailsFailedState extends HomeState {}
+
+class FetchProductDetailsLoadingState extends HomeState {}
+
+class FetchProductDetailsSuccessState extends HomeState {
+  final Product product;
+
+  FetchProductDetailsSuccessState({required this.product});
+}
+
+class FetchProductDetailsFailedState extends HomeState {
+  final String message;
+  FetchProductDetailsFailedState({required this.message});
+}

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,16 +6,19 @@ import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/splash_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/helper/shared_preference_helper.dart';
 import 'package:mafatlal_ecommerce/routes/app_routes.dart';
 
 void main() async {
   CubitsInjector();
   WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    await SharedPreferencesHelper.instance.init();
 
-  CartHelper.init();
-  await SharedPreferencesHelper.instance.init();
-  CubitsInjector.authCubit.getCurrentUser();
+    await CartHelper.init();
+    CubitsInjector.authCubit.getCurrentUser();
+  }
   runApp(const MyApp());
 }
 
@@ -37,7 +41,7 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),
           debugShowCheckedModeBanner: false,
-          initialRoute: SplashScreen.route,
+          initialRoute: kIsWeb ? HomeScreen.route : SplashScreen.route,
           onGenerateRoute: GenerateRoute.onGenerateRoute,
         ));
   }

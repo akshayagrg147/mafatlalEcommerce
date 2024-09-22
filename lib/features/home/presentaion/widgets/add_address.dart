@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
 import 'package:mafatlal_ecommerce/components/custom_dropdown.dart';
 import 'package:mafatlal_ecommerce/components/custom_textfield.dart';
+import 'package:mafatlal_ecommerce/components/loading_animation.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/state_district.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
@@ -14,9 +15,10 @@ import 'package:mafatlal_ecommerce/features/home/model/address.dart';
 
 class AddEditAddress extends StatefulWidget {
   final Address? address;
-  const AddEditAddress({super.key, this.address});
+  final bool isShipping;
+  const AddEditAddress({super.key, this.address, required this.isShipping});
 
-  static void show(context, {Address? address}) {
+  static void show(context, {Address? address, required bool isShipping}) {
     final size = MediaQuery.of(context).size;
     if (size.width > 800) {
       showDialog(
@@ -36,6 +38,7 @@ class AddEditAddress extends StatefulWidget {
                   ),
                   child: AddEditAddress(
                     address: address,
+                    isShipping: isShipping,
                   ),
                 ),
               ),
@@ -51,9 +54,7 @@ class AddEditAddress extends StatefulWidget {
             ),
           ),
           builder: (context) {
-            return AddEditAddress(
-              address: address,
-            );
+            return AddEditAddress(address: address, isShipping: isShipping);
           });
     }
   }
@@ -64,6 +65,8 @@ class AddEditAddress extends StatefulWidget {
 
 class _AddEditAddressState extends State<AddEditAddress> {
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _addressController2 = TextEditingController();
+  final TextEditingController _landmarkController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _pinCodeController = TextEditingController();
   String? selectedDistrict;
@@ -75,6 +78,7 @@ class _AddEditAddressState extends State<AddEditAddress> {
       _addressController.text = widget.address!.address;
       _cityController.text = widget.address!.city;
       _pinCodeController.text = widget.address!.pincode;
+      _landmarkController.text = widget.address!.landmark;
       selectedState = widget.address!.state;
       selectedDistrict = widget.address!.district;
     }
@@ -96,7 +100,9 @@ class _AddEditAddressState extends State<AddEditAddress> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox.shrink(),
+                const SizedBox(
+                  width: 30,
+                ),
                 Text(
                   "${widget.address != null ? "Update" : "Add"} Address",
                   style: AppTextStyle.f16BlackW400,
@@ -124,6 +130,23 @@ class _AddEditAddressState extends State<AddEditAddress> {
                 }
                 return null;
               },
+            ),
+            SizedBox(
+              height: 12,
+            ),
+            CustomTextField(
+              hint: "Street Address 2",
+              textEditingController: _addressController2,
+              validation: (value) {
+                return null;
+              },
+            ),
+            SizedBox(
+              height: 12,
+            ),
+            CustomTextField(
+              hint: "Landmark",
+              textEditingController: _landmarkController,
             ),
             SizedBox(
               height: 12,
@@ -231,23 +254,42 @@ class _AddEditAddressState extends State<AddEditAddress> {
             SizedBox(
               height: 20,
             ),
-            CustomElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState?.validate() == true) {
-                  final address = Address(
-                      address: _addressController.text,
-                      state: selectedState!,
-                      pincode: _pinCodeController.text,
-                      district: selectedDistrict!,
-                      city: _cityController.text);
-                  CubitsInjector.homeCubit.updateAddress(address);
+            BlocConsumer<HomeCubit, HomeState>(
+              listener: (context, state) {
+                if (state is UpdateAddressState) {
                   Navigator.pop(context);
                 }
               },
-              lable: "Save Address",
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              backgroundColor: AppColors.kRed,
-              textStyle: AppTextStyle.f16WhiteW600,
+              buildWhen: (previous, current) =>
+                  current is SaveAddressLoadingState ||
+                  current is UpdateAddressState ||
+                  current is SaveAddressFailedState,
+              builder: (context, state) {
+                if (state is SaveAddressLoadingState) {
+                  return const LoadingAnimation();
+                }
+                return CustomElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState?.validate() == true) {
+                      final address = Address(
+                          address: _addressController.text,
+                          address2: _addressController2.text,
+                          state: selectedState!,
+                          pincode: _pinCodeController.text,
+                          district: selectedDistrict!,
+                          city: _cityController.text,
+                          landmark: _landmarkController.text);
+                      CubitsInjector.homeCubit.saveAddress(address,
+                          isUpdate: widget.address != null,
+                          isShipping: widget.isShipping);
+                    }
+                  },
+                  label: "Save Address",
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  backgroundColor: AppColors.kRed,
+                  textStyle: AppTextStyle.f16WhiteW600,
+                );
+              },
             )
           ],
         ),

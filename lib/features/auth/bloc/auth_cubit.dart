@@ -29,6 +29,20 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  void fetchCurrentUser() async {
+    try {
+      emit(FetchCurrentUserLoadingState());
+      final response = await AuthRepo.fetchCurrentUser(userId: currentUser!.id);
+      _currentUser = response.data!;
+      SharedPreferencesHelper.instance.setCurrentUser(response.data!);
+      emit(FetchCurrentUserSuccessState());
+    } on DioException catch (e) {
+      emit(FetchCurrentUserFailedState());
+    } catch (e) {
+      emit(FetchCurrentUserFailedState());
+    }
+  }
+
   void updateState(String state) {
     final districtList = StateDistricts.getDistrictList(state);
     emit(GetDistrictListState(districtList));
@@ -65,14 +79,20 @@ class AuthCubit extends Cubit<AuthState> {
       required String pwd,
       required String name,
       required String state,
-      required String district}) async {
+      required String district,
+      required String gstNo}) async {
     try {
       if (state is RegisterUserLoadingState) {
         return;
       }
       emit(RegisterUserLoadingState());
       final response = await AuthRepo.registerUser(
-          email: email, pwd: pwd, name: name, state: state, district: district);
+          email: email,
+          pwd: pwd,
+          name: name,
+          state: state,
+          district: district,
+          gstNo: gstNo);
       if (response.data != null) {
         _currentUser = response.data;
         SharedPreferencesHelper.instance.setCurrentUser(response.data!);
@@ -93,5 +113,6 @@ class AuthCubit extends Cubit<AuthState> {
     CartHelper.clear();
     _currentUser = null;
     CubitsInjector.homeCubit.clear();
+    emit(LogoutState());
   }
 }

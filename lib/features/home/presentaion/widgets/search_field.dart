@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
+import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 
 class SearchInput extends StatelessWidget {
   final TextEditingController textController;
@@ -11,6 +12,9 @@ class SearchInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onSubmitted: (value) {
+        CubitsInjector.homeCubit.searchOrganisation(value);
+      },
       controller: textController,
       onChanged: (value) {
         //Do something wi

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
+import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
+import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 
 class AddToCartWidget extends StatelessWidget {
   final int quantity;
   final int productId;
-  final String? productSize;
+  final Variant? variant;
+  final bool isCart;
   const AddToCartWidget({
     super.key,
     required this.quantity,
     required this.productId,
-    required this.productSize,
+    this.variant,
+    this.isCart = false,
   });
 
   @override
@@ -19,7 +23,7 @@ class AddToCartWidget extends StatelessWidget {
     if (quantity == 0) {
       return GestureDetector(
         onTap: () {
-          CartHelper.addProduct(productId, productSize, 1);
+          CartHelper.addProduct(productId, 1, variant: variant);
         },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
@@ -54,9 +58,14 @@ class AddToCartWidget extends StatelessWidget {
             ),
             onTap: () {
               if (quantity <= 1) {
-                CartHelper.removeProduct(productId);
+                CartHelper.removeProduct(productId, variant: variant);
+                if (isCart) {
+                  CubitsInjector.homeCubit
+                      .updateCartProductList(productId, variant: variant);
+                }
               } else {
-                CartHelper.updateProduct(productId, productSize, quantity - 1);
+                CartHelper.updateProduct(productId, quantity - 1,
+                    variant: variant);
               }
             },
           ),
@@ -73,7 +82,8 @@ class AddToCartWidget extends StatelessWidget {
               ),
             ),
             onTap: () {
-              CartHelper.updateProduct(productId, productSize, quantity + 1);
+              CartHelper.updateProduct(productId, quantity + 1,
+                  variant: variant);
             },
           ),
         ],

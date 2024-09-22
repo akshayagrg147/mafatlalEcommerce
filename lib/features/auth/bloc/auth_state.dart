@@ -4,6 +4,12 @@ class AuthInitialState extends AuthState {}
 
 class GetCurrentUserSuccessState extends AuthState {}
 
+class FetchCurrentUserSuccessState extends AuthState {}
+
+class FetchCurrentUserLoadingState extends AuthState {}
+
+class FetchCurrentUserFailedState extends AuthState {}
+
 class GetCurrentUserFailedState extends AuthState {}
 
 class LoginLoadingState extends AuthState {}
@@ -37,3 +43,5 @@ class UpdateDistrictState extends AuthState {
 
   UpdateDistrictState(this.district);
 }
+
+class LogoutState extends AuthState {}
