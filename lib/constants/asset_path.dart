@@ -2,7 +2,9 @@ class AssetPath {
   static const String successAnim = "assets/order_success.json";
   static const String logo = "assets/mafatlal_logo.png";
   static const String shoppingBag = "assets/shopping_bag.png";
-  static const String banner = "assets/banner.jpeg";
+  static const String banner1 = "assets/banner.jpeg";
+  static const String banner2= "assets/banner2.jpg";
+  static const String banner3 = "assets/banner3.jpg";
   static const String logo1 = "assets/Mafatlallogo.png";
   //shopping cart svg
   static const String icCartSvg =

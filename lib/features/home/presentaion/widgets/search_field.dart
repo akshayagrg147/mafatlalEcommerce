@@ -28,7 +28,7 @@ class SearchInput extends StatelessWidget {
         fillColor: AppColors.kWhite,
         hintText: hintText,
         hintStyle: const TextStyle(color: Colors.grey),
-        contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+        contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
         ),

@@ -3,19 +3,22 @@ import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 
 class HomeBanner extends StatelessWidget {
-  const HomeBanner({super.key});
+  final String imagePath;
+
+  const HomeBanner({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      clipBehavior: Clip.hardEdge,
       width: double.maxFinite,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-          border: Border.all(color: AppColors.kGrey200),
-          image: const DecorationImage(
-              image: AssetImage(AssetPath.banner), fit: BoxFit.fill)),
+        color: Colors.white,
+        border: Border.all(color: AppColors.kGrey200),
+        image: DecorationImage(
+          image: AssetImage(imagePath), // Use the passed image path
+          fit: BoxFit.fill,
+        ),
+      ),
     );
   }
 }

@@ -189,7 +189,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///home/ankit/Downloads/flutter_linux_3.24.2-stable/flutter/packages/flutter",
+      "rootUri": "file:///home/ankit/fvm/versions/3.16.9/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -231,13 +231,13 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///home/ankit/Downloads/flutter_linux_3.24.2-stable/flutter/packages/flutter_test",
+      "rootUri": "file:///home/ankit/fvm/versions/3.16.9/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///home/ankit/Downloads/flutter_linux_3.24.2-stable/flutter/packages/flutter_web_plugins",
+      "rootUri": "file:///home/ankit/fvm/versions/3.16.9/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -561,7 +561,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///home/ankit/Downloads/flutter_linux_3.24.2-stable/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///home/ankit/fvm/versions/3.16.9/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -686,7 +686,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-09-22T12:06:12.155301Z",
+  "generated": "2024-09-23T20:14:41.481239Z",
   "generator": "pub",
   "generatorVersion": "3.2.6"
 }

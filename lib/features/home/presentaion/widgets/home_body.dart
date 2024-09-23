@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
 import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
+import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
@@ -32,6 +33,11 @@ class HomeBody extends StatelessWidget {
   }
 
   Widget body(BuildContext context, [bool isWeb = false]) {
+    final List<String> bannerImages = [
+      AssetPath.banner1,
+      AssetPath.banner2,
+      AssetPath.banner3,
+    ];
     return BlocBuilder<HomeCubit, HomeState>(
       buildWhen: (previous, current) =>
           current is FetchStoreDataLoadingState ||
@@ -42,12 +48,77 @@ class HomeBody extends StatelessWidget {
           return const LoadingAnimation();
         }
         if (CubitsInjector.homeCubit.storeData == null) {
-          return const Center(
-            child: Text(
-              "No Data",
-              style: AppTextStyle.f20GreyW600,
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CarouselSlider(
+                  items: bannerImages
+                      .map((imagePath) => HomeBanner(imagePath: imagePath))
+                      .toList(),
+                  options: CarouselOptions(
+                    viewportFraction: 1,
+                    height:
+                        ResponsiveWidget.isSmallScreen(context) ? 200 : 400.0,
+                    autoPlay: true,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // SizedBox(
+                //   height: 150,
+                //   child: ListView.separated(
+                //     scrollDirection: Axis.horizontal,
+                //     itemCount:
+                //     CubitsInjector.homeCubit.storeData!.categories.length,
+                //     separatorBuilder: (context, index) =>
+                //     const SizedBox(width: 25),
+                //     itemBuilder: (context, index) {
+                //       return CategoryWidget(
+                //         category:
+                //         CubitsInjector.homeCubit.storeData!.categories[index],
+                //       );
+                //     },
+                //   ),
+                // ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Trending Items",
+                  style: AppTextStyle.f22BlackW600,
+                ),
+                const SizedBox(height: 20),
+                // GridView.count(
+                //   shrinkWrap: true,
+                //   physics: const NeverScrollableScrollPhysics(),
+                //   crossAxisCount: ResponsiveWidget.getGridCount(context),
+                //   childAspectRatio: 0.7,
+                //   mainAxisSpacing: 18,
+                //   crossAxisSpacing: 18,
+                //   children: List.generate(
+                //     CubitsInjector.homeCubit.storeData!.products.length,
+                //         (index) {
+                //       return ProductGridTile(
+                //         product:
+                //         CubitsInjector.homeCubit.storeData!.products[index],
+                //       );
+                //     },
+                //   ),
+                // ),
+                const SizedBox(height: 40),
+                // Add space before footer
+                Footer(),
+                // Add your footer widget here
+              ],
             ),
           );
+
+          //   const Center(
+          //   child: Text(
+          //     "No Data",
+          //     style: AppTextStyle.f20GreyW600,
+          //   ),
+          // );
         }
         return SingleChildScrollView(
           child: Column(
@@ -57,12 +128,14 @@ class HomeBody extends StatelessWidget {
             children: [
               const SizedBox(height: 40),
               CarouselSlider(
-                items: [0, 1, 2, 3].map((e) => HomeBanner()).toList(),
+                items: bannerImages
+                    .map((imagePath) => HomeBanner(imagePath: imagePath))
+                    .toList(),
                 options: CarouselOptions(
-                    viewportFraction: 1,
-                    height:
-                        ResponsiveWidget.isSmallScreen(context) ? 200 : 400.0,
-                    autoPlay: true),
+                  viewportFraction: 1,
+                  height: ResponsiveWidget.isSmallScreen(context) ? 200 : 400.0,
+                  autoPlay: true,
+                ),
               ),
               const SizedBox(height: 20),
               SizedBox(

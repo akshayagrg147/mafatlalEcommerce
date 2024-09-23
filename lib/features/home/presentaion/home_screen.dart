@@ -51,27 +51,22 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget largeScreen() {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
+        preferredSize: Size.fromHeight(150),
         child: const Header(),
       ),
-      body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: SizedBox(
-              width: 1280,
-              child: Navigator(
-                key: CubitsInjector.homeCubit.homeNavigatorKey,
-                initialRoute: "/",
-                onGenerateRoute: (settings) {
-                  if (settings.name == "/") {
-                    return MaterialPageRoute(
-                        builder: (_) => const HomeBody(isWeb: true));
-                  }
-                },
-              ),
-            ),
-          )),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Navigator(
+          key: CubitsInjector.homeCubit.homeNavigatorKey,
+          initialRoute: "/",
+          onGenerateRoute: (settings) {
+            if (settings.name == "/") {
+              return MaterialPageRoute(
+                  builder: (_) => const HomeBody(isWeb: true));
+            }
+          },
+        ),
+      ),
     );
   }
 
