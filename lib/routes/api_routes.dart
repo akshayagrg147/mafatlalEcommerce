@@ -1,7 +1,7 @@
 class ApiRoutes {
-  static const String baseUrl =
-      "http://ec2-3-108-18-16.ap-south-1.compute.amazonaws.com:8010";
-  // static const String baseUrl = "https://eapi.vridhee.com";
+  // static const String baseUrl =
+  //     "http://ec2-3-108-18-16.ap-south-1.compute.amazonaws.com/";
+  static const String baseUrl = "https://eapi.vridhee.com";
 
   //auth
   static const String registerUser = "$baseUrl/user_register/";

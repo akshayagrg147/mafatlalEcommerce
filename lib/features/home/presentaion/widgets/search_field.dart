@@ -20,7 +20,7 @@ class SearchInput extends StatelessWidget {
         //Do something wi
       },
       decoration: InputDecoration(
-        prefixIcon: Icon(
+        suffixIcon: Icon(
           Icons.search,
           color: AppColors.kRed,
         ),
@@ -34,11 +34,11 @@ class SearchInput extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.kGrey200, width: 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderRadius: BorderRadius.all(Radius.circular(50.0)),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.kRed, width: 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderRadius: BorderRadius.all(Radius.circular(50.0)),
         ),
       ),
     );
