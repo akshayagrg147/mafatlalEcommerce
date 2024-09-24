@@ -22,11 +22,13 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitialState());
 
   CategoriesAndProducts? _storeData;
+
   CategoriesAndProducts? get storeData => _storeData;
 
   bool isCategoryScreenShown = false;
   final List<Product> cartProducts = [];
   final searchController = TextEditingController();
+
   // Timer? _timer;
 
   bool isSearchScreenShown = false;
@@ -88,6 +90,20 @@ class HomeCubit extends Cubit<HomeState> {
     emit(GetSubCategoryLoadingState());
   }
 
+  void UpdateSubCategory(
+      List<SubCategory_new> subCategories, String selectedCategoryName) {
+    emit(UpdateLabelSuccessState(selectedCategoryName: selectedCategoryName));
+    emit(UpdateSubCategorySuccessState(subcategoy: subCategories));
+  }
+
+  Future<void> UpdateproductAccordingtoCategory(int subid) async {
+    emit(UpdateProductUsingSubCategoryLoadingState());
+    final response = await HomeRepo.getProductsBySubCatId(subid);
+    print(response);
+    emit(UpdateProductUsingSubCategorySuccessState(
+        products: response.data!, subCategoryId: subid));
+  }
+
   void updateState(String state) {
     final districtList = StateDistricts.getDistrictList(state);
     emit(GetDistrictListState(districtList));
@@ -120,7 +136,6 @@ class HomeCubit extends Cubit<HomeState> {
       final response =
           await HomeRepo.getStoreData(CubitsInjector.authCubit.currentUser?.id);
       if (response.data != null) {
-        print(response.data!.data!.categories..first.id);
         _storeData = response.data;
         emit(FetchStoreDataSuccessState());
       } else {
@@ -232,9 +247,12 @@ class HomeCubit extends Cubit<HomeState> {
       final response = await HomeRepo.fetchProductDetails(productId);
       emit(FetchProductDetailsSuccessState(product: response.data!));
     } on DioException catch (e) {
+      print(e);
+
       emit(FetchProductDetailsFailedState(
           message: e.message ?? AppStrings.somethingWentWrong));
     } catch (e) {
+      print(e);
       emit(FetchProductDetailsFailedState(
           message: AppStrings.somethingWentWrong));
     }

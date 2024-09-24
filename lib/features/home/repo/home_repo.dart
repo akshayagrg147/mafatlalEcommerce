@@ -29,12 +29,13 @@ class HomeRepo {
             List<Product_new>.from(data.map((e) => Product_new.fromJson(e))));
   }
 
-  static Future<ApiResponse<Product>> fetchProductDetails(int productId) async {
+  static Future<ApiResponse<Product_new>> fetchProductDetails(
+      int productId) async {
     final response = await DioUtil()
         .getInstance()
         ?.get(ApiRoutes.getProductInfo, queryParameters: {'id': productId});
-    return ApiResponse<Product>.fromJson(
-        response?.data, (data) => Product.fromJson(data));
+    return ApiResponse<Product_new>.fromJson(
+        response?.data, (data) => Product_new.fromJson(data));
   }
 
   static Future<ApiResponse<List<Product>>> getCartProducts(

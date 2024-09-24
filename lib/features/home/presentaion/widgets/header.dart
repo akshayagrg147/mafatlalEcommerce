@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:mafatlal_ecommerce/components/custom_btn.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
+import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
+import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
+import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/search_field.dart';
 
-class Header extends StatelessWidget {
+class Header extends StatefulWidget {
   const Header({Key? key}) : super(key: key);
+
+  @override
+  State<Header> createState() => _HeaderState();
+}
+
+class _HeaderState extends State<Header> {
+  late HomeCubit homeCubit;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    homeCubit = BlocProvider.of<HomeCubit>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +73,7 @@ class Header extends StatelessWidget {
                   runSpacing: 12,
                   children: [
                     // if (CubitsInjector.authCubit.currentUser != null)
-                      ...headerItems(constraints),
+                    ...headerItems(constraints),
                     // else
                     //   CustomElevatedButton(
                     //     width: 150,
@@ -81,23 +98,28 @@ class Header extends StatelessWidget {
 
   List<Widget> headerItems(BoxConstraints constraints) {
     return [
-      _textWithDownArrow('Home'),
-      _textWithDownArrow('Uniforms'),
-      _textWithDownArrow('General Items'),
-      _textWithDownArrow('Wish list'),
-      UserButton(),
+      _textWithDownArrow('Uniform'),
+      if (CubitsInjector.authCubit.currentUser == null)
+        SizedBox.shrink()
+      else
+        UserButton(),
     ];
   }
 
   Widget CartIcons() {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        child: const Icon(
-          Icons.shopping_cart,
-          size: 24,
-          color: AppColors.kGrey,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, CartScreen.route);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          child: const Icon(
+            Icons.shopping_cart,
+            size: 24,
+            color: AppColors.kGrey,
+          ),
         ),
       ),
     );
@@ -106,19 +128,63 @@ class Header extends StatelessWidget {
   Widget _textWithDownArrow(String label) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: AppTextStyle.f12OutfitBlackW500,
-          ),
-          const Icon(
-            Icons.arrow_drop_down,
-            color: Colors.black,
-            size: 24,
-          ),
-        ],
+      child: PopupMenuButton<String>(
+        onSelected: (selectedCategoryName) {
+          print(selectedCategoryName);
+          var category =
+              CubitsInjector.homeCubit.storeData!.categories.firstWhere(
+            (cat) => cat.name == selectedCategoryName,
+            orElse: () =>
+                Category_new(id: 0, name: "", img: "", subCategories: []),
+          );
+          homeCubit.UpdateSubCategory(
+              category.subCategories, selectedCategoryName);
+        },
+        itemBuilder: (BuildContext context) {
+          var categories = CubitsInjector.homeCubit.storeData!.categories;
+
+          return categories.map((category) {
+            return PopupMenuItem<String>(
+              value: category.name, // Assuming category has a 'name' field
+              child: Text(category.name),
+            );
+          }).toList();
+        },
+        child: BlocBuilder<HomeCubit, HomeState>(
+          buildWhen: (previous, current) => current is UpdateLabelSuccessState,
+          builder: (context, state) {
+            if (state is UpdateLabelSuccessState) {
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    state.selectedCategoryName,
+                    style: AppTextStyle.f12OutfitBlackW500,
+                  ),
+                  const Icon(
+                    Icons.arrow_drop_down,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                ],
+              );
+            }
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  label,
+                  style: AppTextStyle.f12OutfitBlackW500,
+                ),
+                const Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.black,
+                  size: 24,
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -161,11 +227,13 @@ class Header extends StatelessWidget {
           color: AppColors.kblue,
           borderRadius: BorderRadius.circular(50),
         ),
-        child: const Row(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Ankit',
+              CubitsInjector.authCubit.currentUser == null
+                  ? 'demo'
+                  : CubitsInjector.authCubit.currentUser!.fullName.toString(),
               style: AppTextStyle.f12WhiteW500,
             ),
             Icon(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_cubit.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_state.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
@@ -50,9 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget largeScreen() {
     return Scaffold(
-      appBar: PreferredSize(
+      appBar: const PreferredSize(
         preferredSize: Size.fromHeight(150),
-        child: const Header(),
+        child: Header(),
       ),
       body: Align(
         alignment: Alignment.topCenter,

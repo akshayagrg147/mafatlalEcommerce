@@ -165,7 +165,7 @@ class FetchOrderDetailsFailedState extends HomeState {}
 class FetchProductDetailsLoadingState extends HomeState {}
 
 class FetchProductDetailsSuccessState extends HomeState {
-  final Product product;
+  final Product_new product;
 
   FetchProductDetailsSuccessState({required this.product});
 }
@@ -174,4 +174,32 @@ class FetchProductDetailsFailedState extends HomeState {
   final String message;
 
   FetchProductDetailsFailedState({required this.message});
+}
+
+class UpdateSubCategoryLoadingState extends HomeState {}
+
+class UpdateSubCategorySuccessState extends HomeState {
+  final List<SubCategory_new> subcategoy;
+
+  UpdateSubCategorySuccessState({required this.subcategoy});
+}
+
+class UpdateSubCategoryFailedState extends HomeState {}
+
+class UpdateProductUsingSubCategorySuccessState extends HomeState {
+  final List<Product_new> products;
+  final int subCategoryId;
+
+  UpdateProductUsingSubCategorySuccessState(
+      {required this.products, required this.subCategoryId});
+}
+
+class UpdateProductUsingSubCategoryLoadingState extends HomeState {}
+
+class UpdateProductUsingSubCategoryFailedState extends HomeState {}
+
+class UpdateLabelSuccessState extends HomeState {
+  final String selectedCategoryName;
+
+  UpdateLabelSuccessState({required this.selectedCategoryName});
 }

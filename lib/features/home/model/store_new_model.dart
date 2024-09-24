@@ -114,24 +114,39 @@ class Product_new {
   });
 
   factory Product_new.fromJson(Map<String, dynamic> json) {
+    // Use the conversion method for both IDs
     final id = json['product_id'] ?? json['id'];
-    final variants = (json['size_available'] as Map);
-    Variant? variant;
-    if (variants.isNotEmpty) {
-      variant = Variant.fromJson(variants.entries.first);
-    }
+    final selectedCategoryId = json['Selected_category_id'] ?? 0;
 
-    final quantity = CartHelper.getProductQuantity(id, variant: variant);
     return Product_new(
-      productId: id,
-      selectedCategoryId: json['Selected_category_id'] as int? ?? 0,
+      productId: _convertToInt(id),
+      selectedCategoryId: _convertToInt(selectedCategoryId),
       productName: json['product_name']?.toString() ?? '',
       productCategory: json['product_category']?.toString() ?? '',
-      variant: variant,
+      variant: _parseVariant(json['size_available']),
       productImage: _parseProductImage(json['product_image']),
       price: json['price']?.toString() ?? '',
-      quantity: quantity,
+      quantity: CartHelper.getProductQuantity(id),
     );
+  }
+
+  static int _convertToInt(dynamic value) {
+    if (value is int) {
+      return value; // Already an int
+    } else if (value is String) {
+      // Attempt to parse the string to an int
+      final parsedValue = int.tryParse(value);
+      return parsedValue ?? 0; // Return 0 if parsing fails
+    }
+    return 0; // Default case for unexpected types
+  }
+
+  static Variant? _parseVariant(dynamic sizeAvailable) {
+    if (sizeAvailable is Map) {
+      return Variant.fromJson(
+          sizeAvailable.entries.first); // Adjust based on your Variant model
+    }
+    return null;
   }
 
   static List<String> _parseProductImage(dynamic productImage) {
@@ -139,5 +154,26 @@ class Product_new {
       return List<String>.from(productImage.values.map((e) => e.toString()));
     }
     return [];
+  }
+}
+
+// Example of RelatedProduct to ensure proper conversion
+class RelatedProduct {
+  final int id;
+  final String name;
+  final String productCategory;
+
+  RelatedProduct({
+    required this.id,
+    required this.name,
+    required this.productCategory,
+  });
+
+  factory RelatedProduct.fromJson(Map<String, dynamic> json) {
+    return RelatedProduct(
+      id: Product_new._convertToInt(json['id']),
+      name: json['name']?.toString() ?? '',
+      productCategory: json['product_category']?.toString() ?? '',
+    );
   }
 }
