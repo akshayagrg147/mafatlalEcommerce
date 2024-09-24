@@ -13,6 +13,7 @@ import 'package:mafatlal_ecommerce/features/home/model/address.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_model.dart';
+import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/search_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/repo/home_repo.dart';
 import 'package:mafatlal_ecommerce/helper/enums.dart';
@@ -21,8 +22,8 @@ import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitialState());
 
-  Store? _storeData;
-  Store? get storeData => _storeData;
+  CategoriesAndProducts? _storeData;
+  CategoriesAndProducts? get storeData => _storeData;
 
   bool isCategoryScreenShown = false;
   final List<Product> cartProducts = [];
@@ -83,7 +84,10 @@ class HomeCubit extends Cubit<HomeState> {
       emit(SearchFailedState(message: AppStrings.somethingWentWrong));
     }
   }
+ void getsubcategory(){
+    emit(GetSubCategoryLoadingState());
 
+ }
   void updateState(String state) {
     final districtList = StateDistricts.getDistrictList(state);
     emit(GetDistrictListState(districtList));
@@ -125,6 +129,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(FetchStoreDataFailedState(
           e.response?.statusMessage ?? AppStrings.somethingWentWrong));
     } catch (e) {
+      print(e);
       emit(FetchStoreDataFailedState(AppStrings.somethingWentWrong));
     }
   }

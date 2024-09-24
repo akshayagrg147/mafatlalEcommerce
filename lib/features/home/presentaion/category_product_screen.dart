@@ -4,12 +4,14 @@ import 'package:mafatlal_ecommerce/components/vertical_tabbar.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
+import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/subcat_products_view.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/subcategory_grid_tile.dart';
 
 class CategoryProductScreen extends StatelessWidget {
   static const String route = "/categoryProductScreen";
-  final Category category;
+  final Category_new category;
+
   const CategoryProductScreen({super.key, required this.category});
 
   @override

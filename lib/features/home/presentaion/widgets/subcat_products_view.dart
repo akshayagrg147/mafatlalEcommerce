@@ -7,11 +7,12 @@ import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
+import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/subcategory_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/product_grid_tile.dart';
 
 class SubCategoryProductTab extends StatelessWidget {
-  final SubCategory subCategory;
+  final SubCategory_new subCategory;
 
   const SubCategoryProductTab({super.key, required this.subCategory});
 

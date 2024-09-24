@@ -5,6 +5,7 @@ import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/sign_up_screen.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/splash_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
+import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/category_product_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
@@ -47,7 +48,7 @@ class GenerateRoute {
         return MaterialPageRoute(
             settings: settings,
             builder: (_) => CategoryProductScreen(
-                  category: settings.arguments as Category,
+                  category: settings.arguments as Category_new,
                 ));
       case CartScreen.route:
         return TransparentRouteBuilder(

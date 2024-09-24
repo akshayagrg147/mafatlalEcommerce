@@ -2,6 +2,7 @@ import 'package:mafatlal_ecommerce/features/admin_orders/model/order_detail.dart
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/order.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
+import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 
 abstract class HomeState {}
 
@@ -24,7 +25,7 @@ class FetchSubcategoryProductsLoadingState extends HomeState {
 }
 
 class FetchSubcategoryProductsSuccessState extends HomeState {
-  final List<Product> products;
+  final List<Product_new> products;
   final int subCategoryId;
 
   FetchSubcategoryProductsSuccessState(this.subCategoryId,
@@ -34,6 +35,7 @@ class FetchSubcategoryProductsSuccessState extends HomeState {
 class FetchSubcategoryProductsFailedState extends HomeState {
   final String message;
   final int subCategoryId;
+
   FetchSubcategoryProductsFailedState(this.message,
       {required this.subCategoryId});
 }
@@ -128,12 +130,18 @@ class SaveAddressFailedState extends HomeState {
   SaveAddressFailedState(this.message);
 }
 
+class GetSubCategorySuccessState extends HomeState {}
+
+class GetSubCategoryFailedState extends HomeState {}
+
+class GetSubCategoryLoadingState extends HomeState {}
+
 class SearchInitialState extends HomeState {}
 
 class SearchLoadingState extends HomeState {}
 
 class SearchSuccessState extends HomeState {
-  final List<Category> organisations;
+  final List<Category_new> organisations;
 
   SearchSuccessState({required this.organisations});
 }
@@ -164,5 +172,6 @@ class FetchProductDetailsSuccessState extends HomeState {
 
 class FetchProductDetailsFailedState extends HomeState {
   final String message;
+
   FetchProductDetailsFailedState({required this.message});
 }

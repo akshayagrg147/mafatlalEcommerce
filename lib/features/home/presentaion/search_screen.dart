@@ -7,11 +7,13 @@ import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
+import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/category_item_widget.dart';
 
 class SearchScreen extends StatefulWidget {
   static const String route = "/searchScreen";
-  final List<Category>? categories;
+  final List<Category_new>? categories;
+
   const SearchScreen({super.key, this.categories});
 
   @override
@@ -19,7 +21,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final List<Category> categories = [];
+  final List<Category_new> categories = [];
 
   @override
   void dispose() {
@@ -97,9 +99,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   childAspectRatio: 0.7,
                   mainAxisSpacing: 18,
                   crossAxisSpacing: 18,
-                  children: List.generate(categories.length,
-                      // CubitsInjector.homeCubit.storeData!.products.length,
-                      (index) {
+                  children: List.generate(
+                      CubitsInjector.homeCubit.storeData!.data.categories
+                          .length, (index) {
                     return CategoryWidget(
                       category: categories[index],
                     );
