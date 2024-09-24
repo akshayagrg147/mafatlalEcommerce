@@ -3,7 +3,6 @@ import 'package:mafatlal_ecommerce/features/home/model/address.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/order.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
-import 'package:mafatlal_ecommerce/features/home/model/store_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/routes/api_routes.dart';
 import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';

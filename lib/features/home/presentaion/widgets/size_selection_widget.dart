@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
-import 'package:mafatlal_ecommerce/features/home/model/product.dart';
+import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 
 class SizeSelection extends StatefulWidget {
-  final Map<String, Map<String, int>> sizeAvailable; // Update to use sizeAvailable
-  final Function(String size) onSizeSelected; // Updated callback to accept a size
+  final Sizes sizeAvailable; // Update to use sizeAvailable
+  final Function(String size)
+      onSizeSelected; // Updated callback to accept a size
   const SizeSelection({
     super.key,
     required this.sizeAvailable,
@@ -23,20 +24,20 @@ class _SizeSelectionState extends State<SizeSelection> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 30,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          // Extract size options from sizeAvailable map
-          final sizeKey = widget.sizeAvailable.keys.elementAt(index);
-          return size(sizeKey, isSelected: selectedSize == sizeKey);
-        },
-        separatorBuilder: (context, index) {
-          return const SizedBox(
-            width: 7,
-          );
-        },
-        itemCount: widget.sizeAvailable.length,
-      ),
+      // child: ListView.separated(
+      //   scrollDirection: Axis.horizontal,
+      //   itemBuilder: (context, index) {
+      //     // Extract size options from sizeAvailable map
+      //     final sizeKey = widget.sizeAvailable.keys.elementAt(index);
+      //     return size(sizeKey, isSelected: selectedSize == sizeKey);
+      //   },
+      //   separatorBuilder: (context, index) {
+      //     return const SizedBox(
+      //       width: 7,
+      //     );
+      //   },
+      //   itemCount: widget.sizeAvailable.length,
+      // ),
     );
   }
 

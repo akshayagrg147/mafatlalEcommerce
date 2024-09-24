@@ -6,7 +6,6 @@ import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
-import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/category_item_widget.dart';
 
@@ -100,7 +99,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   mainAxisSpacing: 18,
                   crossAxisSpacing: 18,
                   children: List.generate(
-                      CubitsInjector.homeCubit.storeData!.data.categories
+                      CubitsInjector.homeCubit.storeData!.data!.categories
                           .length, (index) {
                     return CategoryWidget(
                       category: categories[index],
