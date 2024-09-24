@@ -1,19 +1,18 @@
-class CategoriesAndProducts {
-  final String status;
-  final Data data;
-  final String message;
+import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
+import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 
-  CategoriesAndProducts({
-    required this.status,
-    required this.data,
-    required this.message,
-  });
+class CategoriesAndProducts {
+  final List<Category_new> categories;
+  final List<Product_new> products;
+
+  CategoriesAndProducts({required this.categories, required this.products});
 
   factory CategoriesAndProducts.fromJson(Map<String, dynamic> json) {
     return CategoriesAndProducts(
-      status: json['status']?.toString() ?? '',
-      data: Data.fromJson(json['data'] as Map<String, dynamic>? ?? {}),
-      message: json['message']?.toString() ?? '',
+      categories: List<Category_new>.from(
+          json['categories']?.map((x) => Category_new.fromJson(x))),
+      products: List<Product_new>.from(
+          json['products']?.map((x) => Product_new.fromJson(x))),
     );
   }
 }
@@ -29,12 +28,11 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
-      categories: (json['categories'] as List<dynamic>? ?? [])
-          .map((x) => Category_new.fromJson(x as Map<String, dynamic>? ?? {}))
-          .toList(),
-      products: (json['products'] as List<dynamic>? ?? [])
-          .map((x) => Product_new.fromJson(x as Map<String, dynamic>? ?? {}))
-          .toList(),
+      categories:
+          json['categories']?.map((x) => Category_new.fromJson(x)).toList() ??
+              [],
+      products:
+          (json['products'])?.map((x) => Product_new.fromJson(x)).toList(),
     );
   }
 }
@@ -99,57 +97,46 @@ class Product_new {
   final int selectedCategoryId;
   final String productName;
   final String productCategory;
-  final Map<String, Map<String, int>> sizeAvailable;
-  final List<Map<String, String>> productImage;
+  final Variant? variant;
+  final List<String> productImage;
   final String price;
+  int quantity;
 
   Product_new({
     required this.productId,
     required this.selectedCategoryId,
     required this.productName,
     required this.productCategory,
-    required this.sizeAvailable,
+    required this.variant,
     required this.productImage,
     required this.price,
+    required this.quantity,
   });
 
   factory Product_new.fromJson(Map<String, dynamic> json) {
+    final id = json['product_id'] ?? json['id'];
+    final variants = (json['size_available'] as Map);
+    Variant? variant;
+    if (variants.isNotEmpty) {
+      variant = Variant.fromJson(variants.entries.first);
+    }
+
+    final quantity = CartHelper.getProductQuantity(id, variant: variant);
     return Product_new(
-      productId: json['product_id'] as int? ?? 0,
+      productId: id,
       selectedCategoryId: json['Selected_category_id'] as int? ?? 0,
       productName: json['product_name']?.toString() ?? '',
       productCategory: json['product_category']?.toString() ?? '',
-      sizeAvailable: _parseSizeAvailable(json['size_available']),
+      variant: variant,
       productImage: _parseProductImage(json['product_image']),
       price: json['price']?.toString() ?? '',
+      quantity: quantity,
     );
   }
 
-  static Map<String, Map<String, int>> _parseSizeAvailable(
-      dynamic sizeAvailable) {
-    if (sizeAvailable is Map) {
-      return sizeAvailable.map((key, value) {
-        if (value is Map) {
-          return MapEntry(
-              key,
-              Map<String, int>.from(
-                  value.map((k, v) => MapEntry(k, v as int? ?? 0))));
-        }
-        return MapEntry(key, <String, int>{});
-      });
-    }
-    return {};
-  }
-
-  static List<Map<String, String>> _parseProductImage(dynamic productImage) {
-    if (productImage is List) {
-      return productImage.map((item) {
-        if (item is Map) {
-          return Map<String, String>.from(
-              item.map((k, v) => MapEntry(k, v?.toString() ?? '')));
-        }
-        return <String, String>{};
-      }).toList();
+  static List<String> _parseProductImage(dynamic productImage) {
+    if (productImage is Map) {
+      return List<String>.from(productImage.values.map((e) => e.toString()));
     }
     return [];
   }

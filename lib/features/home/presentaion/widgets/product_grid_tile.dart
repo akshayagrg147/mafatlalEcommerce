@@ -1,14 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
-import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_to_cart_btn.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/size_selection_widget.dart';
@@ -47,9 +46,12 @@ class ProductGridTile extends StatelessWidget {
               flex: 6,
               child: Center(
                 child: CachedNetworkImage(
-                  imageUrl: product.productImage.isNotEmpty ? product.productImage[0]['image_1'] ?? "" : "",
+                  imageUrl: product.productImage.isNotEmpty
+                      ? product.productImage.first
+                      : "",
                   errorWidget: (context, url, error) => CachedNetworkImage(
-                    imageUrl: "https://image.spreadshirtmedia.com/image-server/v1/products/T1412A330PA3703PT17X246Y19D1040247317W6640H6184/views/1,width=550,height=550,appearanceId=330,backgroundColor=F2F2F2,modelId=5186,crop=list/42-dont-panic-life-universe-everything-mens-pique-polo-shirt.jpg",
+                    imageUrl:
+                        "https://image.spreadshirtmedia.com/image-server/v1/products/T1412A330PA3703PT17X246Y19D1040247317W6640H6184/views/1,width=550,height=550,appearanceId=330,backgroundColor=F2F2F2,modelId=5186,crop=list/42-dont-panic-life-universe-everything-mens-pique-polo-shirt.jpg",
                     fit: BoxFit.fill,
                   ),
                   fit: BoxFit.contain,
@@ -59,7 +61,7 @@ class ProductGridTile extends StatelessWidget {
               flex: 4,
               child: Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,29 +71,23 @@ class ProductGridTile extends StatelessWidget {
                       maxLines: 2,
                       style: AppTextStyle.f16OutfitBlackW500,
                     ),
-                    if (product.sizeAvailable.isNotEmpty)
+                    if (product.variant != null)
                       SizeSelection(
-                        onSizeSelected: (selectedSize) {
-                          // product.selectedSize = selectedSize; // Assuming you've added a selectedSize property to the product class
-                          // product.quantity = CartHelper.getProductQuantity(
-                          //   product.productId,
-                          //   selectedSize: product.selectedSize,
-
-
-                          // Update the product variant in the cubit
-                          // CubitsInjector.homeCubit.updateProductVariant(
-                          //   product.productId,
-                          //   selectedSize: product.selectedSize, // Pass the selected size directly
-                          // );
-                        },
-                        sizeAvailable: product.sizeAvailable,
-                      ),
-
-
+                          variant: product.variant!,
+                          onVariantSelected: (o) {
+                            product.variant!.selectedVariant = o;
+                            product.quantity = CartHelper.getProductQuantity(
+                                product.productId,
+                                variant: product.variant);
+                            CubitsInjector.homeCubit.updateProductVariant(
+                                product.productId,
+                                selectedVariant:
+                                    product.variant!.selectedVariant);
+                          }),
                     BlocBuilder<HomeCubit, HomeState>(
                       buildWhen: (previous, current) =>
-                      (current is UpdateProductVariantState &&
-                          current.id == product.productId) ||
+                          (current is UpdateProductVariantState &&
+                              current.id == product.productId) ||
                           (current is UpdateProductVariantLoadingState &&
                               current.id == product.productId),
                       builder: (context, state) {
@@ -106,22 +102,22 @@ class ProductGridTile extends StatelessWidget {
                               "₹${product.price}",
                               style: AppTextStyle.f17OutfitBlackW500,
                             ),
-                            // StreamBuilder<BoxEvent>(
-                            //     stream: CartHelper.watchCart(
-                            //         product.productId, product.variant),
-                            //     builder: (context, eventSnapshot) {
-                            //       if (eventSnapshot.hasData) {
-                            //         final data =
-                            //             eventSnapshot.data?.value ?? {};
-                            //         product.quantity = data['quantity'] ?? 0;
-                            //         // product.selectedSize = data['size'];
-                            //       }
-                            //       return AddToCartWidget(
-                            //         quantity: product.quantity,
-                            //         productId: product.productId,
-                            //         variant: product.variant,
-                            //       );
-                            //     })
+                            StreamBuilder<BoxEvent>(
+                                stream: CartHelper.watchCart(
+                                    product.productId, product.variant),
+                                builder: (context, eventSnapshot) {
+                                  if (eventSnapshot.hasData) {
+                                    final data =
+                                        eventSnapshot.data?.value ?? {};
+                                    product.quantity = data['quantity'] ?? 0;
+                                    // product.selectedSize = data['size'];
+                                  }
+                                  return AddToCartWidget(
+                                    quantity: product.quantity,
+                                    productId: product.productId,
+                                    variant: product.variant,
+                                  );
+                                })
                           ],
                         );
                       },

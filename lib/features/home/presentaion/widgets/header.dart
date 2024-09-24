@@ -55,19 +55,19 @@ class Header extends StatelessWidget {
                   spacing: 16,
                   runSpacing: 12,
                   children: [
-                    if (CubitsInjector.authCubit.currentUser != null)
-                      ...headerItems(constraints)
-                    else
-                      CustomElevatedButton(
-                        width: 150,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        onPressed: () {
-                          Navigator.pushNamed(context, LoginScreen.route);
-                        },
-                        backgroundColor: AppColors.kBlack,
-                        textColor: AppColors.kWhite,
-                        label: "Login",
-                      ),
+                    // if (CubitsInjector.authCubit.currentUser != null)
+                      ...headerItems(constraints),
+                    // else
+                    //   CustomElevatedButton(
+                    //     width: 150,
+                    //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    //     onPressed: () {
+                    //       Navigator.pushNamed(context, LoginScreen.route);
+                    //     },
+                    //     backgroundColor: AppColors.kBlack,
+                    //     textColor: AppColors.kWhite,
+                    //     label: "Login",
+                    //   ),
                     CartIcons(),
                   ],
                 ),
