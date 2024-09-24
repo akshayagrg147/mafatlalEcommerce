@@ -12,7 +12,6 @@ import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
-import 'package:mafatlal_ecommerce/features/home/model/store_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/search_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/repo/home_repo.dart';
@@ -84,10 +83,11 @@ class HomeCubit extends Cubit<HomeState> {
       emit(SearchFailedState(message: AppStrings.somethingWentWrong));
     }
   }
- void getsubcategory(){
-    emit(GetSubCategoryLoadingState());
 
- }
+  void getsubcategory() {
+    emit(GetSubCategoryLoadingState());
+  }
+
   void updateState(String state) {
     final districtList = StateDistricts.getDistrictList(state);
     emit(GetDistrictListState(districtList));
@@ -120,6 +120,7 @@ class HomeCubit extends Cubit<HomeState> {
       final response =
           await HomeRepo.getStoreData(CubitsInjector.authCubit.currentUser?.id);
       if (response.data != null) {
+        print(response.data!.data!.categories..first.id);
         _storeData = response.data;
         emit(FetchStoreDataSuccessState());
       } else {
@@ -129,7 +130,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(FetchStoreDataFailedState(
           e.response?.statusMessage ?? AppStrings.somethingWentWrong));
     } catch (e) {
-      print(e);
+      print('e----$e');
       emit(FetchStoreDataFailedState(AppStrings.somethingWentWrong));
     }
   }
