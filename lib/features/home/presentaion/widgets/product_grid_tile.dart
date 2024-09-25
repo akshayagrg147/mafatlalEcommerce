@@ -57,18 +57,16 @@ class ProductGridTile extends StatelessWidget {
             children: [
               Expanded(
                   flex: 6,
-                  child: Center(
-                    child: CachedNetworkImage(
-                      imageUrl: product.productImage.isNotEmpty
-                          ? product.productImage.first
-                          : "",
-                      errorWidget: (context, url, error) => CachedNetworkImage(
-                        imageUrl:
-                            "https://image.spreadshirtmedia.com/image-server/v1/products/T1412A330PA3703PT17X246Y19D1040247317W6640H6184/views/1,width=550,height=550,appearanceId=330,backgroundColor=F2F2F2,modelId=5186,crop=list/42-dont-panic-life-universe-everything-mens-pique-polo-shirt.jpg",
-                        fit: BoxFit.fill,
-                      ),
-                      fit: BoxFit.contain,
+                  child: CachedNetworkImage(
+                    imageUrl: product.productImage.isNotEmpty
+                        ? product.productImage.first
+                        : "",
+                    errorWidget: (context, url, error) => CachedNetworkImage(
+                      imageUrl:
+                          "https://image.spreadshirtmedia.com/image-server/v1/products/T1412A330PA3703PT17X246Y19D1040247317W6640H6184/views/1,width=550,height=550,appearanceId=330,backgroundColor=F2F2F2,modelId=5186,crop=list/42-dont-panic-life-universe-everything-mens-pique-polo-shirt.jpg",
+                      fit: BoxFit.fill,
                     ),
+                    fit: BoxFit.contain,
                   )),
               Expanded(
                   flex: 4,
