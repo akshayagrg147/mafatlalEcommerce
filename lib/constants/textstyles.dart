@@ -25,6 +25,10 @@ class AppTextStyle {
       color: AppColors.kGrey, fontSize: 16, fontWeight: FontWeight.w500);
   static TextStyle f14OutfitBlackW500 = GoogleFonts.outfit(
       color: AppColors.kBlack, fontSize: 14, fontWeight: FontWeight.w500);
+  static TextStyle f33darkblue = GoogleFonts.outfit(
+      color: const Color(0XFF004392),
+      fontSize: 20,
+      fontWeight: FontWeight.w500);
 
   static TextStyle f14BlackW500 = GoogleFonts.outfit(
       color: AppColors.kBlack, fontSize: 14, fontWeight: FontWeight.w500);

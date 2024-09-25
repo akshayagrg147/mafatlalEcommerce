@@ -7,7 +7,8 @@ class ProductDetail {
   final String productCategory;
   final String productSubCategory;
   final Variant? variant;
-  final ProductImage productImage;
+  final List<String> productImage;
+
   final String price;
   final String? description;
   final List<RelatedProduct> relatedProducts;
@@ -34,6 +35,13 @@ class ProductDetail {
     return null;
   }
 
+  static List<String> _parseProductImage(dynamic productImage) {
+    if (productImage is Map) {
+      return List<String>.from(productImage.values.map((e) => e.toString()));
+    }
+    return [];
+  }
+
   factory ProductDetail.fromJson(Map<String, dynamic> json) {
     var relatedProductsFromJson = json['related_products'] as List;
     List<RelatedProduct> relatedProductsList = relatedProductsFromJson
@@ -46,7 +54,7 @@ class ProductDetail {
       productCategory: json['product_category'],
       productSubCategory: json['product_sub_category'],
       variant: _parseVariant(json['size_available']),
-      productImage: ProductImage.fromJson(json['product_image']),
+      productImage: _parseProductImage(json['product_image']),
       price: json['price'],
       description: json['description'],
       relatedProducts: relatedProductsList,

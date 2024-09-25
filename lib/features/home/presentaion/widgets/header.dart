@@ -24,90 +24,125 @@ class _HeaderState extends State<Header> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     homeCubit = BlocProvider.of<HomeCubit>(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.kWhite,
-            borderRadius: BorderRadius.circular(8.0),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.kBlack.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 3,
-                offset: const Offset(1, 1),
+    return Container(
+      height: 80,
+      decoration: BoxDecoration(
+        color: AppColors.kWhite,
+        borderRadius: BorderRadius.circular(8.0),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.kBlack.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(1, 1),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Logo and Search
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.only(left: 10, top: 10),
+                child: Image.asset(
+                  AssetPath.logo1,
+                  fit: BoxFit.fitHeight,
+                  height: 60,
+                ),
+              ),
+              const SizedBox(width: 50), // Space between logo and search
+              Container(
+                width: 380,
+                padding: const EdgeInsets.all(5),
+                alignment: Alignment.center,
+                child: SearchInput(
+                  textController: CubitsInjector.homeCubit.searchController,
+                  hintText: "Search here",
+                ),
               ),
             ],
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            child: Wrap(
-              alignment: WrapAlignment.spaceBetween,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: 20,
-              runSpacing: 16,
+          Container(
+            margin: const EdgeInsets.only(top: 2),
+            alignment: Alignment.topRight,
+            child: Column(
               children: [
-                // Logo
-                Image.asset(
-                  AssetPath.logo1,
-                  fit: BoxFit.fitHeight,
-                  height: 40,
-                ),
-                // Search field
-                if (constraints.maxWidth > 600)
-                  SizedBox(
-                    width: constraints.maxWidth > 800 ? 600 : 350,
-                    child: SearchInput(
-                      textController: CubitsInjector.homeCubit.searchController,
-                      hintText: "Search here",
+                const Row(
+                  children: [
+                    Icon(
+                      Icons.phone,
+                      color: AppColors.kBlack,
+                      size: 9,
                     ),
-                  ),
-                // Right-side items
-                Padding(
-                  padding: const EdgeInsets.only(top: 15),
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 15,
-                    runSpacing: 12,
-                    children: [
-                      ...headerItems(constraints),
-                    ],
-                  ),
+                    SizedBox(width: 2),
+                    Text(
+                      '+91-22-6771 3800',
+                      style: TextStyle(
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Icon(
+                      Icons.email,
+                      color: AppColors.kBlack,
+                      size: 9,
+                    ),
+                    SizedBox(width: 2),
+                    Text(
+                      'technology@mafatlals.com',
+                      style: TextStyle(
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    _textWithDownArrow('Uniform'),
+                    const SizedBox(width: 20),
+                    CustomElevatedButton(
+                      width: 150,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 2, vertical: 12),
+                      onPressed: () {
+                        Navigator.pushNamed(context, LoginScreen.route);
+                      },
+                      backgroundColor: AppColors.kBlack,
+                      textColor: AppColors.kWhite,
+                      label: "Login",
+                    ),
+                    const SizedBox(width: 20),
+                    // Space between login button and cart
+                    CartIcons(),
+                    if (CubitsInjector.authCubit.currentUser == null)
+                      const SizedBox.shrink()
+                    else
+                      UserButton(),
+                  ],
                 ),
               ],
             ),
           ),
-        );
-      },
-    );
-  }
 
-  List<Widget> headerItems(BoxConstraints constraints) {
-    return [
-      _textWithDownArrow('Uniform'),
-      CustomElevatedButton(
-        width: 150,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        onPressed: () {
-          Navigator.pushNamed(context, LoginScreen.route);
-        },
-        backgroundColor: AppColors.kBlack,
-        textColor: AppColors.kWhite,
-        label: "Login",
+          // Menu and Cart Icons
+        ],
       ),
-      CartIcons(),
-      if (CubitsInjector.authCubit.currentUser == null)
-        const SizedBox.shrink()
-      else
-        UserButton(),
-    ];
+    );
   }
 
   Widget CartIcons() {
@@ -118,7 +153,7 @@ class _HeaderState extends State<Header> {
           Navigator.pushNamed(context, CartScreen.route);
         },
         child: Container(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.only(right: 20),
           child: const Icon(
             Icons.shopping_cart,
             size: 24,
@@ -134,7 +169,6 @@ class _HeaderState extends State<Header> {
       cursor: SystemMouseCursors.click,
       child: PopupMenuButton<String>(
         onSelected: (selectedCategoryName) {
-          print(selectedCategoryName);
           var category =
               CubitsInjector.homeCubit.storeData!.categories.firstWhere(
             (cat) => cat.name == selectedCategoryName,
@@ -149,7 +183,7 @@ class _HeaderState extends State<Header> {
 
           return categories.map((category) {
             return PopupMenuItem<String>(
-              value: category.name, // Assuming category has a 'name' field
+              value: category.name,
               child: Container(
                 margin: const EdgeInsets.only(top: 5),
                 child: Text(

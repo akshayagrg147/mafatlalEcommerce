@@ -82,6 +82,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
               ),
 
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  'Petrol Pump Uniform / Hindutsan Petroleum / Hind Petroleum Waist Coat',
+                  style: AppTextStyle.f33darkblue,
+                ),
+              ),
               BlocBuilder<HomeCubit, HomeState>(
                 buildWhen: (previous, current) =>
                     current is FetchProductDetailsSuccessState ||
@@ -94,43 +101,41 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       children: [
                         Row(
                           children: [
-                            // ListView containing images
                             Container(
                               margin: const EdgeInsets.all(10),
-                              height: 100,
+                              height: 290,
                               width: 100,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFFFFFFF),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(
-                                        0x29004392), // #00439229 in Flutter's color format (with opacity)
-                                    offset: Offset(
-                                        0, 8), // X and Y offset for the shadow
-                                    blurRadius:
-                                        12.0, // The blur effect for the shadow
-                                  ),
-                                ],
-                              ),
                               child: ListView.builder(
-                                itemCount: 1,
+                                itemCount: state.product.productImage.length,
                                 scrollDirection: Axis.vertical,
                                 itemBuilder: (context, index) {
-                                  return CachedNetworkImage(
-                                    imageUrl:
-                                        state.product.productImage.image1 ?? "",
-                                    fit: BoxFit.contain,
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(
-                                      Icons.error,
-                                      color: AppColors.kBlack,
+                                  return Container(
+                                    height: 80,
+                                    width: 80,
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFFFFFFFF),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Color(0x29004392),
+                                          offset: Offset(0, 8),
+                                          blurRadius: 12.0,
+                                        ),
+                                      ],
+                                    ),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          state.product.productImage[index],
+                                      fit: BoxFit.contain,
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(
+                                        Icons.error,
+                                        color: AppColors.kBlack,
+                                      ),
                                     ),
                                   );
                                 },
                               ),
                             ),
-
-                            // Expanded widget for the larger image
                             Expanded(
                               flex: 2,
                               child: Container(
@@ -140,18 +145,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   color: Color(0xFFFFFFFF),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Color(
-                                          0x1F004392), // #0043921F in Flutter's color format (with opacity)
-                                      offset: Offset(0,
-                                          8), // X and Y offset for the shadow
-                                      blurRadius:
-                                          24.0, // The blur effect for the shadow
+                                      color: Color(0x1F004392),
+                                      offset: Offset(0, 8),
+                                      blurRadius: 24.0,
                                     ),
                                   ],
                                 ),
                                 child: CachedNetworkImage(
-                                  imageUrl:
-                                      state.product.productImage.image1 ?? "",
+                                  imageUrl: state.product.productImage.first,
                                   fit: BoxFit.contain,
                                   errorWidget: (context, url, error) =>
                                       const Icon(
@@ -209,7 +210,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     ),
                                     const SizedBox(height: 20),
 
-                                    // Variant Selection
                                     if (state.product.variant != null)
                                       Column(
                                         crossAxisAlignment:
@@ -249,7 +249,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       style: AppTextStyle.f12OutfitBlackW500,
                                     ),
                                     const SizedBox(height: 10),
-                                    Container(
+                                    SizedBox(
                                       width: 100,
                                       child: StreamBuilder<BoxEvent>(
                                         stream: CartHelper.watchCart(
@@ -277,6 +277,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                             ),
                           ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Text(
+                            'Petrol Pump Uniforms by Hindustan Petroleum',
+                            style: AppTextStyle.f33darkblue,
+                          ),
                         ),
                         SizedBox(
                           height: 220,
