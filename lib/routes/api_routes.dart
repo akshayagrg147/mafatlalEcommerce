@@ -22,6 +22,7 @@ class ApiRoutes {
 
   //order history
   static const String orderHistory = "$baseUrl/order_history";
+  static const String getorgainzation = "$baseUrl/get_organizations";
 
   //address
   static const String address = "$baseUrl/address";

@@ -69,8 +69,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 40),
-
-              // Carousel for banners
               CarouselSlider(
                 items: bannerImages
                     .map((imagePath) => HomeBanner(imagePath: imagePath))

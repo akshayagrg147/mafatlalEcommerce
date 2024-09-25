@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/subcategory_detail.dart';
 
 class SubCategoryList extends StatelessWidget {
   final List<SubCategory_new> subcategories;
@@ -56,9 +55,11 @@ class _SubCategoryItemState extends State<SubCategoryItem> {
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
         onTap: () {
-          context
-              .read<HomeCubit>()
-              .UpdateproductAccordingtoCategory(widget.subid);
+          Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return SubCategoryDetail(
+              subid: widget.subid,
+            );
+          }));
         },
         child: Container(
           padding: EdgeInsets.all(10),

@@ -1,6 +1,7 @@
 import 'package:mafatlal_ecommerce/features/admin_orders/model/order_detail.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/order.dart';
+import 'package:mafatlal_ecommerce/features/home/model/organization_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 import 'package:mafatlal_ecommerce/features/home/model/productdetial_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
@@ -204,3 +205,17 @@ class UpdateLabelSuccessState extends HomeState {
 
   UpdateLabelSuccessState({required this.selectedCategoryName});
 }
+
+class GetSubCategoryDetailScreenSuccessState extends HomeState {
+  final List<Organization> organization;
+
+  GetSubCategoryDetailScreenSuccessState({required this.organization});
+}
+
+class GetSubCategoryDetailScreenFailedState extends HomeState {
+  final String message;
+
+  GetSubCategoryDetailScreenFailedState({required this.message});
+}
+
+class GetSubCategoryDetailScreenLoadingState extends HomeState {}

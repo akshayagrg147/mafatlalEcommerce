@@ -344,4 +344,19 @@ class HomeCubit extends Cubit<HomeState> {
     emit(UpdateProductVariantState(
         id: productId, selectedVariant: selectedVariant));
   }
+
+  Future<void> getsubcategorydetails(int subid) async {
+    try {
+      emit(GetSubCategoryDetailScreenLoadingState());
+      final response = await HomeRepo.getsubcateddetails(subid);
+      print(response);
+      emit(GetSubCategoryDetailScreenSuccessState(organization: response));
+    } on DioException catch (e) {
+      emit(GetSubCategoryDetailScreenFailedState(
+          message: e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(GetSubCategoryDetailScreenFailedState(
+          message: AppStrings.somethingWentWrong));
+    }
+  }
 }
