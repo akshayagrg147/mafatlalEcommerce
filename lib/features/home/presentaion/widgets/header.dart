@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mafatlal_ecommerce/components/custom_btn.dart';
 import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
@@ -68,25 +70,16 @@ class _HeaderState extends State<Header> {
                     ),
                   ),
                 // Right-side items
-                Wrap(
-                  spacing: 16,
-                  runSpacing: 12,
-                  children: [
-                    // if (CubitsInjector.authCubit.currentUser != null)
-                    ...headerItems(constraints),
-                    // else
-                    //   CustomElevatedButton(
-                    //     width: 150,
-                    //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    //     onPressed: () {
-                    //       Navigator.pushNamed(context, LoginScreen.route);
-                    //     },
-                    //     backgroundColor: AppColors.kBlack,
-                    //     textColor: AppColors.kWhite,
-                    //     label: "Login",
-                    //   ),
-                    CartIcons(),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 15,
+                    runSpacing: 12,
+                    children: [
+                      ...headerItems(constraints),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -99,8 +92,19 @@ class _HeaderState extends State<Header> {
   List<Widget> headerItems(BoxConstraints constraints) {
     return [
       _textWithDownArrow('Uniform'),
+      CustomElevatedButton(
+        width: 150,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        onPressed: () {
+          Navigator.pushNamed(context, LoginScreen.route);
+        },
+        backgroundColor: AppColors.kBlack,
+        textColor: AppColors.kWhite,
+        label: "Login",
+      ),
+      CartIcons(),
       if (CubitsInjector.authCubit.currentUser == null)
-        SizedBox.shrink()
+        const SizedBox.shrink()
       else
         UserButton(),
     ];
@@ -114,7 +118,7 @@ class _HeaderState extends State<Header> {
           Navigator.pushNamed(context, CartScreen.route);
         },
         child: Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(4),
           child: const Icon(
             Icons.shopping_cart,
             size: 24,
@@ -146,7 +150,13 @@ class _HeaderState extends State<Header> {
           return categories.map((category) {
             return PopupMenuItem<String>(
               value: category.name, // Assuming category has a 'name' field
-              child: Text(category.name),
+              child: Container(
+                margin: const EdgeInsets.only(top: 5),
+                child: Text(
+                  category.name,
+                  style: AppTextStyle.f16BlackW400,
+                ),
+              ),
             );
           }).toList();
         },
@@ -157,9 +167,12 @@ class _HeaderState extends State<Header> {
               return Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    state.selectedCategoryName,
-                    style: AppTextStyle.f12OutfitBlackW500,
+                  Container(
+                    margin: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      state.selectedCategoryName,
+                      style: AppTextStyle.f16BlackW400,
+                    ),
                   ),
                   const Icon(
                     Icons.arrow_drop_down,
@@ -172,9 +185,12 @@ class _HeaderState extends State<Header> {
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  label,
-                  style: AppTextStyle.f12OutfitBlackW500,
+                Container(
+                  margin: const EdgeInsets.only(top: 5),
+                  child: Text(
+                    label,
+                    style: AppTextStyle.f16BlackW400,
+                  ),
                 ),
                 const Icon(
                   Icons.arrow_drop_down,
@@ -236,7 +252,7 @@ class _HeaderState extends State<Header> {
                   : CubitsInjector.authCubit.currentUser!.fullName.toString(),
               style: AppTextStyle.f12WhiteW500,
             ),
-            Icon(
+            const Icon(
               Icons.arrow_drop_down,
               color: Colors.white,
               size: 24,

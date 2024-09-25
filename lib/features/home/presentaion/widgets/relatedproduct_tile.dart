@@ -42,18 +42,18 @@ class RelatedProductTile extends StatelessWidget {
         },
         child: Container(
           width: 150,
-          margin: const EdgeInsets.only(left: 20),
-          decoration: BoxDecoration(
-              color: AppColors.kWhite,
-              border: Border.all(color: AppColors.kGrey200),
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                    color: AppColors.kGrey.withOpacity(.1),
-                    spreadRadius: 2,
-                    blurRadius: 2,
-                    offset: const Offset(1, 1))
-              ]),
+          margin: const EdgeInsets.only(left: 30),
+          decoration: const BoxDecoration(
+            color: Color(0xFFFFFFFF),
+            boxShadow: [
+              BoxShadow(
+                color: Color(
+                    0x1F004392), // #0043921F in Flutter's color format (with opacity)
+                offset: Offset(0, 8), // X and Y offset for the shadow
+                blurRadius: 24.0, // The blur effect for the shadow
+              ),
+            ],
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

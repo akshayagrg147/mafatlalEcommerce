@@ -41,17 +41,17 @@ class ProductGridTile extends StatelessWidget {
           );
         },
         child: Container(
-          decoration: BoxDecoration(
-              color: AppColors.kWhite,
-              border: Border.all(color: AppColors.kGrey200),
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                    color: AppColors.kGrey.withOpacity(.1),
-                    spreadRadius: 2,
-                    blurRadius: 2,
-                    offset: const Offset(1, 1))
-              ]),
+          decoration: const BoxDecoration(
+            color: Color(0xFFFFFFFF),
+            boxShadow: [
+              BoxShadow(
+                color: Color(
+                    0x1F004392), // #0043921F in Flutter's color format (with opacity)
+                offset: Offset(0, 8), // X and Y offset for the shadow
+                blurRadius: 24.0, // The blur effect for the shadow
+              ),
+            ],
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

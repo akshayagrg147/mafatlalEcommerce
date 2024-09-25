@@ -99,14 +99,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               margin: const EdgeInsets.all(10),
                               height: 100,
                               width: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFFFFFFF),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.5),
-                                    spreadRadius: 2,
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 3),
+                                    color: Color(
+                                        0x29004392), // #00439229 in Flutter's color format (with opacity)
+                                    offset: Offset(
+                                        0, 8), // X and Y offset for the shadow
+                                    blurRadius:
+                                        12.0, // The blur effect for the shadow
                                   ),
                                 ],
                               ),
@@ -134,14 +136,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               child: Container(
                                 height: 290,
                                 margin: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFFFFFFFF),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.5),
-                                      spreadRadius: 2,
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 3),
+                                      color: Color(
+                                          0x1F004392), // #0043921F in Flutter's color format (with opacity)
+                                      offset: Offset(0,
+                                          8), // X and Y offset for the shadow
+                                      blurRadius:
+                                          24.0, // The blur effect for the shadow
                                     ),
                                   ],
                                 ),
@@ -188,7 +192,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         const SizedBox(width: 5),
                                         Text(
                                           state.product.productCategory,
-                                          style: AppTextStyle.f12GreenW500,
+                                          style:
+                                              AppTextStyle.f12OutfitBlackW500,
                                         ),
                                       ],
                                     ),
@@ -197,10 +202,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       children: [
                                         const Text('Rs. '),
                                         const SizedBox(width: 5),
-                                        Text(
-                                          state.product.price,
-                                          style: AppTextStyle.f12GreenW500,
-                                        ),
+                                        Text(state.product.price,
+                                            style: AppTextStyle
+                                                .f12OutfitBlackW500),
                                       ],
                                     ),
                                     const SizedBox(height: 20),
