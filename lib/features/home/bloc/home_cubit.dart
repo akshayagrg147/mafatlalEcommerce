@@ -245,10 +245,11 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       emit(FetchProductDetailsLoadingState());
       final response = await HomeRepo.fetchProductDetails(productId);
+      print("e---${response.data!.price}");
+
       emit(FetchProductDetailsSuccessState(product: response.data!));
     } on DioException catch (e) {
       print(e);
-
       emit(FetchProductDetailsFailedState(
           message: e.message ?? AppStrings.somethingWentWrong));
     } catch (e) {

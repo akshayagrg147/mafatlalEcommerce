@@ -3,6 +3,7 @@ import 'package:mafatlal_ecommerce/features/home/model/address.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/order.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
+import 'package:mafatlal_ecommerce/features/home/model/productdetial_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/routes/api_routes.dart';
 import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
@@ -29,13 +30,13 @@ class HomeRepo {
             List<Product_new>.from(data.map((e) => Product_new.fromJson(e))));
   }
 
-  static Future<ApiResponse<Product_new>> fetchProductDetails(
+  static Future<ApiResponse<ProductDetail>> fetchProductDetails(
       int productId) async {
     final response = await DioUtil()
         .getInstance()
         ?.get(ApiRoutes.getProductInfo, queryParameters: {'id': productId});
-    return ApiResponse<Product_new>.fromJson(
-        response?.data, (data) => Product_new.fromJson(data));
+    return ApiResponse<ProductDetail>.fromJson(
+        response?.data, (data) => ProductDetail.fromJson(data));
   }
 
   static Future<ApiResponse<List<Product>>> getCartProducts(

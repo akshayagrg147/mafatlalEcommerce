@@ -156,24 +156,3 @@ class Product_new {
     return [];
   }
 }
-
-// Example of RelatedProduct to ensure proper conversion
-class RelatedProduct {
-  final int id;
-  final String name;
-  final String productCategory;
-
-  RelatedProduct({
-    required this.id,
-    required this.name,
-    required this.productCategory,
-  });
-
-  factory RelatedProduct.fromJson(Map<String, dynamic> json) {
-    return RelatedProduct(
-      id: Product_new._convertToInt(json['id']),
-      name: json['name']?.toString() ?? '',
-      productCategory: json['product_category']?.toString() ?? '',
-    );
-  }
-}

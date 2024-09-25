@@ -10,6 +10,7 @@ class AddToCartWidget extends StatelessWidget {
   final int productId;
   final Variant? variant;
   final bool isCart;
+
   const AddToCartWidget({
     super.key,
     required this.quantity,
@@ -26,7 +27,8 @@ class AddToCartWidget extends StatelessWidget {
           CartHelper.addProduct(productId, 1, variant: variant);
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
           decoration: BoxDecoration(
             border: Border.all(color: AppColors.kRed),
             color: AppColors.kRed.withOpacity(.05),

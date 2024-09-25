@@ -2,6 +2,7 @@ import 'package:mafatlal_ecommerce/features/admin_orders/model/order_detail.dart
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/order.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
+import 'package:mafatlal_ecommerce/features/home/model/productdetial_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 
 abstract class HomeState {}
@@ -165,7 +166,7 @@ class FetchOrderDetailsFailedState extends HomeState {}
 class FetchProductDetailsLoadingState extends HomeState {}
 
 class FetchProductDetailsSuccessState extends HomeState {
-  final Product_new product;
+  final ProductDetail product;
 
   FetchProductDetailsSuccessState({required this.product});
 }
