@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mafatlal_ecommerce/features/home/SubCategory/presentation/subcategory_detail.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/subcategory_detail.dart';
 
 class SubCategoryList extends StatelessWidget {
   final List<SubCategory_new> subcategories;
