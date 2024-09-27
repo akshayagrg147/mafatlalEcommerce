@@ -4,23 +4,23 @@ import 'package:mafatlal_ecommerce/features/home/SubCategory/presentation/subcat
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 
 class SubCategoryList extends StatelessWidget {
-  final List<SubCategory_new> subcategories;
+  final List<SubCategory_new> subcategoriesss;
 
-  const SubCategoryList({required this.subcategories});
+  const SubCategoryList({required this.subcategoriesss});
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       scrollDirection: Axis.horizontal,
-      itemCount: subcategories.length,
+      itemCount: subcategoriesss.length,
       separatorBuilder: (context, index) => const SizedBox(width: 25),
       itemBuilder: (context, index) {
-        final subcategory = subcategories[index];
+        final subcategory = subcategoriesss[index];
         return SubCategoryItem(
           imagePath: subcategory.img,
           name: subcategory.name,
-          itemlength: subcategories.length,
-          subid: subcategory.id,
+          itemlength: subcategoriesss.length,
+          subcategories: subcategoriesss,
         );
       },
     );
@@ -31,14 +31,14 @@ class SubCategoryItem extends StatefulWidget {
   final String name;
   final String imagePath;
   final int itemlength;
-  final subid;
+  final List<SubCategory_new> subcategories;
 
   const SubCategoryItem(
       {super.key,
       required this.name,
       required this.imagePath,
       required this.itemlength,
-      required this.subid});
+      required this.subcategories});
 
   @override
   _SubCategoryItemState createState() => _SubCategoryItemState();
@@ -57,7 +57,8 @@ class _SubCategoryItemState extends State<SubCategoryItem> {
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (_) {
             return SubCategoryDetail(
-              subid: widget.subid,
+              subcategories: widget.subcategories,
+              selectedname: widget.name,
             );
           }));
         },
