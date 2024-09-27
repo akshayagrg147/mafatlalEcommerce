@@ -80,12 +80,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
               ),
 
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  'Petrol Pump Uniform / Hindutsan Petroleum / Hind Petroleum Waist Coat',
-                  style: AppTextStyle.f33darkblue,
-                ),
+              BlocBuilder<HomeCubit, HomeState>(
+                buildWhen: (previous, current) =>
+                    current is FetchProductDetailsSuccessState ||
+                    current is UpdateProductVariantLoadingState ||
+                    current is UpdateProductVariantState,
+                builder: (context, state) {
+                  if (state is FetchProductDetailsSuccessState) {
+                    return Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Text(
+                        '${state.product.productSubCategory} / ${state.product.name}',
+                        style: AppTextStyle.f33darkblue,
+                      ),
+                    );
+                  }
+
+                  return SizedBox.shrink();
+                },
               ),
               BlocBuilder<HomeCubit, HomeState>(
                 buildWhen: (previous, current) =>

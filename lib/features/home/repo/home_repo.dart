@@ -3,7 +3,6 @@ import 'package:mafatlal_ecommerce/features/home/SubCategory/model/organization_
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/order.dart';
-import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 import 'package:mafatlal_ecommerce/features/home/model/productdetial_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/routes/api_routes.dart';
@@ -50,16 +49,18 @@ class HomeRepo {
         response?.data, (data) => ProductDetail.fromJson(data));
   }
 
-  static Future<ApiResponse<List<Product>>> getCartProducts(
+  static Future<ApiResponse<List<Product_new>>> getCartProducts(
       List<int> productIds) async {
     final response = await DioUtil()
         .getInstance()
         ?.post(ApiRoutes.getCartProducts, data: {'ids': productIds});
-    return ApiResponse<List<Product>>.fromJson(response?.data,
-        (data) => List<Product>.from(data.map((e) => Product.fromJson(e))));
+    return ApiResponse<List<Product_new>>.fromJson(
+        response?.data,
+        (data) =>
+            List<Product_new>.from(data.map((e) => Product_new.fromJson(e))));
   }
 
-  static Future<ApiResponse<Map>> placeOrder(List<Product> products,
+  static Future<ApiResponse<Map>> placeOrder(List<Product_new> products,
       {required Address shippingAddress,
       required Address billingAddress}) async {
     final num price = products.fold(

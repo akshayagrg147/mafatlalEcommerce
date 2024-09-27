@@ -26,7 +26,7 @@ class HomeCubit extends Cubit<HomeState> {
   CategoriesAndProducts? get storeData => _storeData;
 
   bool isCategoryScreenShown = false;
-  final List<Product> cartProducts = [];
+  final List<Product_new> cartProducts = [];
   final searchController = TextEditingController();
 
   // Timer? _timer;
@@ -199,7 +199,7 @@ class HomeCubit extends Cubit<HomeState> {
               (option) => option.name == selectedVariantString,
             );
 
-            final cartProduct = Product(
+            final cartProduct = Product_new(
               productId: product.productId,
               productName: product.productName,
               productCategory: product.productCategory,
@@ -209,6 +209,7 @@ class HomeCubit extends Cubit<HomeState> {
               variant: selectedVariant != null
                   ? product.variant!.copyWith(selectedVariant)
                   : product.variant,
+              categoryId: product.categoryId,
             );
 
             cartProducts.add(cartProduct);

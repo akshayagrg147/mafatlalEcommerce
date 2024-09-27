@@ -94,17 +94,17 @@ class SubCategory_new {
 
 class Product_new {
   final int productId;
-  final int selectedCategoryId;
+  final int categoryId;
   final String productName;
   final String productCategory;
   final Variant? variant;
   final List<String> productImage;
-  final String price;
+  final num price;
   int quantity;
 
   Product_new({
     required this.productId,
-    required this.selectedCategoryId,
+    required this.categoryId,
     required this.productName,
     required this.productCategory,
     required this.variant,
@@ -116,18 +116,30 @@ class Product_new {
   factory Product_new.fromJson(Map<String, dynamic> json) {
     // Use the conversion method for both IDs
     final id = json['product_id'] ?? json['id'];
-    final selectedCategoryId = json['Selected_category_id'] ?? 0;
-
+    final categoryId = json['Selected_category_id'] ?? 0;
+    final variant = _parseVariant(json['size_available']);
+    final name =
+        json['product_name']?.toString() ?? json['name']?.toString() ?? '';
     return Product_new(
-      productId: _convertToInt(id),
-      selectedCategoryId: _convertToInt(selectedCategoryId),
-      productName: json['product_name']?.toString() ?? '',
+      productId: id,
+      categoryId: categoryId,
+      productName: name,
       productCategory: json['product_category']?.toString() ?? '',
-      variant: _parseVariant(json['size_available']),
+      variant: variant,
       productImage: _parseProductImage(json['product_image']),
-      price: json['price']?.toString() ?? '',
-      quantity: CartHelper.getProductQuantity(id),
+      price: num.tryParse(json['price'].toString()) ?? 0,
+      quantity: CartHelper.getProductQuantity(id, variant: variant),
     );
+  }
+  num getPrice() {
+    if (variant != null) {
+      return variant!.selectedVariant.price;
+    }
+    return price;
+  }
+
+  num getAmount() {
+    return getPrice() * quantity;
   }
 
   static int _convertToInt(dynamic value) {
@@ -154,5 +166,18 @@ class Product_new {
       return List<String>.from(productImage.values.map((e) => e.toString()));
     }
     return [];
+  }
+
+  Map<String, dynamic> toCartProductJson() {
+    final Map<String, dynamic> map = {
+      'product_id': productId,
+      'quantity': quantity,
+      'price': price
+    };
+    if (variant != null) {
+      map[variant!.variantTitle] = variant!.selectedVariant.name;
+      map['price'] = variant!.selectedVariant.price;
+    }
+    return map;
   }
 }
