@@ -68,7 +68,7 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
               isState: false,
               isOrganization: false));
 
-      if (subcategory != null && subcategory.isState == false) {
+      if (subcategory != null && subcategory.isState == true) {
         final stateResponse = await SubCategoryRepo.getallstate();
         states = stateResponse;
         if (states.isNotEmpty) {
@@ -113,12 +113,13 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
               isState: false,
               isOrganization: false));
 
-      if (subcategory != null && subcategory.isDistrict == false) {
+      if (subcategory != null && subcategory.isDistrict == true) {
         final state = states.firstWhere((s) => s.name == SelectedStatename);
         final districtresponse = await SubCategoryRepo.getalldistrict(state.id);
         districts = districtresponse;
         if (districts.isNotEmpty) {
           emit(GetAllDistrictSuccessState(district: districts, name: ''));
+          emit(GetAllStateSuccessState(states: states, name: ''));
         } else {
           emit(GetAllDistrictFailedState(message: 'No districts found'));
         }
@@ -154,7 +155,7 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
               isState: false,
               isOrganization: false));
 
-      if (subcategory != null && subcategory.isOrganization == false) {
+      if (subcategory != null && subcategory.isOrganization == true) {
         final district =
             districts.firstWhere((d) => d.name == SelectedSDistrictname);
         final organizationresponse =
@@ -203,7 +204,11 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
         emit(GetAllOrganizationSuccessState(
             organization: organizations, name: ''));
       } else {
-        emit(GetAllOrganizationFailedState(message: 'No organizations found'));
+        emit(GetAllStateSuccessState(states: states, name: ''));
+        emit(GetAllDistrictSuccessState(district: districts, name: ''));
+        emit(GetAllOrganizationSuccessState(
+            organization: organizations, name: ''));
+        // emit(GetAllOrganizationFailedState(message: 'No organizations found'));
       }
     } catch (e) {
       emit(GetAllOrganizationFailedState(
