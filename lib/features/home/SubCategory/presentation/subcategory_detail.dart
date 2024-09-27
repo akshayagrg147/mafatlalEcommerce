@@ -176,16 +176,60 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                               style: AppTextStyle.f12OutfitBlackW500));
                     }
                     if (state is GetAllStateSuccessState) {
-                      return _buildDynamicDropdown<StateModel>(
-                        hintText: 'Select State',
-                        value: state.states.isNotEmpty
-                            ? state.states.firstWhere(
-                                (stateItem) => stateItem.name == state.name,
-                                orElse: () => state.states.first,
-                              )
-                            : null,
-                        // Handle empty list case
-                        items: state.states,
+                      return Visibility(
+                        visible: state.states.isEmpty ? false : true,
+                        child: _buildDynamicDropdown<StateModel>(
+                          hintText: 'Select State',
+                          value: state.states.isNotEmpty
+                              ? state.states.firstWhere(
+                                  (stateItem) => stateItem.name == state.name,
+                                  orElse: () => state.states.first,
+                                )
+                              : null,
+                          // Handle empty list case
+                          items: state.states,
+                          itemBuilder: (stateItem) =>
+                              DropdownMenuItem<StateModel>(
+                            value: stateItem,
+                            child: Text(stateItem.name),
+                          ),
+                          onChanged: (newValue) {
+                            if (newValue != null) {
+                              subcategoryCubit.selectState(newValue.name);
+                            }
+                          },
+                        ),
+                      );
+                    }
+
+                    return Visibility(
+                      visible: context.read<SubcategoryCubit>().states.isEmpty
+                          ? false
+                          : true,
+                      child: _buildDynamicDropdown<StateModel>(
+                        hintText: context
+                                .read<SubcategoryCubit>()
+                                .SelectedStatename ??
+                            'Select State',
+                        value:
+                            context.read<SubcategoryCubit>().states.isNotEmpty
+                                ? context
+                                    .read<SubcategoryCubit>()
+                                    .states
+                                    .firstWhere(
+                                      (stateItem) =>
+                                          stateItem.name ==
+                                          context
+                                              .read<SubcategoryCubit>()
+                                              .SelectedStatename,
+                                      orElse: () => context
+                                          .read<SubcategoryCubit>()
+                                          .states
+                                          .first,
+                                    )
+                                : null,
+                        // Handle empty or null list
+                        items: context.read<SubcategoryCubit>().states,
                         itemBuilder: (stateItem) =>
                             DropdownMenuItem<StateModel>(
                           value: stateItem,
@@ -196,37 +240,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                             subcategoryCubit.selectState(newValue.name);
                           }
                         },
-                      );
-                    }
-
-                    return _buildDynamicDropdown<StateModel>(
-                      hintText:
-                          context.read<SubcategoryCubit>().SelectedStatename ??
-                              'Select State',
-                      value: context.read<SubcategoryCubit>().states.isNotEmpty
-                          ? context.read<SubcategoryCubit>().states.firstWhere(
-                                (stateItem) =>
-                                    stateItem.name ==
-                                    context
-                                        .read<SubcategoryCubit>()
-                                        .SelectedStatename,
-                                orElse: () => context
-                                    .read<SubcategoryCubit>()
-                                    .states
-                                    .first,
-                              )
-                          : null,
-                      // Handle empty or null list
-                      items: context.read<SubcategoryCubit>().states,
-                      itemBuilder: (stateItem) => DropdownMenuItem<StateModel>(
-                        value: stateItem,
-                        child: Text(stateItem.name),
                       ),
-                      onChanged: (newValue) {
-                        if (newValue != null) {
-                          subcategoryCubit.selectState(newValue.name);
-                        }
-                      },
                     );
                   },
                 ),
@@ -245,16 +259,62 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                               style: AppTextStyle.f12OutfitBlackW500));
                     }
                     if (state is GetAllDistrictSuccessState) {
-                      return _buildDynamicDropdown<DistrictModel>(
-                        hintText: 'Select District',
-                        value: state.district.isNotEmpty
-                            ? state.district.firstWhere(
-                                (stateItem) => stateItem.name == state.name,
-                                orElse: () => state.district.first,
-                              )
+                      return Visibility(
+                        visible: state.district.isEmpty ? false : true,
+                        child: _buildDynamicDropdown<DistrictModel>(
+                          hintText: 'Select District',
+                          value: state.district.isNotEmpty
+                              ? state.district.firstWhere(
+                                  (stateItem) => stateItem.name == state.name,
+                                  orElse: () => state.district.first,
+                                )
+                              : null,
+                          // Handle empty list case
+                          items: state.district,
+                          itemBuilder: (stateItem) =>
+                              DropdownMenuItem<DistrictModel>(
+                            value: stateItem,
+                            child: Text(stateItem.name),
+                          ),
+                          onChanged: (newValue) {
+                            if (newValue != null) {
+                              subcategoryCubit.selectdistrict(newValue.name);
+                            }
+                          },
+                        ),
+                      );
+                    }
+
+                    return Visibility(
+                      visible:
+                          context.read<SubcategoryCubit>().districts.isEmpty
+                              ? false
+                              : true,
+                      child: _buildDynamicDropdown<DistrictModel>(
+                        hintText: context
+                                .read<SubcategoryCubit>()
+                                .SelectedSDistrictname ??
+                            'Select District',
+                        value: context
+                                .read<SubcategoryCubit>()
+                                .districts
+                                .isNotEmpty
+                            ? context
+                                .read<SubcategoryCubit>()
+                                .districts
+                                .firstWhere(
+                                  (stateItem) =>
+                                      stateItem.name ==
+                                      context
+                                          .read<SubcategoryCubit>()
+                                          .SelectedStatename,
+                                  orElse: () => context
+                                      .read<SubcategoryCubit>()
+                                      .districts
+                                      .first,
+                                )
                             : null,
-                        // Handle empty list case
-                        items: state.district,
+                        items: context.read<SubcategoryCubit>().districts,
                         itemBuilder: (stateItem) =>
                             DropdownMenuItem<DistrictModel>(
                           value: stateItem,
@@ -265,42 +325,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                             subcategoryCubit.selectdistrict(newValue.name);
                           }
                         },
-                      );
-                    }
-
-                    return _buildDynamicDropdown<DistrictModel>(
-                      hintText: context
-                              .read<SubcategoryCubit>()
-                              .SelectedSDistrictname ??
-                          'Select District',
-                      value:
-                          context.read<SubcategoryCubit>().districts.isNotEmpty
-                              ? context
-                                  .read<SubcategoryCubit>()
-                                  .districts
-                                  .firstWhere(
-                                    (stateItem) =>
-                                        stateItem.name ==
-                                        context
-                                            .read<SubcategoryCubit>()
-                                            .SelectedStatename,
-                                    orElse: () => context
-                                        .read<SubcategoryCubit>()
-                                        .districts
-                                        .first,
-                                  )
-                              : null,
-                      items: context.read<SubcategoryCubit>().districts,
-                      itemBuilder: (stateItem) =>
-                          DropdownMenuItem<DistrictModel>(
-                        value: stateItem,
-                        child: Text(stateItem.name),
                       ),
-                      onChanged: (newValue) {
-                        if (newValue != null) {
-                          subcategoryCubit.selectdistrict(newValue.name);
-                        }
-                      },
                     );
                   },
                 ),
@@ -319,16 +344,63 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                               style: AppTextStyle.f12OutfitBlackW500));
                     }
                     if (state is GetAllOrganizationSuccessState) {
-                      return _buildDynamicDropdown<Organization>(
-                        hintText: 'Select Organization',
-                        value: state.organization.isNotEmpty
-                            ? state.organization.firstWhere(
-                                (stateItem) => stateItem.name == state.name,
-                                orElse: () => state.organization.first,
-                              )
+                      return Visibility(
+                        visible: state.organization.isEmpty ? false : true,
+                        child: _buildDynamicDropdown<Organization>(
+                          hintText: 'Select Organization',
+                          value: state.organization.isNotEmpty
+                              ? state.organization.firstWhere(
+                                  (stateItem) => stateItem.name == state.name,
+                                  orElse: () => state.organization.first,
+                                )
+                              : null,
+                          // Handle empty list case
+                          items: state.organization,
+                          itemBuilder: (stateItem) =>
+                              DropdownMenuItem<Organization>(
+                            value: stateItem,
+                            child: Text(stateItem.name),
+                          ),
+                          onChanged: (newValue) {
+                            if (newValue != null) {
+                              subcategoryCubit
+                                  .selectOrganization(newValue.name);
+                            }
+                          },
+                        ),
+                      );
+                    }
+
+                    return Visibility(
+                      visible:
+                          context.read<SubcategoryCubit>().organizations.isEmpty
+                              ? false
+                              : true,
+                      child: _buildDynamicDropdown<Organization>(
+                        hintText: context
+                                .read<SubcategoryCubit>()
+                                .SelectedOrganizationname ??
+                            'Select Organization',
+                        value: context
+                                .read<SubcategoryCubit>()
+                                .organizations
+                                .isNotEmpty
+                            ? context
+                                .read<SubcategoryCubit>()
+                                .organizations
+                                .firstWhere(
+                                  (stateItem) =>
+                                      stateItem.name ==
+                                      context
+                                          .read<SubcategoryCubit>()
+                                          .SelectedStatename,
+                                  orElse: () => context
+                                      .read<SubcategoryCubit>()
+                                      .organizations
+                                      .first,
+                                )
                             : null,
-                        // Handle empty list case
-                        items: state.organization,
+                        items: context.read<SubcategoryCubit>().organizations,
                         itemBuilder: (stateItem) =>
                             DropdownMenuItem<Organization>(
                           value: stateItem,
@@ -339,44 +411,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                             subcategoryCubit.selectOrganization(newValue.name);
                           }
                         },
-                      );
-                    }
-
-                    return _buildDynamicDropdown<Organization>(
-                      hintText: context
-                              .read<SubcategoryCubit>()
-                              .SelectedOrganizationname ??
-                          'Select Organization',
-                      value: context
-                              .read<SubcategoryCubit>()
-                              .organizations
-                              .isNotEmpty
-                          ? context
-                              .read<SubcategoryCubit>()
-                              .organizations
-                              .firstWhere(
-                                (stateItem) =>
-                                    stateItem.name ==
-                                    context
-                                        .read<SubcategoryCubit>()
-                                        .SelectedStatename,
-                                orElse: () => context
-                                    .read<SubcategoryCubit>()
-                                    .organizations
-                                    .first,
-                              )
-                          : null,
-                      items: context.read<SubcategoryCubit>().organizations,
-                      itemBuilder: (stateItem) =>
-                          DropdownMenuItem<Organization>(
-                        value: stateItem,
-                        child: Text(stateItem.name),
                       ),
-                      onChanged: (newValue) {
-                        if (newValue != null) {
-                          subcategoryCubit.selectOrganization(newValue.name);
-                        }
-                      },
                     );
                   },
                 ),
@@ -399,12 +434,15 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(
-                      margin: const EdgeInsets.all(30),
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        '${state.organization.subCategoryName} / ${state.organization.stateName} / ${state.organization.districtName} / ${state.organization.name} ',
-                        style: AppTextStyle.f33darkblue,
+                    Visibility(
+                      visible: state.organization != null ? true : false,
+                      child: Container(
+                        margin: const EdgeInsets.all(30),
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          '${state.organization?.subCategoryName} / ${state.organization?.stateName} / ${state.organization?.districtName} / ${state.organization?.name} ',
+                          style: AppTextStyle.f33darkblue,
+                        ),
                       ),
                     ),
                     Container(
