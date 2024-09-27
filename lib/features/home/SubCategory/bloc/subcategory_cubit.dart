@@ -17,6 +17,7 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
   List<StateModel> states = [];
   List<DistrictModel> districts = [];
   List<Organization> organizations = [];
+  List<Product_new> products = [];
 
   Future<void> getsubcategorydetails(
       List<SubCategory_new> subcategories, String selectedname) async {
@@ -24,32 +25,86 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
     subcategorieslist = subcategories;
     SelectedSubcategoryname = selectedname;
     await getallstate();
+
     emit(GetSubCategoryDetailScreenSuccessState(
         subcategories: subcategories, selectedname: selectedname));
   }
 
   Future<void> UpdateproductAccordingtoCategory(int id) async {
     emit(UpdateProductUsingSubCategoryLoadingState());
+
     try {
       final response = await SubCategoryRepo.getProductsBySubCatId(id);
-      print(response);
-      emit(UpdateProductUsingSubCategorySuccessState(
-          products: response.data!, organization: organizations.first));
+
+      // Check if response data is empty
+      if (response.data == null || response.data!.isEmpty) {
+        // Handle the case where no products are returned
+        products = [];
+
+        // Check for organizations and handle accordingly
+        final organization =
+            (organizations.isNotEmpty) ? organizations.first : null;
+
+        emit(UpdateProductUsingSubCategorySuccessState(
+          products: products,
+          organization:
+              organization, // It can be null if no organization is available
+        ));
+      } else {
+        // If there are products in the response
+        products = response.data!;
+
+        print(response.data!.first.productId);
+
+        // Check for organizations and handle accordingly
+        final organization =
+            (organizations.isNotEmpty) ? organizations.first : null;
+
+        emit(UpdateProductUsingSubCategorySuccessState(
+          products: products,
+          organization:
+              organization, // It can be null if no organization is available
+        ));
+      }
     } catch (e) {
+      // Handle error case
       emit(UpdateProductUsingSubCategoryFailedState());
     }
   }
 
   void selectSubCategory(String newValue) {
     emit(GetSubCategoryDetailScreenLoadingState());
+
     SelectedSubcategoryname = newValue;
+
+    // Clear previous data
     districts.clear();
     states.clear();
     organizations.clear();
+
+    // Emit cleared states
     emit(GetAllDistrictSuccessState(district: districts, name: ''));
     emit(GetAllStateSuccessState(states: states, name: ''));
     emit(GetAllOrganizationSuccessState(organization: organizations, name: ''));
-    getallstate();
+
+    // Flag to track if a match was found
+    bool isCategoryFound = false;
+
+    // Loop through subcategorieslist
+    for (var id in subcategorieslist!) {
+      if (id.name == SelectedSubcategoryname) {
+        if (id.isState == false) {
+          UpdateproductAccordingtoCategory(id.id);
+          isCategoryFound = true;
+          break;
+        }
+      }
+    }
+    if (!isCategoryFound) {
+      getallstate();
+    }
+
+    // Emit success state after completing the loop
     emit(GetSubCategoryDetailScreenSuccessState(
         subcategories: subcategorieslist!,
         selectedname: SelectedSubcategoryname!));
@@ -74,12 +129,19 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
         if (states.isNotEmpty) {
           emit(GetAllStateSuccessState(states: states, name: ''));
         } else {
-          emit(GetAllStateFailedState(message: 'No states found'));
+          for (var id in subcategorieslist!) {
+            if (id.name == SelectedSubcategoryname) {
+              UpdateproductAccordingtoCategory(id.id);
+              emit(GetAllOrganizationSuccessState(
+                  organization: organizations, name: SelectedSubcategoryname!));
+            }
+          }
+          // emit(GetAllStateFailedState(message: 'No states found'));
         }
       } else {
         for (var id in subcategorieslist!) {
           if (id.name == SelectedSubcategoryname) {
-            fetchorganization(id.id);
+            UpdateproductAccordingtoCategory(id.id);
           }
         }
       }
@@ -131,11 +193,7 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
 
   void selectdistrict(String name) {
     SelectedSDistrictname = name;
-    // districts.clear();
-    // states.clear();
     organizations.clear();
-    // emit(GetAllDistrictSuccessState(district: districts, name: ''));
-    // emit(GetAllStateSuccessState(states: states, name: ''));
     emit(GetAllOrganizationSuccessState(organization: organizations, name: ''));
     getorganization();
     emit(GetAllDistrictSuccessState(

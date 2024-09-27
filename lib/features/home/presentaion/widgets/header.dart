@@ -115,24 +115,26 @@ class _HeaderState extends State<Header> {
                   children: [
                     _textWithDownArrow('Uniform'),
                     const SizedBox(width: 20),
-                    CustomElevatedButton(
-                      width: 150,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 2, vertical: 12),
-                      onPressed: () {
-                        Navigator.pushNamed(context, LoginScreen.route);
-                      },
-                      backgroundColor: AppColors.kBlack,
-                      textColor: AppColors.kWhite,
-                      label: "Login",
-                    ),
-                    const SizedBox(width: 20),
+                    if (CubitsInjector.authCubit.currentUser == null)
+                      CustomElevatedButton(
+                        width: 150,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 2, vertical: 12),
+                        onPressed: () {
+                          Navigator.pushNamed(context, LoginScreen.route);
+                        },
+                        backgroundColor: AppColors.kBlack,
+                        textColor: AppColors.kWhite,
+                        label: "Login",
+                      )
+                    else
+                      const SizedBox(width: 10),
                     // Space between login button and cart
-                    CartIcons(),
                     if (CubitsInjector.authCubit.currentUser == null)
                       const SizedBox.shrink()
                     else
                       UserButton(),
+                    CartIcons(),
                   ],
                 ),
               ],
@@ -153,7 +155,7 @@ class _HeaderState extends State<Header> {
           Navigator.pushNamed(context, CartScreen.route);
         },
         child: Container(
-          padding: const EdgeInsets.only(right: 20),
+          padding: const EdgeInsets.only(right: 20, left: 20),
           child: const Icon(
             Icons.shopping_cart,
             size: 24,
@@ -253,7 +255,6 @@ class _HeaderState extends State<Header> {
       offset: const Offset(25, 10),
       onSelected: (value) {
         if (value == 'Your Orders') {
-          // Navigate to orders history
         } else if (value == 'Logout') {
           CubitsInjector.authCubit.logOut();
         }

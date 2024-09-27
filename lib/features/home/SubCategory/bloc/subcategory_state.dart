@@ -27,7 +27,7 @@ class GetSubCategoryDetailScreenSuccessState extends SubCategoryDetailState {
 
 class UpdateProductUsingSubCategorySuccessState extends SubCategoryDetailState {
   final List<Product_new> products;
-  final Organization organization;
+  final Organization? organization;
 
   UpdateProductUsingSubCategorySuccessState(
       {required this.products, required this.organization});
