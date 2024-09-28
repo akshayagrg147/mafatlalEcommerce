@@ -1,10 +1,10 @@
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/model/organization_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
-import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/order.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 import 'package:mafatlal_ecommerce/features/home/model/productdetial_model.dart';
+import 'package:mafatlal_ecommerce/features/home/model/searchmodel.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/routes/api_routes.dart';
 import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
@@ -110,15 +110,15 @@ class HomeRepo {
     await DioUtil().getInstance()?.patch(ApiRoutes.address, data: data);
   }
 
-  static Future<ApiResponse<List<Category_new>>> search(
+  static Future<ApiResponse<List<ProductSearch>>> search(
       String searchQuery) async {
     final response = await DioUtil()
         .getInstance()
         ?.get(ApiRoutes.search, queryParameters: {'search': searchQuery});
-    return ApiResponse<List<Category_new>>.fromJson(response?.data, (data) {
-      final categories = data['categories'] ?? [];
-      return List<Category_new>.from(
-          categories.map((e) => Category.fromJson(e)));
+    return ApiResponse<List<ProductSearch>>.fromJson(response?.data, (data) {
+      final categories = data['products'] ?? [];
+      return List<ProductSearch>.from(
+          categories.map((e) => ProductSearch.fromJson(e)));
     });
   }
 }

@@ -6,21 +6,21 @@ import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
-import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/category_item_widget.dart';
+import 'package:mafatlal_ecommerce/features/home/model/searchmodel.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/ProductSearchTile.dart';
 
 class SearchScreen extends StatefulWidget {
   static const String route = "/searchScreen";
-  final List<Category_new>? categories;
+  final List<ProductSearch>? products;
 
-  const SearchScreen({super.key, this.categories});
+  const SearchScreen({super.key, this.products});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final List<Category_new> categories = [];
+  final List<ProductSearch> productlist = [];
 
   @override
   void dispose() {
@@ -30,8 +30,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void initState() {
-    if (widget.categories != null) {
-      categories.addAll(widget.categories!);
+    if (widget.products != null) {
+      productlist.addAll(widget.products!);
     }
     super.initState();
   }
@@ -76,11 +76,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: BlocConsumer<HomeCubit, HomeState>(
               listener: (context, state) {
                 if (state is SearchSuccessState) {
-                  categories.clear();
-                  categories.addAll(state.organisations);
+                  productlist.clear();
+                  productlist.addAll(state.organisations);
                 }
                 if (state is SearchFailedState) {
-                  categories.clear();
+                  productlist.clear();
                 }
               },
               buildWhen: (previous, current) =>
@@ -93,16 +93,13 @@ class _SearchScreenState extends State<SearchScreen> {
                 }
                 return GridView.count(
                   shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: ResponsiveWidget.getGridCount(context),
                   childAspectRatio: 0.7,
                   mainAxisSpacing: 18,
                   crossAxisSpacing: 18,
-                  children: List.generate(
-                      CubitsInjector.homeCubit.storeData!.categories.length,
-                      (index) {
-                    return CategoryWidget(
-                      category: categories[index],
+                  children: List.generate(productlist.length, (index) {
+                    return ProductSearchTile(
+                      product: productlist[index],
                     );
                   }),
                 );

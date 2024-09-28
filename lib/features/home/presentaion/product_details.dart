@@ -290,16 +290,41 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
                           ),
                           SizedBox(
-                            height: 220,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: state.product.relatedProducts.length,
-                              itemBuilder: (context, index) {
-                                return RelatedProductTile(
-                                  product: state.product.relatedProducts[index],
-                                );
-                              },
+                            child: GridView.count(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              crossAxisCount:
+                                  ResponsiveWidget.getGridCount(context),
+                              childAspectRatio:
+                                  MediaQuery.sizeOf(context).width < 600
+                                      ? 0.5
+                                      : 0.7,
+                              crossAxisSpacing:
+                                  MediaQuery.sizeOf(context).width < 600
+                                      ? 30
+                                      : 42,
+                              children: List.generate(
+                                state.product.relatedProducts.length,
+                                (index) {
+                                  return Container(
+                                      margin: const EdgeInsets.all(10),
+                                      child: RelatedProductTile(
+                                        product: state
+                                            .product.relatedProducts[index],
+                                      ));
+                                },
+                              ),
                             ),
+
+                            // ListView.builder(
+                            //   scrollDirection: Axis.horizontal,
+                            //   itemCount: state.product.relatedProducts.length,
+                            //   itemBuilder: (context, index) {
+                            //     return RelatedProductTile(
+                            //       product: state.product.relatedProducts[index],
+                            //     );
+                            //   },
+                            // ),
                           ),
                         ],
                       );

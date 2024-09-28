@@ -71,17 +71,20 @@ class HomeCubit extends Cubit<HomeState> {
       if (isSearchScreenShown == false) {
         homeNavigatorKey.currentState!.push(MaterialPageRoute(
             builder: (_) => SearchScreen(
-                  categories: response.data ?? [],
+                  products: response.data ?? [],
                 )));
         isSearchScreenShown = true;
       }
+      print(response.data);
       emit(SearchSuccessState(
         organisations: response.data ?? [],
       ));
     } on DioException catch (e) {
+      print(e);
       emit(SearchFailedState(
           message: e.response?.statusMessage ?? AppStrings.somethingWentWrong));
     } catch (e) {
+      print(e);
       emit(SearchFailedState(message: AppStrings.somethingWentWrong));
     }
   }
