@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mafatlal_ecommerce/constants/app_strings.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/size_config.dart';
 
-class Footer extends StatelessWidget {
+class Footer extends StatefulWidget {
   const Footer({Key? key}) : super(key: key);
+
+  @override
+  State<Footer> createState() => _FooterState();
+}
+
+class _FooterState extends State<Footer> {
+  List<bool> _isHoveringList = List.generate(7, (index) => false);
 
   @override
   Widget build(BuildContext context) {
@@ -130,11 +138,11 @@ class Footer extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            _socialIcon(Icons.facebook, 'Facebook'),
+            _socialIcon(FontAwesomeIcons.facebook, 'Facebook'),
             SizedBox(width: 16 * SizeConfig.widthMultiplier),
-            _socialIcon(Icons.inbox, 'LinkedIn'),
+            _socialIcon(FontAwesomeIcons.linkedin, 'LinkedIn'),
             SizedBox(width: 16 * SizeConfig.widthMultiplier),
-            _socialIcon(Icons.six_ft_apart, 'Instagram'),
+            _socialIcon(FontAwesomeIcons.instagram, 'Instagram'),
           ],
         ),
       ],
@@ -212,13 +220,13 @@ class Footer extends StatelessWidget {
           style: AppTextStyle.f10WhiteW600,
         ),
         const SizedBox(height: 8),
-        _productItem(AppStrings.digitalclassroom),
-        _productItem(AppStrings.lms),
-        _productItem(AppStrings.tma),
-        _productItem(AppStrings.erp),
-        _productItem(AppStrings.DCC),
-        _productItem(AppStrings.AE),
-        _productItem(AppStrings.SSCS),
+        _productItem(AppStrings.digitalclassroom, 0),
+        _productItem(AppStrings.lms, 1),
+        _productItem(AppStrings.tma, 2),
+        _productItem(AppStrings.erp, 3),
+        _productItem(AppStrings.DCC, 4),
+        _productItem(AppStrings.AE, 5),
+        _productItem(AppStrings.SSCS, 6),
       ],
     );
   }
@@ -259,12 +267,39 @@ class Footer extends StatelessWidget {
     );
   }
 
-  Widget _productItem(String text) {
+  Widget _productItem(String text, int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Text(
-        text,
-        style: AppTextStyle.f10WhiteW600,
+      child: MouseRegion(
+        onEnter: (_) {
+          setState(() {
+            _isHoveringList[index] = true;
+          });
+        },
+        onExit: (_) {
+          setState(() {
+            _isHoveringList[index] = false;
+          });
+        },
+        cursor: SystemMouseCursors.click,
+        child: Container(
+          decoration: _isHoveringList[index]
+              ? BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.white, // Underline color
+                      width: 2.0, // Underline thickness
+                    ),
+                  ),
+                )
+              : null, // No underline when not hovering
+          padding: const EdgeInsets.only(
+              bottom: 2.0), // Space between text and underline
+          child: Text(
+            text,
+            style: AppTextStyle.f10WhiteW600,
+          ),
+        ),
       ),
     );
   }

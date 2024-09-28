@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mafatlal_ecommerce/constants/app_strings.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
+import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+import 'package:mafatlal_ecommerce/core/size_config.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/search_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/cart_btn.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/search_field.dart';
 
-class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
+class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Function()? onMenuTap;
 
   @override
@@ -15,11 +18,6 @@ class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
         super(key: key);
 
   @override
-  State<HomeAppBar> createState() => _HomeAppBarState();
-}
-
-class _HomeAppBarState extends State<HomeAppBar> {
-  @override
   Widget build(BuildContext context) {
     return AppBar(
       forceMaterialTransparency: true,
@@ -27,19 +25,46 @@ class _HomeAppBarState extends State<HomeAppBar> {
       elevation: 0,
       backgroundColor: Colors.transparent,
       leading: GestureDetector(
-        onTap: widget.onMenuTap,
+        onTap: onMenuTap,
         child: Icon(
           Icons.menu,
           color: AppColors.kGrey,
           size: 40,
         ),
       ),
-      title: Container(
-        padding: const EdgeInsets.all(5),
-        alignment: Alignment.center,
-        child: SearchInput(
-          textController: CubitsInjector.homeCubit.searchController,
-          hintText: "Search here",
+      title: GestureDetector(
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return const SearchScreen();
+          }));
+        },
+        child: TextField(
+          enabled: false,
+          controller: CubitsInjector.homeCubit.searchController,
+          decoration: InputDecoration(
+            filled: true,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 5,
+              vertical: 8,
+            ),
+            fillColor: AppColors.kGrey200,
+            prefixIcon: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 12,
+              ),
+              child: Icon(
+                Icons.search_sharp,
+                color: AppColors.kGrey,
+                size: 30 * SizeConfig.imageSizeMultiplier,
+              ),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide.none,
+            ),
+            hintStyle: AppTextStyle.f16GreyW500,
+            hintText: AppStrings.searchHint,
+          ),
         ),
       ),
       actions: [
