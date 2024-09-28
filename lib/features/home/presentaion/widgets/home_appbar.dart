@@ -4,7 +4,7 @@ import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/cart_btn.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/search_field.dart';
 
-class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Function()? onMenuTap;
 
   @override
@@ -15,6 +15,11 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         super(key: key);
 
   @override
+  State<HomeAppBar> createState() => _HomeAppBarState();
+}
+
+class _HomeAppBarState extends State<HomeAppBar> {
+  @override
   Widget build(BuildContext context) {
     return AppBar(
       forceMaterialTransparency: true,
@@ -22,7 +27,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       backgroundColor: Colors.transparent,
       leading: GestureDetector(
-        onTap: onMenuTap,
+        onTap: widget.onMenuTap,
         child: Icon(
           Icons.menu,
           color: AppColors.kGrey,
