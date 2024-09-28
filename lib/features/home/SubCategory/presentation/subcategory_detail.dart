@@ -66,8 +66,11 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
             ),
           ),
           Container(
-            alignment: Alignment.center,
-            height: 60,
+            padding: const EdgeInsets.only(top: 15),
+            margin: const EdgeInsets.only(top: 20),
+            height: MediaQuery.sizeOf(context).width < 600 ? 150 : 60,
+            alignment: Alignment.topLeft,
+            width: MediaQuery.sizeOf(context).width,
             decoration: const BoxDecoration(
               color: Color(0xFFFFFFFF),
               boxShadow: [
@@ -78,7 +81,9 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                 ),
               ],
             ),
-            child: Row(
+            child: Wrap(
+              runSpacing: 10,
+              alignment: WrapAlignment.start,
               children: [
                 BlocBuilder<SubcategoryCubit, SubCategoryDetailState>(
                   buildWhen: (previous, current) =>
@@ -348,6 +353,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                         visible: state.organization.isEmpty ? false : true,
                         child: _buildDynamicDropdown<Organization>(
                           hintText: 'Select Organization',
+
                           value: state.organization.isNotEmpty
                               ? state.organization.firstWhere(
                                   (stateItem) => stateItem.name == state.name,
@@ -508,10 +514,38 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
             child: Text(hintText, style: AppTextStyle.f12OutfitBlackW500),
           ),
           value: value,
-          items: items.map(itemBuilder).toList(),
+          items: items.map((item) {
+            final dropdownItem = itemBuilder(item);
+            return DropdownMenuItem<T>(
+              value: dropdownItem.value,
+              child: Container(
+                margin: EdgeInsets.only(left: 10),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    (dropdownItem.child as Text).data!,
+                    textAlign: TextAlign.center,
+                    style:
+                        AppTextStyle.f12OutfitBlackW500, // Decreased text size
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
           onChanged: onChanged,
           isExpanded: true,
-          icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+          icon: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const VerticalDivider(
+                color: Colors.grey,
+                thickness: 1,
+                indent: 8,
+                endIndent: 8,
+              ),
+              const Icon(Icons.arrow_drop_down, color: Colors.black),
+            ],
+          ),
         ),
       ),
     );
