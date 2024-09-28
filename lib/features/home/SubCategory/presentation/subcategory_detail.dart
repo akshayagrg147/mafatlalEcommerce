@@ -473,7 +473,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                         margin: const EdgeInsets.all(30),
                         alignment: Alignment.topLeft,
                         child: Text(
-                          '${state.organization?.subCategoryName} / ${state.organization?.stateName} / ${state.organization?.districtName} / ${state.organization?.name} ',
+                          '${state.organization?.subCategoryName} / ${state.organization?.stateName} / ${state.organization?.districtName} / ${state.orgname} ',
                           style: AppTextStyle.f33darkblue,
                         ),
                       ),

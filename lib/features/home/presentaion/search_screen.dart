@@ -179,16 +179,24 @@ class _SearchScreenState extends State<SearchScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      "Search Results",
-                      style: AppTextStyle.f20GreyW600,
-                    ),
-                  )
-                ],
+              BlocBuilder<HomeCubit, HomeState>(
+                buildWhen: (previous, current) => current is SearchSuccessState,
+                builder: (context, state) {
+                  if (state is SearchSuccessState) {
+                    return const Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                            "Search Results",
+                            style: AppTextStyle.f20GreyW600,
+                          ),
+                        )
+                      ],
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
               const SizedBox(height: 20),
               Expanded(
