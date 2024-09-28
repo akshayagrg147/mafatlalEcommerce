@@ -5,13 +5,17 @@ import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/constants/app_strings.dart';
 import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
+import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/bloc/subcategory_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/bloc/subcategory_state.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/model/district_model.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/model/organization_model.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/model/state_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/drawer.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_appbar.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_banner.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/product_grid_tile.dart';
 
@@ -29,6 +33,7 @@ class SubCategoryDetail extends StatefulWidget {
 
 class _SubCategoryDetailState extends State<SubCategoryDetail> {
   late SubcategoryCubit subcategoryCubit;
+  final _homeKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -41,8 +46,30 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ResponsiveWidget(largeScreen: largeScreen()),
+      body: ResponsiveWidget(
+        largeScreen: largeScreen(),
+        smallScreen: smallScreen(),
+      ),
     );
+  }
+
+  Widget smallScreen() {
+    return SafeArea(
+        child: Scaffold(
+            key: _homeKey,
+            appBar: HomeAppBar(
+              onMenuTap: () {
+                if (CubitsInjector.authCubit.currentUser != null) {
+                  _homeKey.currentState?.openDrawer();
+                } else {
+                  Navigator.pushNamed(context, LoginScreen.route);
+                }
+              },
+            ),
+            drawer: const HomeDrawer(),
+            body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: largeScreen())));
   }
 
   Widget largeScreen() {
@@ -66,9 +93,9 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(top: 15),
+            padding: const EdgeInsets.only(top: 15, right: 5),
             margin: const EdgeInsets.only(top: 20),
-            height: MediaQuery.sizeOf(context).width < 600 ? 150 : 60,
+            height: MediaQuery.sizeOf(context).width < 600 ? 120 : 60,
             alignment: Alignment.topLeft,
             width: MediaQuery.sizeOf(context).width,
             decoration: const BoxDecoration(
@@ -458,9 +485,11 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         crossAxisCount: ResponsiveWidget.getGridCount(context),
-                        childAspectRatio: 0.7,
+                        childAspectRatio:
+                            MediaQuery.sizeOf(context).width < 600 ? 0.38 : 0.8,
                         mainAxisSpacing: 18,
-                        crossAxisSpacing: 42,
+                        crossAxisSpacing:
+                            MediaQuery.sizeOf(context).width < 600 ? 20 : 42,
                         children: List.generate(
                           state.products.length,
                           (index) {
@@ -496,9 +525,9 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
     required void Function(T?) onChanged,
   }) {
     return Container(
-      width: 200,
+      width: MediaQuery.sizeOf(context).width < 600 ? 150 : 200,
       height: 30,
-      margin: const EdgeInsets.only(left: 20),
+      margin: const EdgeInsets.only(left: 5),
       decoration: BoxDecoration(
         color: const Color(0xFFFAFAFA),
         boxShadow: const [
