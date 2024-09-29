@@ -33,6 +33,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _pwdController = TextEditingController();
   final TextEditingController _rePwdController = TextEditingController();
   final TextEditingController _gstController = TextEditingController();
+  final TextEditingController _pincodeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? selectedState;
   String? selectedDistrict;
@@ -55,6 +56,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$')
         .hasMatch(value)) {
       return 'Invalid GST number format';
+    }
+    return null;
+  }
+
+  // write a function which will validate and return string for error else null for pincode
+  String? pincodeValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Pincode is required';
+    } else if (value.length != 6) {
+      return 'Pincode must be 6 characters long';
     }
     return null;
   }
@@ -277,6 +288,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     textEditingController: _gstController,
                   ),
                   const SizedBox(
+                    height: 20,
+                  ),
+                  CustomTextField(
+                    hint: "Pincode",
+                    suffixWidget: const Icon(Icons.pin_drop_outlined),
+                    formatters: [
+                      LengthLimitingTextInputFormatter(
+                          6), // Limit input to 15 characters
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    validation: pincodeValidator,
+                    textEditingController: _pincodeController,
+                  ),
+                  const SizedBox(
                     height: 26,
                   ),
                   BlocConsumer<AuthCubit, AuthState>(
@@ -308,7 +333,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 name: _nameController.text,
                                 state: selectedState!,
                                 district: selectedDistrict!,
-                                gstNo: _gstController.text);
+                                gstNo: _gstController.text,
+                                pincode: _pincodeController.text);
                           }
                         },
                         label: AppStrings.signUp,
@@ -508,6 +534,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       textEditingController: _gstController,
                     ),
                     const SizedBox(
+                      height: 20,
+                    ),
+                    CustomTextField(
+                      hint: "Pincode",
+                      suffixWidget: const Icon(Icons.pin_drop_outlined),
+                      formatters: [
+                        LengthLimitingTextInputFormatter(
+                            6), // Limit input to 15 characters
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      validation: pincodeValidator,
+                      textEditingController: _pincodeController,
+                    ),
+                    const SizedBox(
                       height: 40,
                     ),
                     BlocConsumer<AuthCubit, AuthState>(
@@ -538,7 +578,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   name: _nameController.text,
                                   state: selectedState!,
                                   district: selectedDistrict!,
-                                  gstNo: _gstController.text);
+                                  gstNo: _gstController.text,
+                                  pincode: _pincodeController.text);
                             }
                           },
                           label: AppStrings.signUp,

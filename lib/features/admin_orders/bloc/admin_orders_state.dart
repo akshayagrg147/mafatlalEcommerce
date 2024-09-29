@@ -29,3 +29,19 @@ class FetchOrderDetailsSuccessState extends AdminOrderState {
 }
 
 class FetchOrderDetailsFailedState extends AdminOrderState {}
+
+class UpdateSelectedDate extends AdminOrderState {}
+
+class ShowDispatchFormState extends AdminOrderState {}
+
+class HideDispatchFormState extends AdminOrderState {}
+
+class UpdateOrderStatusLoadingState extends AdminOrderState {}
+
+class UpdateOrderStatusSuccessState extends AdminOrderState {}
+
+class UpdateOrderStatusFailedState extends AdminOrderState {
+  UpdateOrderStatusFailedState({required this.message});
+
+  final String message;
+}

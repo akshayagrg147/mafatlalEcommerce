@@ -80,7 +80,8 @@ class AuthCubit extends Cubit<AuthState> {
       required String name,
       required String state,
       required String district,
-      required String gstNo}) async {
+      required String gstNo,
+      required String pincode}) async {
     try {
       if (state is RegisterUserLoadingState) {
         return;
@@ -92,7 +93,8 @@ class AuthCubit extends Cubit<AuthState> {
           name: name,
           state: state,
           district: district,
-          gstNo: gstNo);
+          gstNo: gstNo,
+          pinCode: pincode);
       if (response.data != null) {
         _currentUser = response.data;
         SharedPreferencesHelper.instance.setCurrentUser(response.data!);

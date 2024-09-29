@@ -5,16 +5,20 @@ import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
 
 class AdminOrderRepo {
   static Future<ApiResponse<List<OrderModel>>> fetchOrder(int userId,
-      {required int page}) async {
-    final dt = DateTime.now();
-    final fromDate = dt.subtract(Duration(days: 30));
-    final response = await DioUtil()
-        .getInstance()
-        ?.get(ApiRoutes.adminOrderList, queryParameters: {
+      {required int page, DateTime? fromDate, DateTime? toDate}) async {
+    final Map<String, dynamic> query = {
       'user_id': userId,
       'page': page,
-      'from': fromDate.toIso8601String()
-    });
+    };
+    if (fromDate != null) {
+      query['from'] = fromDate.toIso8601String();
+    }
+    if (toDate != null) {
+      query['to'] = toDate.toIso8601String();
+    }
+    final response = await DioUtil()
+        .getInstance()
+        ?.get(ApiRoutes.adminOrderList, queryParameters: query);
 
     return ApiResponse.fromJson(
         response!.data,
@@ -29,5 +33,16 @@ class AdminOrderRepo {
         queryParameters: {'order_id': orderId});
     return ApiResponse.fromJson(
         response!.data, (data) => OrderDetailModel.fromMap(data));
+  }
+
+  static Future<void> updateOrderStatus(int orderId,
+      {String? trackingUrl, required String status}) async {
+    String path = ApiRoutes.updateOrderStatus;
+    final Map<String, dynamic> query = {'order_id': orderId, 'status': status};
+    if (trackingUrl != null) {
+      path += '?tracking_url=$trackingUrl';
+    }
+    final response =
+        await DioUtil().getInstance()?.get(path, queryParameters: query);
   }
 }

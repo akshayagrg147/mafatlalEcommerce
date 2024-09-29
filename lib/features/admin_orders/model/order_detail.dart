@@ -56,7 +56,7 @@ class OrderedProduct {
   final int productId;
   final int quantity;
   final int price;
-  final String productImage;
+  final List<String>? productImage;
   final String productName;
   final String productCategory;
   final String? size;
@@ -75,7 +75,10 @@ class OrderedProduct {
         productId: json["product_id"],
         quantity: json["quantity"],
         price: json["price"],
-        productImage: json["product_image"],
+        productImage: json["product_image"] is Map
+            ? List<String>.from(
+                json["product_image"].values.map((e) => e.toString()))
+            : null,
         productName: json["product_name"],
         productCategory: json["product_category"],
         size: json["size"],

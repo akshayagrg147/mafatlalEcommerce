@@ -97,6 +97,8 @@ class AppTextStyle {
       color: AppColors.darkGray, fontSize: 18, fontWeight: FontWeight.w600);
   static TextStyle f18PoppinsGreenw600 = GoogleFonts.poppins(
       color: AppColors.kGreen, fontSize: 18, fontWeight: FontWeight.w600);
+  static TextStyle f18PoppinsBluew600 = GoogleFonts.poppins(
+      color: AppColors.kblue, fontSize: 18, fontWeight: FontWeight.w600);
   static TextStyle f18PoppinsWhitew600 = GoogleFonts.poppins(
       color: AppColors.kWhite, fontSize: 18, fontWeight: FontWeight.w600);
 }

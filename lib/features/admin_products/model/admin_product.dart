@@ -34,10 +34,10 @@ class AdminProduct {
     Map<String, dynamic> json,
   ) {
     final id = json['product_id'] ?? json['id'];
-    final variants = (json['size_available'] as Map);
+    final variants = (json['size_available'] as Map?);
     AdminVariant? variant;
-    if (variants.isNotEmpty) {
-      variant = AdminVariant.fromJson(variants.entries.first);
+    if (variants?.isNotEmpty == true) {
+      variant = AdminVariant.fromJson(variants!.entries.first);
     }
 
     return AdminProduct(

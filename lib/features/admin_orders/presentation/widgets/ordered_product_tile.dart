@@ -24,7 +24,9 @@ class OrderedProductTile extends StatelessWidget {
                 border: Border.all(color: AppColors.kGrey200),
                 image: DecorationImage(
                     image: CachedNetworkImageProvider(
-                      product.productImage,
+                      product.productImage?.isNotEmpty == true
+                          ? product.productImage!.first
+                          : "",
                     ),
                     fit: BoxFit.contain)),
           ),
