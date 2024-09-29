@@ -3,6 +3,7 @@ import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/order.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
 import 'package:mafatlal_ecommerce/features/home/model/productdetial_model.dart';
+import 'package:mafatlal_ecommerce/features/home/model/searchmodel.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 
 abstract class HomeState {}
@@ -142,7 +143,7 @@ class SearchInitialState extends HomeState {}
 class SearchLoadingState extends HomeState {}
 
 class SearchSuccessState extends HomeState {
-  final List<Category_new> organisations;
+  final List<ProductSearch> organisations;
 
   SearchSuccessState({required this.organisations});
 }

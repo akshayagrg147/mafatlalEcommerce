@@ -47,8 +47,9 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
 
         emit(UpdateProductUsingSubCategorySuccessState(
           products: products,
-          organization:
-              organization, // It can be null if no organization is available
+          organization: organization,
+          orgname: SelectedOrganizationname ??
+              '', // It can be null if no organization is available
         ));
       } else {
         // If there are products in the response
@@ -62,8 +63,9 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
 
         emit(UpdateProductUsingSubCategorySuccessState(
           products: products,
-          organization:
-              organization, // It can be null if no organization is available
+          organization: organization,
+          orgname: SelectedOrganizationname ??
+              '', // It can be null if no organization is available
         ));
       }
     } catch (e) {
@@ -126,6 +128,7 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
       if (subcategory != null && subcategory.isState == true) {
         final stateResponse = await SubCategoryRepo.getallstate();
         states = stateResponse;
+        states.insert(0, StateModel(id: 0, name: 'Select State'));
         if (states.isNotEmpty) {
           emit(GetAllStateSuccessState(states: states, name: ''));
         } else {
@@ -152,14 +155,18 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
 
   void selectState(String name) {
     SelectedStatename = name;
-    districts.clear();
-    // states.clear();
-    organizations.clear();
-    emit(GetAllDistrictSuccessState(district: districts, name: ''));
-    // emit(GetAllStateSuccessState(states: states, name: ''));
-    emit(GetAllOrganizationSuccessState(organization: organizations, name: ''));
-    getdistrict();
+    //
+    // districts.clear();
+    // // states.clear();
+    // organizations.clear();
+    // emit(GetAllDistrictSuccessState(
+    //     district: districts, name: SelectedSDistrictname!));
+    // // emit(GetAllStateSuccessState(states: states, name: ''));
+    // emit(GetAllOrganizationSuccessState(
+    //     organization: organizations, name: SelectedOrganizationname!));
     emit(GetAllStateSuccessState(states: states, name: SelectedStatename!));
+
+    getdistrict();
   }
 
   Future<void> getdistrict() async {
@@ -179,9 +186,18 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
         final state = states.firstWhere((s) => s.name == SelectedStatename);
         final districtresponse = await SubCategoryRepo.getalldistrict(state.id);
         districts = districtresponse;
+        districts.insert(
+            0,
+            DistrictModel(
+                stateName: 'Select State',
+                stateId: 0,
+                id: 0,
+                name: 'Select District'));
+
         if (districts.isNotEmpty) {
           emit(GetAllDistrictSuccessState(district: districts, name: ''));
-          emit(GetAllStateSuccessState(states: states, name: ''));
+          // emit(GetAllStateSuccessState(
+          //     states: states, name: SelectedStatename!));
         } else {
           emit(GetAllDistrictFailedState(message: 'No districts found'));
         }
@@ -219,6 +235,18 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
         final organizationresponse =
             await SubCategoryRepo.getorganization(district.id);
         organizations = organizationresponse;
+        organizations.insert(
+            0,
+            Organization(
+                districtId: 0,
+                districtName: SelectedSDistrictname ?? 'Select District',
+                subCategoryId: 0,
+                subCategoryName:
+                    SelectedSubcategoryname ?? 'Select Subcategory',
+                id: 0,
+                name: SelectedOrganizationname ?? 'Select Organization',
+                stateId: 0,
+                stateName: SelectedStatename ?? 'Select State'));
         if (organizations.isNotEmpty) {
           emit(GetAllOrganizationSuccessState(
               organization: organizations, name: ''));

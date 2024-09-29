@@ -61,27 +61,52 @@ class HomeCubit extends Cubit<HomeState> {
   //     },
   //   );
   // }
-
   void searchOrganisation(String searchText) async {
     try {
       emit(SearchLoadingState());
 
       await Future.delayed(const Duration(milliseconds: 200));
       final response = await HomeRepo.search(searchText);
-      if (isSearchScreenShown == false) {
-        homeNavigatorKey.currentState!.push(MaterialPageRoute(
-            builder: (_) => SearchScreen(
-                  categories: response.data ?? [],
-                )));
-        isSearchScreenShown = true;
-      }
+      homeNavigatorKey.currentState!.push(MaterialPageRoute(
+          builder: (_) => SearchScreen(
+                products: response.data ?? [],
+              )));
+      isSearchScreenShown = true;
+      print(response.data);
       emit(SearchSuccessState(
         organisations: response.data ?? [],
       ));
     } on DioException catch (e) {
+      print(e);
       emit(SearchFailedState(
           message: e.response?.statusMessage ?? AppStrings.somethingWentWrong));
     } catch (e) {
+      print(e);
+      emit(SearchFailedState(message: AppStrings.somethingWentWrong));
+    }
+  }
+
+  void searchOrganisationsmall(String searchText) async {
+    try {
+      emit(SearchLoadingState());
+
+      await Future.delayed(const Duration(milliseconds: 200));
+      final response = await HomeRepo.search(searchText);
+      // homeNavigatorKey.currentState!.push(MaterialPageRoute(
+      //     builder: (_) => SearchScreen(
+      //           products: response.data ?? [],
+      //         )));
+      // isSearchScreenShown = true;
+      print(response.data);
+      emit(SearchSuccessState(
+        organisations: response.data ?? [],
+      ));
+    } on DioException catch (e) {
+      print(e);
+      emit(SearchFailedState(
+          message: e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      print(e);
       emit(SearchFailedState(message: AppStrings.somethingWentWrong));
     }
   }

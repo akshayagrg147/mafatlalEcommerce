@@ -5,13 +5,17 @@ import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/constants/app_strings.dart';
 import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
+import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/bloc/subcategory_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/bloc/subcategory_state.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/model/district_model.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/model/organization_model.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/model/state_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/drawer.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_appbar.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_banner.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/product_grid_tile.dart';
 
@@ -29,6 +33,7 @@ class SubCategoryDetail extends StatefulWidget {
 
 class _SubCategoryDetailState extends State<SubCategoryDetail> {
   late SubcategoryCubit subcategoryCubit;
+  final _homeKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -41,8 +46,30 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ResponsiveWidget(largeScreen: largeScreen()),
+      body: ResponsiveWidget(
+        largeScreen: largeScreen(),
+        smallScreen: smallScreen(),
+      ),
     );
+  }
+
+  Widget smallScreen() {
+    return SafeArea(
+        child: Scaffold(
+            key: _homeKey,
+            appBar: HomeAppBar(
+              onMenuTap: () {
+                if (CubitsInjector.authCubit.currentUser != null) {
+                  _homeKey.currentState?.openDrawer();
+                } else {
+                  Navigator.pushNamed(context, LoginScreen.route);
+                }
+              },
+            ),
+            drawer: const HomeDrawer(),
+            body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: largeScreen())));
   }
 
   Widget largeScreen() {
@@ -66,8 +93,11 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
             ),
           ),
           Container(
-            alignment: Alignment.center,
-            height: 60,
+            padding: const EdgeInsets.only(top: 15, right: 5),
+            margin: const EdgeInsets.only(top: 20),
+            height: MediaQuery.sizeOf(context).width < 600 ? 120 : 60,
+            alignment: Alignment.topLeft,
+            width: MediaQuery.sizeOf(context).width,
             decoration: const BoxDecoration(
               color: Color(0xFFFFFFFF),
               boxShadow: [
@@ -78,7 +108,9 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                 ),
               ],
             ),
-            child: Row(
+            child: Wrap(
+              runSpacing: 10,
+              alignment: WrapAlignment.start,
               children: [
                 BlocBuilder<SubcategoryCubit, SubCategoryDetailState>(
                   buildWhen: (previous, current) =>
@@ -348,6 +380,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                         visible: state.organization.isEmpty ? false : true,
                         child: _buildDynamicDropdown<Organization>(
                           hintText: 'Select Organization',
+
                           value: state.organization.isNotEmpty
                               ? state.organization.firstWhere(
                                   (stateItem) => stateItem.name == state.name,
@@ -440,7 +473,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                         margin: const EdgeInsets.all(30),
                         alignment: Alignment.topLeft,
                         child: Text(
-                          '${state.organization?.subCategoryName} / ${state.organization?.stateName} / ${state.organization?.districtName} / ${state.organization?.name} ',
+                          '${state.organization?.subCategoryName} / ${state.organization?.stateName} / ${state.organization?.districtName} / ${state.orgname} ',
                           style: AppTextStyle.f33darkblue,
                         ),
                       ),
@@ -452,9 +485,11 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         crossAxisCount: ResponsiveWidget.getGridCount(context),
-                        childAspectRatio: 0.7,
+                        childAspectRatio:
+                            MediaQuery.sizeOf(context).width < 600 ? 0.38 : 0.8,
                         mainAxisSpacing: 18,
-                        crossAxisSpacing: 42,
+                        crossAxisSpacing:
+                            MediaQuery.sizeOf(context).width < 600 ? 20 : 42,
                         children: List.generate(
                           state.products.length,
                           (index) {
@@ -490,9 +525,9 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
     required void Function(T?) onChanged,
   }) {
     return Container(
-      width: 200,
+      width: MediaQuery.sizeOf(context).width < 600 ? 150 : 200,
       height: 30,
-      margin: const EdgeInsets.only(left: 20),
+      margin: const EdgeInsets.only(left: 5),
       decoration: BoxDecoration(
         color: const Color(0xFFFAFAFA),
         boxShadow: const [
@@ -508,10 +543,38 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
             child: Text(hintText, style: AppTextStyle.f12OutfitBlackW500),
           ),
           value: value,
-          items: items.map(itemBuilder).toList(),
+          items: items.map((item) {
+            final dropdownItem = itemBuilder(item);
+            return DropdownMenuItem<T>(
+              value: dropdownItem.value,
+              child: Container(
+                margin: EdgeInsets.only(left: 10),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    (dropdownItem.child as Text).data!,
+                    textAlign: TextAlign.center,
+                    style:
+                        AppTextStyle.f12OutfitBlackW500, // Decreased text size
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
           onChanged: onChanged,
           isExpanded: true,
-          icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+          icon: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const VerticalDivider(
+                color: Colors.grey,
+                thickness: 1,
+                indent: 8,
+                endIndent: 8,
+              ),
+              const Icon(Icons.arrow_drop_down, color: Colors.black),
+            ],
+          ),
         ),
       ),
     );

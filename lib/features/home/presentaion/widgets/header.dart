@@ -10,6 +10,7 @@ import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/search_field.dart';
 
 class Header extends StatefulWidget {
@@ -50,12 +51,19 @@ class _HeaderState extends State<Header> {
           // Logo and Search
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.only(left: 10, top: 10),
-                child: Image.asset(
-                  AssetPath.logo1,
-                  fit: BoxFit.fitHeight,
-                  height: 60,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) {
+                    return HomeScreen();
+                  }));
+                },
+                child: Container(
+                  padding: const EdgeInsets.only(left: 10, top: 10),
+                  child: Image.asset(
+                    AssetPath.logo1,
+                    fit: BoxFit.fitHeight,
+                    height: 60,
+                  ),
                 ),
               ),
               const SizedBox(width: 50), // Space between logo and search

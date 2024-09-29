@@ -64,261 +64,281 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           );
         }
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 40),
-              CarouselSlider(
-                items: bannerImages
-                    .map((imagePath) => HomeBanner(imagePath: imagePath))
-                    .toList(),
-                options: CarouselOptions(
-                  viewportFraction: 1,
-                  height: ResponsiveWidget.isSmallScreen(context) ? 200 : 400.0,
-                  autoPlay: true,
+        return Scaffold(
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 40),
+                CarouselSlider(
+                  items: bannerImages
+                      .map((imagePath) => HomeBanner(imagePath: imagePath))
+                      .toList(),
+                  options: CarouselOptions(
+                    viewportFraction: 1,
+                    height:
+                        ResponsiveWidget.isSmallScreen(context) ? 200 : 400.0,
+                    autoPlay: true,
+                  ),
                 ),
-              ),
 
-              BlocBuilder<HomeCubit, HomeState>(
-                buildWhen: (previous, current) =>
-                    current is FetchProductDetailsSuccessState ||
-                    current is UpdateProductVariantLoadingState ||
-                    current is UpdateProductVariantState,
-                builder: (context, state) {
-                  if (state is FetchProductDetailsSuccessState) {
-                    return Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Text(
-                        '${state.product.productSubCategory} / ${state.product.name}',
-                        style: AppTextStyle.f33darkblue,
-                      ),
-                    );
-                  }
-
-                  return SizedBox.shrink();
-                },
-              ),
-              BlocBuilder<HomeCubit, HomeState>(
-                buildWhen: (previous, current) =>
-                    current is FetchProductDetailsSuccessState ||
-                    current is UpdateProductVariantLoadingState ||
-                    current is UpdateProductVariantState,
-                builder: (context, state) {
-                  if (state is FetchProductDetailsSuccessState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.all(10),
-                              height: 290,
-                              width: 100,
-                              child: ListView.builder(
-                                itemCount: state.product.productImage.length,
-                                scrollDirection: Axis.vertical,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    height: 80,
-                                    width: 80,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFFFFFFF),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Color(0x29004392),
-                                          offset: Offset(0, 8),
-                                          blurRadius: 12.0,
-                                        ),
-                                      ],
-                                    ),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          state.product.productImage[index],
-                                      fit: BoxFit.contain,
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(
-                                        Icons.error,
-                                        color: AppColors.kBlack,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Container(
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    'Petrol Pump Uniform / Hindutsan Petroleum / Hind Petroleum Waist Coat',
+                    style: AppTextStyle.f33darkblue,
+                  ),
+                ),
+                BlocBuilder<HomeCubit, HomeState>(
+                  buildWhen: (previous, current) =>
+                      current is FetchProductDetailsSuccessState ||
+                      current is UpdateProductVariantLoadingState ||
+                      current is UpdateProductVariantState,
+                  builder: (context, state) {
+                    if (state is FetchProductDetailsSuccessState) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.all(10),
                                 height: 290,
-                                margin: const EdgeInsets.all(20),
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFFFFFFFF),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color(0x1F004392),
-                                      offset: Offset(0, 8),
-                                      blurRadius: 24.0,
-                                    ),
-                                  ],
+                                width: 100,
+                                child: ListView.builder(
+                                  itemCount: state.product.productImage.length,
+                                  scrollDirection: Axis.vertical,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      height: 80,
+                                      width: 80,
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFFFFFFFF),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Color(0x29004392),
+                                            offset: Offset(0, 8),
+                                            blurRadius: 12.0,
+                                          ),
+                                        ],
+                                      ),
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            state.product.productImage[index],
+                                        fit: BoxFit.contain,
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(
+                                          Icons.error,
+                                          color: AppColors.kBlack,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                                child: CachedNetworkImage(
-                                  imageUrl: state.product.productImage.first,
-                                  fit: BoxFit.contain,
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(
-                                    Icons.error,
-                                    color: AppColors.kBlack,
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  height: 290,
+                                  margin: const EdgeInsets.all(20),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFFFFFFF),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0x1F004392),
+                                        offset: Offset(0, 8),
+                                        blurRadius: 24.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: CachedNetworkImage(
+                                    imageUrl: state.product.productImage.first,
+                                    fit: BoxFit.contain,
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(
+                                      Icons.error,
+                                      color: AppColors.kBlack,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
 
-                            // Product information
-                            Expanded(
-                              flex: 3,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      state.product.name,
-                                      style: AppTextStyle.f16BlackW400,
-                                    ),
-                                    const SizedBox(height: 20),
-                                    const Row(
-                                      children: [
-                                        Text('Availability: '),
-                                        SizedBox(width: 5),
-                                        Text(
-                                          'In Stock',
-                                          style: AppTextStyle.f12GreenW500,
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Row(
-                                      children: [
-                                        const Text('Product Type: '),
-                                        const SizedBox(width: 5),
-                                        Text(
-                                          state.product.productCategory,
-                                          style:
-                                              AppTextStyle.f12OutfitBlackW500,
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Row(
-                                      children: [
-                                        const Text('Rs. '),
-                                        const SizedBox(width: 5),
-                                        Text(state.product.price,
-                                            style: AppTextStyle
-                                                .f12OutfitBlackW500),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
-
-                                    if (state.product.variant != null)
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                              // Product information
+                              Expanded(
+                                flex: 3,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        state.product.name,
+                                        style: AppTextStyle.f16BlackW400,
+                                      ),
+                                      const SizedBox(height: 20),
+                                      const Row(
                                         children: [
+                                          Text('Availability: '),
+                                          SizedBox(width: 5),
                                           Text(
-                                            'Select Size',
+                                            'In Stock',
+                                            style: AppTextStyle.f12GreenW500,
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Row(
+                                        children: [
+                                          const Text('Product Type: '),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            state.product.productCategory,
                                             style:
                                                 AppTextStyle.f12OutfitBlackW500,
                                           ),
-                                          const SizedBox(height: 10),
-                                          SizeSelection(
-                                            variant: state.product.variant!,
-                                            onVariantSelected: (o) {
-                                              state.product.variant!
-                                                  .selectedVariant = o;
-                                              state.product.quantity =
-                                                  CartHelper.getProductQuantity(
-                                                int.parse(state.product.id),
-                                                variant: state.product.variant,
-                                              );
-                                              CubitsInjector.homeCubit
-                                                  .updateProductVariant(
-                                                int.parse(state.product.id),
-                                                selectedVariant: state.product
-                                                    .variant!.selectedVariant,
-                                              );
-                                            },
-                                          ),
-                                          const SizedBox(height: 20),
                                         ],
                                       ),
-
-                                    // Quantity selection
-                                    Text(
-                                      'Select Quantity',
-                                      style: AppTextStyle.f12OutfitBlackW500,
-                                    ),
-                                    const SizedBox(height: 10),
-                                    SizedBox(
-                                      width: 100,
-                                      child: StreamBuilder<BoxEvent>(
-                                        stream: CartHelper.watchCart(
-                                          int.parse(state.product.id),
-                                          state.product.variant,
-                                        ),
-                                        builder: (context, eventSnapshot) {
-                                          if (eventSnapshot.hasData) {
-                                            final data =
-                                                eventSnapshot.data?.value ?? {};
-                                            state.product.quantity =
-                                                data['quantity'] ?? 0;
-                                          }
-                                          return AddToCartWidget(
-                                            quantity: state.product.quantity,
-                                            productId:
-                                                int.parse(state.product.id),
-                                            variant: state.product.variant,
-                                          );
-                                        },
+                                      const SizedBox(height: 20),
+                                      Row(
+                                        children: [
+                                          const Text('Rs. '),
+                                          const SizedBox(width: 5),
+                                          Text(state.product.price,
+                                              style: AppTextStyle
+                                                  .f12OutfitBlackW500),
+                                        ],
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(height: 20),
+
+                                      if (state.product.variant != null)
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Select Size',
+                                              style: AppTextStyle
+                                                  .f12OutfitBlackW500,
+                                            ),
+                                            const SizedBox(height: 10),
+                                            SizeSelection(
+                                              variant: state.product.variant!,
+                                              onVariantSelected: (o) {
+                                                state.product.variant!
+                                                    .selectedVariant = o;
+                                                state.product.quantity =
+                                                    CartHelper
+                                                        .getProductQuantity(
+                                                  int.parse(state.product.id),
+                                                  variant:
+                                                      state.product.variant,
+                                                );
+                                                CubitsInjector.homeCubit
+                                                    .updateProductVariant(
+                                                  int.parse(state.product.id),
+                                                  selectedVariant: state.product
+                                                      .variant!.selectedVariant,
+                                                );
+                                              },
+                                            ),
+                                            const SizedBox(height: 20),
+                                          ],
+                                        ),
+
+                                      // Quantity selection
+                                      Text(
+                                        'Select Quantity',
+                                        style: AppTextStyle.f12OutfitBlackW500,
+                                      ),
+                                      const SizedBox(height: 10),
+                                      SizedBox(
+                                        width: 100,
+                                        child: StreamBuilder<BoxEvent>(
+                                          stream: CartHelper.watchCart(
+                                            int.parse(state.product.id),
+                                            state.product.variant,
+                                          ),
+                                          builder: (context, eventSnapshot) {
+                                            if (eventSnapshot.hasData) {
+                                              final data =
+                                                  eventSnapshot.data?.value ??
+                                                      {};
+                                              state.product.quantity =
+                                                  data['quantity'] ?? 0;
+                                            }
+                                            return AddToCartWidget(
+                                              quantity: state.product.quantity,
+                                              productId:
+                                                  int.parse(state.product.id),
+                                              variant: state.product.variant,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Text(
+                              'Petrol Pump Uniforms by Hindustan Petroleum',
+                              style: AppTextStyle.f33darkblue,
                             ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Text(
-                            'Petrol Pump Uniforms by Hindustan Petroleum',
-                            style: AppTextStyle.f33darkblue,
                           ),
-                        ),
-                        SizedBox(
-                          height: 220,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: state.product.relatedProducts.length,
-                            itemBuilder: (context, index) {
-                              return RelatedProductTile(
-                                product: state.product.relatedProducts[index],
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    );
-                  }
+                          SizedBox(
+                            child: GridView.count(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              crossAxisCount:
+                                  ResponsiveWidget.getGridCount(context),
+                              childAspectRatio:
+                                  MediaQuery.sizeOf(context).width < 600
+                                      ? 0.5
+                                      : 0.7,
+                              crossAxisSpacing:
+                                  MediaQuery.sizeOf(context).width < 600
+                                      ? 30
+                                      : 42,
+                              children: List.generate(
+                                state.product.relatedProducts.length,
+                                (index) {
+                                  return Container(
+                                      margin: const EdgeInsets.all(10),
+                                      child: RelatedProductTile(
+                                        product: state
+                                            .product.relatedProducts[index],
+                                      ));
+                                },
+                              ),
+                            ),
 
-                  return const Center(child: Text('No Data'));
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Footer(), // Footer widget
-            ],
+                            // ListView.builder(
+                            //   scrollDirection: Axis.horizontal,
+                            //   itemCount: state.product.relatedProducts.length,
+                            //   itemBuilder: (context, index) {
+                            //     return RelatedProductTile(
+                            //       product: state.product.relatedProducts[index],
+                            //     );
+                            //   },
+                            // ),
+                          ),
+                        ],
+                      );
+                    }
+
+                    return const Center(child: Text('No Data'));
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Footer(), // Footer widget
+              ],
+            ),
           ),
         );
       },
