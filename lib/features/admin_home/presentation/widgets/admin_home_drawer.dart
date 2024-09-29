@@ -65,7 +65,7 @@ class AdminHomeDrawer extends StatelessWidget {
                 },
                 leading: const Icon(Icons.group),
                 title: Text(
-                  "Organisations",
+                  "Categories",
                   style: AppTextStyle.f14OutfitBlackW500,
                 ),
               ),

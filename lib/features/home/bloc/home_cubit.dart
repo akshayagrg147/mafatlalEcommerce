@@ -12,7 +12,7 @@ import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
-import 'package:mafatlal_ecommerce/features/home/model/store_model.dart';
+import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/search_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/repo/home_repo.dart';
 import 'package:mafatlal_ecommerce/helper/enums.dart';
@@ -21,12 +21,14 @@ import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitialState());
 
-  Store? _storeData;
-  Store? get storeData => _storeData;
+  CategoriesAndProducts? _storeData;
+
+  CategoriesAndProducts? get storeData => _storeData;
 
   bool isCategoryScreenShown = false;
-  final List<Product> cartProducts = [];
+  final List<Product_new> cartProducts = [];
   final searchController = TextEditingController();
+
   // Timer? _timer;
 
   bool isSearchScreenShown = false;
@@ -59,29 +61,72 @@ class HomeCubit extends Cubit<HomeState> {
   //     },
   //   );
   // }
-
   void searchOrganisation(String searchText) async {
     try {
       emit(SearchLoadingState());
 
       await Future.delayed(const Duration(milliseconds: 200));
       final response = await HomeRepo.search(searchText);
-      if (isSearchScreenShown == false) {
-        homeNavigatorKey.currentState!.push(MaterialPageRoute(
-            builder: (_) => SearchScreen(
-                  categories: response.data ?? [],
-                )));
-        isSearchScreenShown = true;
-      }
+      homeNavigatorKey.currentState!.push(MaterialPageRoute(
+          builder: (_) => SearchScreen(
+                products: response.data ?? [],
+              )));
+      isSearchScreenShown = true;
+      print(response.data);
       emit(SearchSuccessState(
         organisations: response.data ?? [],
       ));
     } on DioException catch (e) {
+      print(e);
       emit(SearchFailedState(
           message: e.response?.statusMessage ?? AppStrings.somethingWentWrong));
     } catch (e) {
+      print(e);
       emit(SearchFailedState(message: AppStrings.somethingWentWrong));
     }
+  }
+
+  void searchOrganisationsmall(String searchText) async {
+    try {
+      emit(SearchLoadingState());
+
+      await Future.delayed(const Duration(milliseconds: 200));
+      final response = await HomeRepo.search(searchText);
+      // homeNavigatorKey.currentState!.push(MaterialPageRoute(
+      //     builder: (_) => SearchScreen(
+      //           products: response.data ?? [],
+      //         )));
+      // isSearchScreenShown = true;
+      print(response.data);
+      emit(SearchSuccessState(
+        organisations: response.data ?? [],
+      ));
+    } on DioException catch (e) {
+      print(e);
+      emit(SearchFailedState(
+          message: e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      print(e);
+      emit(SearchFailedState(message: AppStrings.somethingWentWrong));
+    }
+  }
+
+  void getsubcategory() {
+    emit(GetSubCategoryLoadingState());
+  }
+
+  void UpdateSubCategory(
+      List<SubCategory_new> subCategories, String selectedCategoryName) {
+    emit(UpdateLabelSuccessState(selectedCategoryName: selectedCategoryName));
+    emit(UpdateSubCategorySuccessState(subcategoy: subCategories));
+  }
+
+  Future<void> UpdateproductAccordingtoCategory(int subid) async {
+    emit(UpdateProductUsingSubCategoryLoadingState());
+    final response = await HomeRepo.getProductsBySubCatId(subid);
+    print(response);
+    emit(UpdateProductUsingSubCategorySuccessState(
+        products: response.data!, subCategoryId: subid));
   }
 
   void updateState(String state) {
@@ -125,6 +170,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(FetchStoreDataFailedState(
           e.response?.statusMessage ?? AppStrings.somethingWentWrong));
     } catch (e) {
+      print('e----$e');
       emit(FetchStoreDataFailedState(AppStrings.somethingWentWrong));
     }
   }
@@ -178,7 +224,7 @@ class HomeCubit extends Cubit<HomeState> {
               (option) => option.name == selectedVariantString,
             );
 
-            final cartProduct = Product(
+            final cartProduct = Product_new(
               productId: product.productId,
               productName: product.productName,
               productCategory: product.productCategory,
@@ -188,6 +234,7 @@ class HomeCubit extends Cubit<HomeState> {
               variant: selectedVariant != null
                   ? product.variant!.copyWith(selectedVariant)
                   : product.variant,
+              categoryId: product.categoryId,
             );
 
             cartProducts.add(cartProduct);
@@ -224,11 +271,15 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       emit(FetchProductDetailsLoadingState());
       final response = await HomeRepo.fetchProductDetails(productId);
+      print("e---${response.data!.price}");
+
       emit(FetchProductDetailsSuccessState(product: response.data!));
     } on DioException catch (e) {
+      print(e);
       emit(FetchProductDetailsFailedState(
           message: e.message ?? AppStrings.somethingWentWrong));
     } catch (e) {
+      print(e);
       emit(FetchProductDetailsFailedState(
           message: AppStrings.somethingWentWrong));
     }

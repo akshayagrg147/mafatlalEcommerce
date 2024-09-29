@@ -31,7 +31,7 @@ class OrderModel {
 
   factory OrderModel.fromMap(Map<String, dynamic> json) => OrderModel(
         orderId: json["order_id"],
-        createdOn: DateTime.parse(json["created_on"]),
+        createdOn: DateTime.parse(json["created_on"]).toLocal(),
         customerName: json["customer_name"],
         productQuantity: json["product_quantity"],
         userId: json["user_id"],

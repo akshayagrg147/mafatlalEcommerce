@@ -1,6 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mafatlal_ecommerce/components/date_filter_btn.dart';
 import 'package:mafatlal_ecommerce/components/elevated_btn_with_icon.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
@@ -22,18 +23,31 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
   final List<OrderModel> orders = [];
   int page = 1;
   int totalPage = 1;
+  DateTime? selectedFromDate;
+  DateTime? selectedToDate;
 
   @override
   void initState() {
-    context.read<AdminOrderCubit>().fetchOrders(page);
+    context.read<AdminOrderCubit>().fetchOrders(
+          page,
+          fromDate: Utils.getTodayDate(),
+        );
     super.initState();
+  }
+
+  void fetchOrders({int? fetchPage}) {
+    context.read<AdminOrderCubit>().fetchOrders(
+          fetchPage ?? page,
+          fromDate: selectedFromDate ?? Utils.getTodayDate(),
+          toDate: selectedToDate?.add(const Duration(days: 1)),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.maxFinite,
-      padding: EdgeInsets.fromLTRB(12, 30, 12, 5),
+      padding: const EdgeInsets.fromLTRB(12, 30, 12, 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -41,45 +55,109 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
             "Orders",
             style: AppTextStyle.f18OutfitBlackW500,
           ),
-          SizedBox(
-            height: 35,
+          const SizedBox(
+            height: 15,
           ),
-          Container(
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                  color: AppColors.kWhite,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey
-                          .withOpacity(0.7), // Shadow color with opacity
-                      spreadRadius: 3, // How much the shadow spreads
-                      blurRadius: 5, // Blurring effect
-                      offset: Offset(0, 3), // Shadow position (x, y)
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(12)),
-              constraints: const BoxConstraints(minHeight: 200, maxHeight: 700),
-              child: BlocConsumer<AdminOrderCubit, AdminOrderState>(
-                listener: (context, state) {
-                  if (state is FetchOrdersSuccessState) {
-                    orders.clear();
-                    orders.addAll(state.orderList);
-                    page = state.currentPage;
-                    totalPage = state.totalPage;
-                  }
-                },
-                buildWhen: (previous, current) =>
-                    current is FetchOrdersLoadingState ||
-                    current is FetchOrdersSuccessState ||
-                    current is FetchOrdersFailedState,
-                builder: (context, state) {
-                  if (state is FetchOrdersLoadingState) {
-                    return const LoadingAnimation();
-                  }
-                  return orderTable();
-                },
-              )),
-          SizedBox(
+          BlocBuilder<AdminOrderCubit, AdminOrderState>(
+            buildWhen: (previous, current) => current is UpdateSelectedDate,
+            builder: (context, state) {
+              return Row(
+                children: [
+                  DateFilterButton(
+                      selectedDate: selectedFromDate,
+                      onDateSelected: (selectedDate) {
+                        selectedFromDate = selectedDate;
+                        context.read<AdminOrderCubit>().updateSelectedDate();
+                        if (selectedFromDate != null &&
+                            selectedToDate != null) {
+                          page = 1;
+                          fetchOrders();
+                        }
+                      },
+                      dateValidator: (selectedDate) {
+                        if (selectedToDate == null) return true;
+                        return selectedDate.isBefore(selectedToDate!);
+                      },
+                      label: "From Date"),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  DateFilterButton(
+                      selectedDate: selectedToDate,
+                      onDateSelected: (selectedDate) {
+                        selectedToDate = selectedDate;
+                        context.read<AdminOrderCubit>().updateSelectedDate();
+                        if (selectedFromDate != null &&
+                            selectedToDate != null) {
+                          page = 1;
+                          fetchOrders();
+                        }
+                      },
+                      dateValidator: (selectedDate) {
+                        if (selectedFromDate == null) return true;
+                        return selectedDate.isAfter(selectedFromDate!);
+                      },
+                      label: "To Date"),
+                  const Spacer(),
+                  if (selectedFromDate != null || selectedToDate != null)
+                    TextButton(
+                        onPressed: () {
+                          selectedFromDate = null;
+                          selectedToDate = null;
+                          page = 1;
+                          context.read<AdminOrderCubit>().updateSelectedDate();
+                          fetchOrders();
+                        },
+                        child: Text(
+                          "Reset",
+                          style: AppTextStyle.f18PoppinsBlackw400
+                              .copyWith(decoration: TextDecoration.underline),
+                        ))
+                ],
+              );
+            },
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Expanded(
+            child: Container(
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                    color: AppColors.kWhite,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey
+                            .withOpacity(0.7), // Shadow color with opacity
+                        spreadRadius: 3, // How much the shadow spreads
+                        blurRadius: 5, // Blurring effect
+                        offset: const Offset(0, 3), // Shadow position (x, y)
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(12)),
+                // constraints: const BoxConstraints(minHeight: 200, maxHeight: 700),
+                child: BlocConsumer<AdminOrderCubit, AdminOrderState>(
+                  listener: (context, state) {
+                    if (state is FetchOrdersSuccessState) {
+                      orders.clear();
+                      orders.addAll(state.orderList);
+                      page = state.currentPage;
+                      totalPage = state.totalPage;
+                    }
+                  },
+                  buildWhen: (previous, current) =>
+                      current is FetchOrdersLoadingState ||
+                      current is FetchOrdersSuccessState ||
+                      current is FetchOrdersFailedState,
+                  builder: (context, state) {
+                    if (state is FetchOrdersLoadingState) {
+                      return const LoadingAnimation();
+                    }
+                    return orderTable();
+                  },
+                )),
+          ),
+          const SizedBox(
             height: 20,
           ),
           BlocBuilder<AdminOrderCubit, AdminOrderState>(
@@ -93,28 +171,27 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
                   ElevatedButtonWithIcon(
                       onPressed: page > 1
                           ? () {
-                              context
-                                  .read<AdminOrderCubit>()
-                                  .fetchOrders(page - 1);
+                              fetchOrders(fetchPage: page - 1);
                             }
                           : null,
                       icon: Icons.arrow_back_ios),
-                  SizedBox(
+                  const SizedBox(
                     width: 50,
                   ),
                   ElevatedButtonWithIcon(
                       onPressed: page < totalPage
                           ? () {
-                              context
-                                  .read<AdminOrderCubit>()
-                                  .fetchOrders(page + 1);
+                              fetchOrders(fetchPage: page + 1);
                             }
                           : null,
                       icon: Icons.arrow_forward_ios),
                 ],
               );
             },
-          )
+          ),
+          const SizedBox(
+            height: 10,
+          ),
         ],
       ),
     );
@@ -130,43 +207,35 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
         minWidth: 1000,
         fixedLeftColumns: 2,
         columns: [
-          DataColumn2(
-            label: Checkbox(
-              value: false,
-              onChanged: (bool? value) {},
-            ),
-            size: ColumnSize.S,
-            fixedWidth: 30,
-          ),
-          DataColumn2(
+          const DataColumn2(
             label: Text('Order'),
             size: ColumnSize.S,
           ),
-          DataColumn2(
+          const DataColumn2(
             label: Text('Date'),
             size: ColumnSize.S,
           ),
-          DataColumn2(
+          const DataColumn2(
             label: Text('Customer'),
             size: ColumnSize.S,
           ),
-          DataColumn2(
+          const DataColumn2(
             label: Text('Channel'),
             size: ColumnSize.S,
           ),
-          DataColumn2(
+          const DataColumn2(
             label: Text('Total'),
             size: ColumnSize.S,
           ),
-          DataColumn2(
+          const DataColumn2(
             label: Text('Payment Status'),
             size: ColumnSize.S,
           ),
-          DataColumn2(
+          const DataColumn2(
             label: Text('Order Status'),
             size: ColumnSize.S,
           ),
-          DataColumn2(
+          const DataColumn2(
             label: Text('Items'),
             size: ColumnSize.S,
           )
@@ -174,20 +243,16 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
         rows: List<DataRow2>.generate(
             orders.length,
             (index) => DataRow2(
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (_) => OrderDetailsScreen(
                                   orderId: orders[index].orderId)));
+
+                      fetchOrders();
                     },
                     cells: [
-                      DataCell(
-                        Checkbox(
-                          value: false,
-                          onChanged: (bool? value) {},
-                        ),
-                      ),
                       DataCell(
                         Text(
                           "#ORD${orders[index].orderId}",
@@ -209,7 +274,7 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
                       DataCell(
                         Text("₹${orders[index].price}"),
                       ),
-                      DataCell(
+                      const DataCell(
                         Text('Not Paid'),
                       ),
                       DataCell(

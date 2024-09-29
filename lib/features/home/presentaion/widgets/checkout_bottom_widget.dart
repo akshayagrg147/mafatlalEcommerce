@@ -186,61 +186,62 @@ class CheckOutBottomWidget extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget addressWidget(BuildContext context, {bool isShipping = true}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          isShipping ? "Deliver To" : "Billing Address",
-          style: AppTextStyle.f16BlackW600,
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Icon(
-              Icons.delivery_dining_sharp,
-              color: AppColors.kBlack,
+Widget addressWidget(BuildContext context, {bool isShipping = true}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Text(
+        isShipping ? "Deliver To" : "Billing Address",
+        style: AppTextStyle.f16BlackW600,
+      ),
+      SizedBox(
+        height: 10,
+      ),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(
+            Icons.delivery_dining_sharp,
+            color: AppColors.kBlack,
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Text(
+              (isShipping
+                          ? CubitsInjector
+                              .authCubit.currentUser?.shippingAddress
+                          : CubitsInjector
+                              .authCubit.currentUser?.billingAddress)
+                      ?.addressString ??
+                  "",
+              textAlign: TextAlign.left,
+              style: AppTextStyle.f14BlackW500,
             ),
-            SizedBox(
-              width: 10,
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          TextButton(
+            child: Text(
+              "Change",
+              style: AppTextStyle.f14BlackW500
+                  .copyWith(decoration: TextDecoration.underline),
             ),
-            Expanded(
-              child: Text(
-                (isShipping
-                            ? CubitsInjector
-                                .authCubit.currentUser?.shippingAddress
-                            : CubitsInjector
-                                .authCubit.currentUser?.billingAddress)
-                        ?.addressString ??
-                    "",
-                textAlign: TextAlign.left,
-                style: AppTextStyle.f14BlackW500,
-              ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            TextButton(
-              child: Text(
-                "Change",
-                style: AppTextStyle.f14BlackW500
-                    .copyWith(decoration: TextDecoration.underline),
-              ),
-              onPressed: () {
-                AddEditAddress.show(context,
-                    address:
-                        CubitsInjector.authCubit.currentUser?.shippingAddress,
-                    isShipping: isShipping);
-              },
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+            onPressed: () {
+              AddEditAddress.show(context,
+                  address:
+                      CubitsInjector.authCubit.currentUser?.shippingAddress,
+                  isShipping: isShipping);
+            },
+          ),
+        ],
+      ),
+    ],
+  );
 }

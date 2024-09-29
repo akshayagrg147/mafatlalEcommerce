@@ -17,10 +17,12 @@ class SearchInput extends StatelessWidget {
       },
       controller: textController,
       onChanged: (value) {
+        CubitsInjector.homeCubit.searchOrganisation(value);
+
         //Do something wi
       },
       decoration: InputDecoration(
-        prefixIcon: Icon(
+        suffixIcon: Icon(
           Icons.search,
           color: AppColors.kRed,
         ),
@@ -28,17 +30,17 @@ class SearchInput extends StatelessWidget {
         fillColor: AppColors.kWhite,
         hintText: hintText,
         hintStyle: const TextStyle(color: Colors.grey),
-        contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+        contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.kGrey200, width: 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderRadius: BorderRadius.all(Radius.circular(50.0)),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.kRed, width: 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderRadius: BorderRadius.all(Radius.circular(50.0)),
         ),
       ),
     );

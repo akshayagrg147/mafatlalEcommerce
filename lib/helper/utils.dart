@@ -5,6 +5,13 @@ class Utils {
     return DateFormat("EEEE, dd MMM yy, hh:mm a").format(dateTime);
   }
 
+  static DateTime getTodayDate() {
+    DateTime startOfToday = DateTime.now();
+    DateTime todayStart =
+        DateTime(startOfToday.year, startOfToday.month, startOfToday.day);
+    return todayStart;
+  }
+
   static String formatDate(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);

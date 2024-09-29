@@ -25,6 +25,10 @@ class AppTextStyle {
       color: AppColors.kGrey, fontSize: 16, fontWeight: FontWeight.w500);
   static TextStyle f14OutfitBlackW500 = GoogleFonts.outfit(
       color: AppColors.kBlack, fontSize: 14, fontWeight: FontWeight.w500);
+  static TextStyle f33darkblue = GoogleFonts.outfit(
+      color: const Color(0XFF004392),
+      fontSize: 20,
+      fontWeight: FontWeight.w500);
 
   static TextStyle f14BlackW500 = GoogleFonts.outfit(
       color: AppColors.kBlack, fontSize: 14, fontWeight: FontWeight.w500);
@@ -44,6 +48,8 @@ class AppTextStyle {
       color: AppColors.kGrey, fontSize: 12, fontWeight: FontWeight.w400);
   static const TextStyle f12WhiteW500 = TextStyle(
       color: AppColors.kWhite, fontSize: 12, fontWeight: FontWeight.w500);
+  static const TextStyle f12GreenW500 = TextStyle(
+      color: AppColors.kGreen, fontSize: 12, fontWeight: FontWeight.w500);
   static const TextStyle f14WhiteW500 = TextStyle(
       color: AppColors.kWhite, fontSize: 14, fontWeight: FontWeight.w500);
   static const TextStyle f10BlackW500 = TextStyle(
@@ -70,4 +76,29 @@ class AppTextStyle {
       color: AppColors.kBlack, fontSize: 18, fontWeight: FontWeight.w500);
   static const TextStyle f20GreyW600 = TextStyle(
       color: AppColors.kGrey, fontSize: 20, fontWeight: FontWeight.w600);
+
+  //poppins
+  static TextStyle f24PoppinsBluew400 = GoogleFonts.poppins(
+      color: AppColors.kblue, fontSize: 24, fontWeight: FontWeight.w400);
+  static TextStyle f24PoppinsBlackw600 = GoogleFonts.poppins(
+      color: AppColors.kBlack, fontSize: 24, fontWeight: FontWeight.w600);
+  static TextStyle f28PoppinsBlackw600 = GoogleFonts.poppins(
+      color: AppColors.kBlack, fontSize: 28, fontWeight: FontWeight.w600);
+  static TextStyle f28PoppinsDarkGreyw600 = GoogleFonts.poppins(
+      color: AppColors.darkGray, fontSize: 28, fontWeight: FontWeight.w600);
+  static TextStyle f24PoppinsBlueGreyw600 = GoogleFonts.poppins(
+      color: AppColors.blueGray, fontSize: 24, fontWeight: FontWeight.w600);
+  static TextStyle f18PoppinsDarkGreyw400 = GoogleFonts.poppins(
+      color: AppColors.darkGray, fontSize: 18, fontWeight: FontWeight.w400);
+
+  static TextStyle f18PoppinsBlackw400 = GoogleFonts.poppins(
+      color: AppColors.kBlack, fontSize: 18, fontWeight: FontWeight.w400);
+  static TextStyle f18PoppinsDarkGreyw600 = GoogleFonts.poppins(
+      color: AppColors.darkGray, fontSize: 18, fontWeight: FontWeight.w600);
+  static TextStyle f18PoppinsGreenw600 = GoogleFonts.poppins(
+      color: AppColors.kGreen, fontSize: 18, fontWeight: FontWeight.w600);
+  static TextStyle f18PoppinsBluew600 = GoogleFonts.poppins(
+      color: AppColors.kblue, fontSize: 18, fontWeight: FontWeight.w600);
+  static TextStyle f18PoppinsWhitew600 = GoogleFonts.poppins(
+      color: AppColors.kWhite, fontSize: 18, fontWeight: FontWeight.w600);
 }

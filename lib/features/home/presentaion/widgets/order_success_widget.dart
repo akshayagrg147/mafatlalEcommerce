@@ -16,8 +16,8 @@ class OrderSuccess extends StatefulWidget {
 class _OrderSuccessState extends State<OrderSuccess> {
   void returnToHome() {
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.popUntil(
-          context, (route) => route.settings.name == HomeScreen.route);
+      Navigator.pushNamedAndRemoveUntil(
+          context, HomeScreen.route, (route) => false);
     });
   }
 
@@ -34,28 +34,22 @@ class _OrderSuccessState extends State<OrderSuccess> {
         onWillPop: () async {
           return false;
         },
-        child: Align(
-          alignment: Alignment.centerRight,
-          child: SizedBox(
-            width: size.width > 800 ? 500 : double.maxFinite,
-            child: Scaffold(
-                backgroundColor: AppColors.kWhite,
-                body: SizedBox.expand(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset(AssetPath.successAnim, height: 230),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Order Placed Successfully",
-                        style: AppTextStyle.f20GreyW600,
-                      )
-                    ],
+        child: Scaffold(
+            backgroundColor: AppColors.kWhite,
+            body: SizedBox.expand(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Lottie.asset(AssetPath.successAnim, height: 230),
+                  SizedBox(
+                    height: 10,
                   ),
-                )),
-          ),
-        ));
+                  Text(
+                    "Order Placed Successfully",
+                    style: AppTextStyle.f20GreyW600,
+                  )
+                ],
+              ),
+            )));
   }
 }

@@ -1,48 +1,66 @@
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+import 'package:mafatlal_ecommerce/features/home/SubCategory/model/organization_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
-import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/order.dart';
-import 'package:mafatlal_ecommerce/features/home/model/product.dart';
-import 'package:mafatlal_ecommerce/features/home/model/store_model.dart';
+import 'package:mafatlal_ecommerce/features/home/model/productdetial_model.dart';
+import 'package:mafatlal_ecommerce/features/home/model/searchmodel.dart';
+import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/routes/api_routes.dart';
 import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
 
 class HomeRepo {
-  static Future<ApiResponse<Store>> getStoreData(int? userId) async {
+  static Future<ApiResponse<CategoriesAndProducts>> getStoreData(
+      int? userId) async {
     final response = await DioUtil().getInstance()?.get(
         ApiRoutes.fetchStoreDetails,
         queryParameters: userId != null ? {'user_id': userId} : null);
-    return ApiResponse<Store>.fromJson(
-        response?.data, (data) => Store.fromJson(data));
+    print(response?.data);
+    return ApiResponse<CategoriesAndProducts>.fromJson(
+        response?.data, (data) => CategoriesAndProducts.fromJson(data));
   }
 
-  static Future<ApiResponse<List<Product>>> getProductsBySubCatId(
+  static Future<List<Organization>> getsubcateddetails(int subid) async {
+    final response = await DioUtil()
+        .getInstance()
+        ?.get(ApiRoutes.getorgainzation, queryParameters: {'sub_id': 27});
+    List<dynamic> organizationsJson = response?.data['data'];
+    return organizationsJson
+        .map((json) => Organization.fromJson(json))
+        .toList();
+  }
+
+  static Future<ApiResponse<List<Product_new>>> getProductsBySubCatId(
       int subCategoryId) async {
     final response = await DioUtil().getInstance()?.get(
         ApiRoutes.getProductsAccToCategory,
         queryParameters: {'sub_id': subCategoryId});
-    return ApiResponse<List<Product>>.fromJson(response?.data,
-        (data) => List<Product>.from(data.map((e) => Product.fromJson(e))));
+    return ApiResponse<List<Product_new>>.fromJson(
+        response?.data,
+        (data) =>
+            List<Product_new>.from(data.map((e) => Product_new.fromJson(e))));
   }
 
-  static Future<ApiResponse<Product>> fetchProductDetails(int productId) async {
+  static Future<ApiResponse<ProductDetail>> fetchProductDetails(
+      int productId) async {
     final response = await DioUtil()
         .getInstance()
         ?.get(ApiRoutes.getProductInfo, queryParameters: {'id': productId});
-    return ApiResponse<Product>.fromJson(
-        response?.data, (data) => Product.fromJson(data));
+    return ApiResponse<ProductDetail>.fromJson(
+        response?.data, (data) => ProductDetail.fromJson(data));
   }
 
-  static Future<ApiResponse<List<Product>>> getCartProducts(
+  static Future<ApiResponse<List<Product_new>>> getCartProducts(
       List<int> productIds) async {
     final response = await DioUtil()
         .getInstance()
         ?.post(ApiRoutes.getCartProducts, data: {'ids': productIds});
-    return ApiResponse<List<Product>>.fromJson(response?.data,
-        (data) => List<Product>.from(data.map((e) => Product.fromJson(e))));
+    return ApiResponse<List<Product_new>>.fromJson(
+        response?.data,
+        (data) =>
+            List<Product_new>.from(data.map((e) => Product_new.fromJson(e))));
   }
 
-  static Future<ApiResponse<Map>> placeOrder(List<Product> products,
+  static Future<ApiResponse<Map>> placeOrder(List<Product_new> products,
       {required Address shippingAddress,
       required Address billingAddress}) async {
     final num price = products.fold(
@@ -93,13 +111,15 @@ class HomeRepo {
     await DioUtil().getInstance()?.patch(ApiRoutes.address, data: data);
   }
 
-  static Future<ApiResponse<List<Category>>> search(String searchQuery) async {
+  static Future<ApiResponse<List<ProductSearch>>> search(
+      String searchQuery) async {
     final response = await DioUtil()
         .getInstance()
         ?.get(ApiRoutes.search, queryParameters: {'search': searchQuery});
-    return ApiResponse<List<Category>>.fromJson(response?.data, (data) {
-      final categories = data['categories'] ?? [];
-      return List<Category>.from(categories.map((e) => Category.fromJson(e)));
+    return ApiResponse<List<ProductSearch>>.fromJson(response?.data, (data) {
+      final categories = data['products'] ?? [];
+      return List<ProductSearch>.from(
+          categories.map((e) => ProductSearch.fromJson(e)));
     });
   }
 }

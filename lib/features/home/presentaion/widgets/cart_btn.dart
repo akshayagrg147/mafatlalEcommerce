@@ -68,7 +68,6 @@ class CartBtnRoundedrect extends StatelessWidget {
           color: AppColors.kRed,
           borderRadius: BorderRadius.circular(10),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         child: Row(
           children: [
             SvgPicture.string(

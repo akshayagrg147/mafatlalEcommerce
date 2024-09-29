@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
+import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/category_product_screen.dart';
 
 class CategoryWidget extends StatelessWidget {
-  final Category category;
+  final Category_new category;
   const CategoryWidget({super.key, required this.category});
 
   @override
@@ -43,7 +44,7 @@ class CategoryWidget extends StatelessWidget {
                   color: AppColors.kRed.withOpacity(0.07),
                   borderRadius: BorderRadius.circular(12)),
               child: CachedNetworkImage(
-                imageUrl: category.imgUrl,
+                imageUrl: category.img,
                 errorWidget: (context, url, error) => CachedNetworkImage(
                   imageUrl:
                       "https://w7.pngwing.com/pngs/505/284/png-transparent-india-hindustan-petroleum-bharat-petroleum-logo-india-text-trademark-logo-thumbnail.png",

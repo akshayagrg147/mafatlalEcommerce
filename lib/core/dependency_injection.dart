@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/bloc/admin_home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_cubit.dart';
+import 'package:mafatlal_ecommerce/features/home/SubCategory/bloc/subcategory_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 
 class CubitsInjector {
@@ -16,6 +17,7 @@ class CubitsInjector {
   void _registerCubits() {
     _getIt.registerLazySingleton<AuthCubit>(() => AuthCubit());
     _getIt.registerLazySingleton<HomeCubit>(() => HomeCubit());
+    _getIt.registerLazySingleton<SubcategoryCubit>(() => SubcategoryCubit());
     _getIt.registerLazySingleton<AdminHomeCubit>(() => AdminHomeCubit());
   }
 
@@ -36,7 +38,12 @@ class CubitsInjector {
 
   // Example static getter method to access CounterCubit
   static AuthCubit get authCubit => _getIt<AuthCubit>();
+
   static HomeCubit get homeCubit => _getIt<HomeCubit>();
+
+  static SubcategoryCubit get subcategoryCubit =>
+      _getIt<SubcategoryCubit>(); // Renamed here
+
   static AdminHomeCubit get adminHomeCubit => _getIt<AdminHomeCubit>();
 
   static List<BlocProvider> blocProviders = [
@@ -48,6 +55,9 @@ class CubitsInjector {
     ),
     BlocProvider<AdminHomeCubit>(
       create: (context) => CubitsInjector.adminHomeCubit,
+    ),
+    BlocProvider<SubcategoryCubit>(
+      create: (context) => CubitsInjector.subcategoryCubit, // Updated here
     ),
   ];
 }
