@@ -47,8 +47,9 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
 
         emit(UpdateProductUsingSubCategorySuccessState(
           products: products,
-          organization:
-              organization, // It can be null if no organization is available
+          organization: organization,
+          orgname: SelectedOrganizationname ??
+              '', // It can be null if no organization is available
         ));
       } else {
         // If there are products in the response
@@ -62,8 +63,9 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
 
         emit(UpdateProductUsingSubCategorySuccessState(
           products: products,
-          organization:
-              organization, // It can be null if no organization is available
+          organization: organization,
+          orgname: SelectedOrganizationname ??
+              '', // It can be null if no organization is available
         ));
       }
     } catch (e) {
@@ -237,13 +239,14 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
             0,
             Organization(
                 districtId: 0,
-                districtName: 'Select District',
+                districtName: SelectedSDistrictname ?? 'Select District',
                 subCategoryId: 0,
-                subCategoryName: 'Select Subcategory',
+                subCategoryName:
+                    SelectedSubcategoryname ?? 'Select Subcategory',
                 id: 0,
-                name: 'Select Organization',
+                name: SelectedOrganizationname ?? 'Select Organization',
                 stateId: 0,
-                stateName: 'Select Name'));
+                stateName: SelectedStatename ?? 'Select State'));
         if (organizations.isNotEmpty) {
           emit(GetAllOrganizationSuccessState(
               organization: organizations, name: ''));

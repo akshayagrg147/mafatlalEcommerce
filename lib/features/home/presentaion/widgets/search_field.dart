@@ -17,6 +17,8 @@ class SearchInput extends StatelessWidget {
       },
       controller: textController,
       onChanged: (value) {
+        CubitsInjector.homeCubit.searchOrganisation(value);
+
         //Do something wi
       },
       decoration: InputDecoration(

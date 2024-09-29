@@ -8,21 +8,21 @@ import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
-import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
+import 'package:mafatlal_ecommerce/features/home/model/searchmodel.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/product_details.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_to_cart_btn.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/size_selection_widget.dart';
 
-class ProductGridTile extends StatelessWidget {
-  final Product_new product;
+class ProductSearchTile extends StatelessWidget {
+  final ProductSearch product;
   final Color bgColor;
   final double shadowOpacity;
 
-  ProductGridTile({super.key, required this.product})
+  ProductSearchTile({super.key, required this.product})
       : bgColor = AppColors.kGrey200,
         shadowOpacity = 0.5;
 
-  const ProductGridTile.subList({super.key, required this.product})
+  const ProductSearchTile.subList({super.key, required this.product})
       : bgColor = AppColors.kWhite,
         shadowOpacity = 0.2;
 
@@ -36,7 +36,7 @@ class ProductGridTile extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  ProductDetailsScreen(productId: product.productId),
+                  ProductDetailsScreen(productId: product.id!.toInt()),
             ),
           );
         },
@@ -45,9 +45,10 @@ class ProductGridTile extends StatelessWidget {
             color: Color(0xFFFFFFFF),
             boxShadow: [
               BoxShadow(
-                color: Color(
-                    0x1F004392), // #0043921F in Flutter's color format (with opacity)
-                offset: Offset(0, 8), // X and Y offset for the shadow
+                color: Color(0x1F004392),
+                // #0043921F in Flutter's color format (with opacity)
+                offset: Offset(0, 8),
+                // X and Y offset for the shadow
                 blurRadius: 24.0, // The blur effect for the shadow
               ),
             ],
@@ -58,8 +59,8 @@ class ProductGridTile extends StatelessWidget {
               Expanded(
                   flex: 6,
                   child: CachedNetworkImage(
-                    imageUrl: product.productImage.isNotEmpty
-                        ? product.productImage.first
+                    imageUrl: product.productImage!.isNotEmpty
+                        ? product.productImage!.first
                         : "",
                     errorWidget: (context, url, error) => CachedNetworkImage(
                       imageUrl:
@@ -78,7 +79,7 @@ class ProductGridTile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          product.productName,
+                          product.name ?? '',
                           maxLines: 2,
                           style: AppTextStyle.f16OutfitBlackW500,
                         ),
@@ -89,19 +90,19 @@ class ProductGridTile extends StatelessWidget {
                                 product.variant!.selectedVariant = o;
                                 product.quantity =
                                     CartHelper.getProductQuantity(
-                                        product.productId,
+                                        product.id!.toInt(),
                                         variant: product.variant);
                                 CubitsInjector.homeCubit.updateProductVariant(
-                                    product.productId,
+                                    product.id!.toInt(),
                                     selectedVariant:
                                         product.variant!.selectedVariant);
                               }),
                         BlocBuilder<HomeCubit, HomeState>(
                           buildWhen: (previous, current) =>
                               (current is UpdateProductVariantState &&
-                                  current.id == product.productId) ||
+                                  current.id == product.id) ||
                               (current is UpdateProductVariantLoadingState &&
-                                  current.id == product.productId),
+                                  current.id == product.id),
                           builder: (context, state) {
                             if (state is UpdateProductVariantLoadingState) {
                               return const SizedBox.shrink();
@@ -116,7 +117,7 @@ class ProductGridTile extends StatelessWidget {
                                 ),
                                 StreamBuilder<BoxEvent>(
                                     stream: CartHelper.watchCart(
-                                        product.productId, product.variant),
+                                        product.id, product.variant),
                                     builder: (context, eventSnapshot) {
                                       if (eventSnapshot.hasData) {
                                         final data =
@@ -127,7 +128,7 @@ class ProductGridTile extends StatelessWidget {
                                       }
                                       return AddToCartWidget(
                                         quantity: product.quantity,
-                                        productId: product.productId,
+                                        productId: product.id!.toInt(),
                                         variant: product.variant,
                                       );
                                     })
