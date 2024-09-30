@@ -91,9 +91,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
                 BlocBuilder<HomeCubit, HomeState>(
                   buildWhen: (previous, current) =>
-                      current is FetchProductDetailsSuccessState ||
-                      current is UpdateProductVariantLoadingState ||
-                      current is UpdateProductVariantState,
+                      current is FetchProductDetailsSuccessState,
+                  // current is UpdateProductVariantState,
                   builder: (context, state) {
                     if (state is FetchProductDetailsSuccessState) {
                       return Column(
@@ -254,24 +253,66 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       const SizedBox(height: 10),
                                       SizedBox(
                                         width: 100,
-                                        child: StreamBuilder<BoxEvent>(
-                                          stream: CartHelper.watchCart(
-                                            int.parse(state.product.id),
-                                            state.product.variant,
-                                          ),
-                                          builder: (context, eventSnapshot) {
-                                            if (eventSnapshot.hasData) {
-                                              final data =
-                                                  eventSnapshot.data?.value ??
-                                                      {};
-                                              state.product.quantity =
-                                                  data['quantity'] ?? 0;
+                                        child:
+                                            BlocBuilder<HomeCubit, HomeState>(
+                                          buildWhen: (previous, current) =>
+                                              (current
+                                                      is UpdateProductVariantState &&
+                                                  current.id ==
+                                                      int.parse(context
+                                                          .read<HomeCubit>()
+                                                          .productDetail!
+                                                          .id)) ||
+                                              (current
+                                                      is UpdateProductVariantLoadingState &&
+                                                  current.id ==
+                                                      int.parse(context
+                                                          .read<HomeCubit>()
+                                                          .productDetail!
+                                                          .id)),
+                                          builder: (context, state) {
+                                            if (state
+                                                is UpdateProductVariantLoadingState) {
+                                              return const SizedBox.shrink();
                                             }
-                                            return AddToCartWidget(
-                                              quantity: state.product.quantity,
-                                              productId:
-                                                  int.parse(state.product.id),
-                                              variant: state.product.variant,
+                                            return StreamBuilder<BoxEvent>(
+                                              stream: CartHelper.watchCart(
+                                                int.parse(context
+                                                    .read<HomeCubit>()
+                                                    .productDetail!
+                                                    .id),
+                                                context
+                                                    .read<HomeCubit>()
+                                                    .productDetail!
+                                                    .variant,
+                                              ),
+                                              builder:
+                                                  (context, eventSnapshot) {
+                                                if (eventSnapshot.hasData) {
+                                                  final data = eventSnapshot
+                                                          .data?.value ??
+                                                      {};
+                                                  context
+                                                          .read<HomeCubit>()
+                                                          .productDetail!
+                                                          .quantity =
+                                                      data['quantity'] ?? 0;
+                                                }
+                                                return AddToCartWidget(
+                                                  quantity: context
+                                                      .read<HomeCubit>()
+                                                      .productDetail!
+                                                      .quantity,
+                                                  productId: int.parse(context
+                                                      .read<HomeCubit>()
+                                                      .productDetail!
+                                                      .id),
+                                                  variant: context
+                                                      .read<HomeCubit>()
+                                                      .productDetail!
+                                                      .variant,
+                                                );
+                                              },
                                             );
                                           },
                                         ),
@@ -315,16 +356,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 },
                               ),
                             ),
-
-                            // ListView.builder(
-                            //   scrollDirection: Axis.horizontal,
-                            //   itemCount: state.product.relatedProducts.length,
-                            //   itemBuilder: (context, index) {
-                            //     return RelatedProductTile(
-                            //       product: state.product.relatedProducts[index],
-                            //     );
-                            //   },
-                            // ),
                           ),
                         ],
                       );
