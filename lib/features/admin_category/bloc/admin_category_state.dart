@@ -1,4 +1,5 @@
 import 'package:mafatlal_ecommerce/features/admin_category/model/admin_cat_model.dart';
+import 'package:mafatlal_ecommerce/features/admin_category/model/admin_org-model.dart';
 
 abstract class AdminCategoryState {}
 
@@ -31,6 +32,20 @@ class FetchSubCategoriesFailedState extends AdminCategoryState {
 }
 
 class FetchSubCategoriesLoadingState extends AdminCategoryState {}
+
+class FetchOrganisationSuccessState extends AdminCategoryState {
+  final List<AdminOrganisation> organisations;
+
+  FetchOrganisationSuccessState({required this.organisations});
+}
+
+class FetchOrganisationFailedState extends AdminCategoryState {
+  final String message;
+
+  FetchOrganisationFailedState(this.message);
+}
+
+class FetchOrganisationLoadingState extends AdminCategoryState {}
 
 class AddCategorySuccessState extends AdminCategoryState {}
 

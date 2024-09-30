@@ -1,17 +1,17 @@
 import 'package:equatable/equatable.dart';
 
-class Organisation extends Equatable {
+class DataObject extends Equatable {
   final int id;
   final String name;
   final String image;
 
-  const Organisation({
+  const DataObject({
     required this.id,
     required this.name,
     required this.image,
   });
 
-  factory Organisation.fromJson(Map<String, dynamic> json) => Organisation(
+  factory DataObject.fromJson(Map<String, dynamic> json) => DataObject(
         id: json["id"],
         name: json["name"],
         image: json["image"] ?? "",

@@ -39,6 +39,21 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
     }
   }
 
+  void fetchOrganisation() async {
+    try {
+      emit(FetchOrganisationLoadingState());
+      final response = await AdminCatRepo.fetchOrganisation(
+        CubitsInjector.authCubit.currentUser!.id,
+      );
+      emit(FetchOrganisationSuccessState(organisations: response.data ?? []));
+    } on DioException catch (e) {
+      emit(FetchOrganisationFailedState(
+          e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(FetchOrganisationFailedState(AppStrings.somethingWentWrong));
+    }
+  }
+
   void addCategory(String name, {required XFile image}) async {
     try {
       emit(AddCategoryLoadingState());

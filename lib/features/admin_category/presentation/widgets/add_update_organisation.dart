@@ -9,41 +9,49 @@ import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/bloc/admin_category_cubit.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/bloc/admin_category_state.dart';
-import 'package:mafatlal_ecommerce/features/admin_category/model/admin_cat_model.dart';
+import 'package:mafatlal_ecommerce/features/admin_category/model/admin_org-model.dart';
+import 'package:mafatlal_ecommerce/features/home/SubCategory/model/district_model.dart';
+import 'package:mafatlal_ecommerce/features/home/SubCategory/model/state_model.dart';
 import 'package:mafatlal_ecommerce/helper/toast_utils.dart';
 
-class AddUpdateCat extends StatefulWidget {
-  final AdminCategory? category;
-  final AdminCategory? subCategory;
-  final bool isCategory;
+class AddUpdateorganisation extends StatefulWidget {
   final AdminCategoryCubit bloc;
+  final AdminOrganisation? organisation;
 
-  const AddUpdateCat.category({super.key, this.category, required this.bloc})
-      : subCategory = null,
-        isCategory = true;
-
-  const AddUpdateCat.subCategory(
-      {this.category, super.key, this.subCategory, required this.bloc})
-      : isCategory = false;
+  const AddUpdateorganisation(
+      {super.key, required this.bloc, this.organisation});
 
   @override
-  State<AddUpdateCat> createState() => _AddUpdateCatState();
+  State<AddUpdateorganisation> createState() => _AddUpdateorganisationState();
 }
 
-class _AddUpdateCatState extends State<AddUpdateCat> {
+class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
+  String? errMsg;
   bool isEdit = false;
+  final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   XFile? selectedFile;
-  String? errMsg;
-  final _formKey = GlobalKey<FormState>();
+  StateModel? selectedState;
+
+  DistrictModel? selectedDistrict;
+
   @override
   void initState() {
-    if (widget.category != null && widget.isCategory) {
+    if (widget.organisation != null) {
       isEdit = true;
-      nameController.text = widget.category!.name;
-    } else if (widget.subCategory != null && !widget.isCategory) {
-      isEdit = true;
-      nameController.text = widget.subCategory!.name;
+      nameController.text = widget.organisation!.name;
+      if (widget.organisation!.stateId != null) {
+        selectedState = StateModel(
+            id: widget.organisation!.stateId!,
+            name: widget.organisation!.stateName!);
+      }
+      if (widget.organisation!.districtId != null) {
+        selectedDistrict = DistrictModel(
+            id: widget.organisation!.districtId!,
+            name: widget.organisation!.districtName!,
+            stateId: widget.organisation!.stateId!,
+            stateName: widget.organisation!.stateName!);
+      }
     }
     super.initState();
   }
@@ -60,8 +68,7 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
         if (state is AddCategorySuccessState ||
             state is AddSubCategorySuccessState) {
           Navigator.pop(context);
-          ToastUtils.showSuccessToast(
-              "${widget.isCategory ? "Category" : "Sub Category"} ${!isEdit ? 'Added' : 'Updated'} Successfully");
+          ToastUtils.showSuccessToast("Organisation Added Successfully");
         }
       },
       buildWhen: (previous, current) {
@@ -91,7 +98,7 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
                         width: 15,
                       ),
                       Text(
-                        "${isEdit ? "Update" : "Add"} ${widget.isCategory ? "Category" : "Sub Category"}",
+                        "${isEdit ? "Update" : "Add"} Organisation",
                         style: AppTextStyle.f18PoppinsBluew600,
                       ),
                       IconButton(
@@ -131,28 +138,23 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
                       alignment: Alignment.center,
                       child: selectedFile != null
                           ? Image.network(selectedFile!.path)
-                          : widget.isCategory && widget.category?.image != null
+                          : widget.organisation?.image != null
                               ? CachedNetworkImage(
-                                  imageUrl: widget.category!.image)
-                              : !widget.isCategory &&
-                                      widget.subCategory?.image != null
-                                  ? CachedNetworkImage(
-                                      imageUrl: widget.subCategory!.image)
-                                  : CustomElevatedButton(
-                                      width: 180,
-                                      onPressed: () async {
-                                        final img = await ImagePicker()
-                                            .pickImage(
-                                                source: ImageSource.gallery);
-                                        if (img != null) {
-                                          setState(() {
-                                            selectedFile = img;
-                                          });
-                                        }
-                                      },
-                                      backgroundColor: AppColors.kWhite,
-                                      textColor: AppColors.kBlack,
-                                      label: "+ Add Image"),
+                                  imageUrl: widget.organisation!.image!)
+                              : CustomElevatedButton(
+                                  width: 180,
+                                  onPressed: () async {
+                                    final img = await ImagePicker()
+                                        .pickImage(source: ImageSource.gallery);
+                                    if (img != null) {
+                                      setState(() {
+                                        selectedFile = img;
+                                      });
+                                    }
+                                  },
+                                  backgroundColor: AppColors.kWhite,
+                                  textColor: AppColors.kBlack,
+                                  label: "+ Add Image"),
                     ),
                   ),
                   if (errMsg != null)
@@ -165,11 +167,10 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
                   ),
                   CustomTextField(
                     textEditingController: nameController,
-                    hint:
-                        "${widget.isCategory ? "Category" : "Sub Category"} Name",
+                    hint: "Organisation Name",
                     validation: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return "Please enter ${widget.isCategory ? "Category" : "Sub Category"} Name";
+                        return "Please enter Organisation Name";
                       }
                       return null;
                     },
@@ -187,48 +188,15 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
                               vertical: 12, horizontal: 20),
                           onPressed: () async {
                             errMsg = null;
-                            if (widget.isCategory) {
-                              if ((widget.category?.image != null ||
-                                  selectedFile != null)) {
-                                if (_formKey.currentState!.validate()) {
-                                  if (isEdit) {
-                                    widget.bloc.updateCategory(
-                                        nameController.text,
-                                        categoryId: widget.category!.id,
-                                        img: widget.category!.image,
-                                        image: selectedFile);
-                                  } else {
-                                    widget.bloc.addCategory(nameController.text,
-                                        image: selectedFile!);
-                                  }
-                                }
-                              } else {
-                                errMsg = "Please add image";
-                                setState(() {});
-                                return;
-                              }
-                            } else {
-                              if ((widget.subCategory?.image != null ||
-                                  selectedFile != null)) {
-                                if (_formKey.currentState!.validate()) {
-                                  if (isEdit) {
-                                    widget.bloc.updateSubCategory(
-                                        nameController.text,
-                                        subCategoryId: widget.subCategory!.id,
-                                        image: selectedFile,
-                                        img: widget.subCategory!.image);
-                                  } else {
-                                    widget.bloc.addSubCategory(
-                                        widget.category!.id,
-                                        name: nameController.text,
-                                        image: selectedFile!);
-                                  }
-                                }
-                              } else {
-                                errMsg = "Please add image";
-                                setState(() {});
-                                return;
-                              }
+                            if (widget.organisation?.image == null &&
+                                selectedFile == null) {
+                              errMsg = "Please add image";
+                              setState(() {});
+                              return;
+                            }
+                            if (_formKey.currentState!.validate()) {
+                              if (isEdit) {
+                              } else {}
                             }
                           })
                 ],

@@ -1,4 +1,5 @@
 import 'package:mafatlal_ecommerce/features/admin_category/model/admin_cat_model.dart';
+import 'package:mafatlal_ecommerce/features/admin_category/model/admin_org-model.dart';
 import 'package:mafatlal_ecommerce/routes/api_routes.dart';
 import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
 
@@ -27,16 +28,16 @@ class AdminCatRepo {
             data.map((e) => AdminCategory.fromJson(e))));
   }
 
-  static Future<ApiResponse<List<AdminCategory>>> fetchOrganisation(
+  static Future<ApiResponse<List<AdminOrganisation>>> fetchOrganisation(
       int userId) async {
     final response = await DioUtil().getInstance()?.get(
         ApiRoutes.crudOrganisationList,
         queryParameters: {'user_id': userId});
 
-    return ApiResponse<List<AdminCategory>>.fromJson(
+    return ApiResponse<List<AdminOrganisation>>.fromJson(
         response!.data,
-        (data) => List<AdminCategory>.from(
-            data.map((e) => AdminCategory.fromJson(e))));
+        (data) => List<AdminOrganisation>.from(
+            data.map((e) => AdminOrganisation.fromJson(e))));
   }
 
   static Future<void> addCategory(int userId,

@@ -11,6 +11,7 @@ import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/order_history.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/search_field.dart';
 
 class Header extends StatefulWidget {
@@ -263,6 +264,7 @@ class _HeaderState extends State<Header> {
       offset: const Offset(25, 10),
       onSelected: (value) {
         if (value == 'Your Orders') {
+          Navigator.pushNamed(context, OrdersHistory.route);
         } else if (value == 'Logout') {
           CubitsInjector.authCubit.logOut();
         }

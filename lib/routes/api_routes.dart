@@ -41,7 +41,7 @@ class ApiRoutes {
       "$baseUrl/admin_action/sub_category/";
   static const String crudCategoryList = "$baseUrl/admin_action/category/";
 
-  static const String crudProductList = "$baseUrl/admin_action/products";
+  static const String crudProductList = "$baseUrl/admin_action/products/";
 
   static const String uploadImage = "$baseUrl/photo_upload";
 }
