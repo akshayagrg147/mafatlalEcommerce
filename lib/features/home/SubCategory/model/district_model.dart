@@ -1,6 +1,8 @@
 // CategoryModel.dart
 
-class DistrictModel {
+import 'package:equatable/equatable.dart';
+
+class DistrictModel extends Equatable {
   final int id;
   final String name;
   final int stateId;
@@ -22,4 +24,8 @@ class DistrictModel {
       stateName: json['state_name'],
     );
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [id, name, stateId, stateName];
 }

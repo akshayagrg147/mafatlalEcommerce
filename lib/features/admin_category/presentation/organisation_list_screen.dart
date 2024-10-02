@@ -8,6 +8,7 @@ import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/bloc/admin_category_cubit.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/bloc/admin_category_state.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/model/admin_org-model.dart';
+import 'package:mafatlal_ecommerce/features/admin_category/presentation/widgets/add_update_organisation.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/presentation/widgets/organisation_grid_tile.dart';
 
 class OrganisationListScreen extends StatefulWidget {
@@ -40,9 +41,9 @@ class _OrganisationListScreenState extends State<OrganisationListScreen> {
           organisation.clear();
           organisation.addAll(state.organisations);
         }
-        // if (state is AddCategorySuccessState) {
-        //   fetchOrganisations();
-        // }
+        if (state is AddOrganisationSuccessState) {
+          fetchOrganisations();
+        }
       },
       child: Container(
         width: double.maxFinite,
@@ -59,13 +60,13 @@ class _OrganisationListScreenState extends State<OrganisationListScreen> {
                 const Spacer(),
                 CustomElevatedButton(
                     onPressed: () {
-                      // showDialog(
-                      //     context: context,
-                      //     builder: (_) {
-                      //       return Center(
-                      //           child: AddUpdateCat.category(
-                      //               bloc: adminCategoryCubit));
-                      //     });
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return Center(
+                                child: AddUpdateorganisation(
+                                    bloc: adminCategoryCubit));
+                          });
                     },
                     width: 120,
                     padding: const EdgeInsets.symmetric(

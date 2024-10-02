@@ -41,9 +41,15 @@ class OrganisationGridTile extends StatelessWidget {
                       flex: 2,
                       child: CachedNetworkImage(
                         imageUrl: data.image ?? '',
+                        height: double.maxFinite,
+                        width: double.maxFinite,
+                        fit: BoxFit.fill,
                         errorWidget: (context, url, error) => const Center(
                             child: Icon(Icons.error, color: AppColors.kBlack)),
                       )),
+                  SizedBox(
+                    width: 15,
+                  ),
                   Expanded(
                     flex: 3,
                     child: Column(
@@ -55,20 +61,23 @@ class OrganisationGridTile extends StatelessWidget {
                           maxLines: 2,
                           style: AppTextStyle.f16OutfitBlackW500,
                         ),
-                        if (data.stateName != null)
+                        const Spacer(),
+                        if (data.stateName?.isNotEmpty == true)
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            padding: const EdgeInsets.symmetric(vertical: 2),
                             child: Text(
                               'State :- ${data.stateName}',
-                              style: AppTextStyle.f16OutfitBlackW500,
+                              maxLines: 2,
+                              style: AppTextStyle.f12OutfitBlackW500,
                             ),
                           ),
-                        if (data.districtName != null)
+                        if (data.districtName?.isNotEmpty == true)
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            padding: const EdgeInsets.symmetric(vertical: 2),
                             child: Text(
                               'District :- ${data.districtName}',
-                              style: AppTextStyle.f16OutfitBlackW500,
+                              maxLines: 2,
+                              style: AppTextStyle.f12OutfitBlackW500,
                             ),
                           ),
                       ],
@@ -102,8 +111,12 @@ class OrganisationGridTile extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      ShowDeleteOrgConfirmation.show(context,
-                          data: data, onDeleteTap: () {});
+                      ShowDeleteOrgConfirmation.show(context, data: data,
+                          onDeleteTap: () {
+                        context
+                            .read<AdminCategoryCubit>()
+                            .deleteOrganisation(data.id);
+                      });
                     },
                     icon: const Icon(Icons.delete),
                     color: AppColors.kRed,

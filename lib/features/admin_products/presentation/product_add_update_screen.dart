@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
 import 'package:mafatlal_ecommerce/components/custom_textfield.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
@@ -421,8 +422,8 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
       children: [
         GestureDetector(
           onTap: () async {
-            final result =
-                await ImagePicker().pickImage(source: ImageSource.gallery);
+            final result = await ImagePickerWeb.getImageInfo();
+
             if (result != null) {
               images[index] = result;
               context.read<AdminProductCubit>().updateProductimageState();
@@ -467,9 +468,9 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
     return CustomElevatedButton(
         width: 180,
         onPressed: () async {
-          final result = await ImagePicker().pickMultiImage();
-          if (result.isNotEmpty == true) {
-            images.addAll(result);
+          final result = await ImagePickerWeb.getImageInfo();
+          if (result != null) {
+            images.add(result);
             context.read<AdminProductCubit>().updateProductimageState();
           }
         },

@@ -35,7 +35,7 @@ class ApiRoutes {
   static const String getOrderDetails = "$baseUrl/order_details";
   static const String updateOrderStatus = "$baseUrl/order_status_update";
   static const String crudOrganisationList =
-      "$baseUrl/admin_action/organization";
+      "$baseUrl/admin_action/organization/";
 
   static const String crudSubCategoryList =
       "$baseUrl/admin_action/sub_category/";

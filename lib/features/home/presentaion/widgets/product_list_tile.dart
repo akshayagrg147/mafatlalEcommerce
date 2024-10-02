@@ -10,22 +10,23 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_to_cart
 
 class ProductListTile extends StatelessWidget {
   final Product_new product;
-
-  const ProductListTile({super.key, required this.product});
+  final bool isSmallScreen;
+  const ProductListTile(
+      {super.key, required this.product, this.isSmallScreen = false});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 400,
+      height: isSmallScreen ? 250 : 400,
       width: double.maxFinite,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           buildImage(),
           SizedBox(
-            width: 40,
+            width: isSmallScreen ? 20 : 40,
           ),
-          Expanded(flex: 7, child: buildProductDetails())
+          Expanded(flex: isSmallScreen ? 6 : 7, child: buildProductDetails())
         ],
       ),
     );
@@ -33,7 +34,7 @@ class ProductListTile extends StatelessWidget {
 
   Widget buildImage() {
     return Expanded(
-      flex: 3,
+      flex: isSmallScreen ? 4 : 3,
       child: Container(
         height: double.maxFinite, // height: 400px
         decoration: BoxDecoration(
@@ -81,19 +82,27 @@ class ProductListTile extends StatelessWidget {
             children: [
               Text(
                 product.productName,
-                style: AppTextStyle.f24PoppinsBlackw600,
+                style: isSmallScreen
+                    ? AppTextStyle.f24PoppinsBlackw600.copyWith(fontSize: 20)
+                    : AppTextStyle.f24PoppinsBlackw600,
               ),
               const SizedBox(height: 12),
               Row(
                 children: [
                   Text(
                     'Availability:',
-                    style: AppTextStyle.f18PoppinsDarkGreyw400,
+                    style: isSmallScreen
+                        ? AppTextStyle.f18PoppinsDarkGreyw400
+                            .copyWith(fontSize: 14)
+                        : AppTextStyle.f18PoppinsDarkGreyw400,
                   ),
-                  SizedBox(width: 39),
+                  SizedBox(width: isSmallScreen ? 15 : 39),
                   Text(
                     'In Stock',
-                    style: AppTextStyle.f18PoppinsGreenw600,
+                    style: isSmallScreen
+                        ? AppTextStyle.f18PoppinsGreenw600
+                            .copyWith(fontSize: 14)
+                        : AppTextStyle.f18PoppinsGreenw600,
                   ),
                 ],
               ),
@@ -102,12 +111,18 @@ class ProductListTile extends StatelessWidget {
                 children: [
                   Text(
                     'Product Type:',
-                    style: AppTextStyle.f18PoppinsDarkGreyw400,
+                    style: isSmallScreen
+                        ? AppTextStyle.f18PoppinsDarkGreyw400
+                            .copyWith(fontSize: 14)
+                        : AppTextStyle.f18PoppinsDarkGreyw400,
                   ),
                   const SizedBox(width: 31),
                   Text(
                     product.productCategory,
-                    style: AppTextStyle.f18PoppinsDarkGreyw600,
+                    style: isSmallScreen
+                        ? AppTextStyle.f18PoppinsDarkGreyw600
+                            .copyWith(fontSize: 14)
+                        : AppTextStyle.f18PoppinsDarkGreyw600,
                   ),
                 ],
               ),
@@ -116,8 +131,8 @@ class ProductListTile extends StatelessWidget {
                 children: [
                   if (product.variant != null)
                     Container(
-                      height: 48,
-                      width: 48,
+                      height: isSmallScreen ? 35 : 48,
+                      width: isSmallScreen ? 35 : 48,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: AppColors.kRed,
@@ -125,14 +140,20 @@ class ProductListTile extends StatelessWidget {
                       child: Center(
                         child: Text(
                           product.variant!.selectedVariant.name,
-                          style: AppTextStyle.f18PoppinsWhitew600,
+                          style: isSmallScreen
+                              ? AppTextStyle.f18PoppinsWhitew600
+                                  .copyWith(fontSize: 12)
+                              : AppTextStyle.f18PoppinsWhitew600,
                         ),
                       ),
                     ),
                   const Spacer(),
                   Text(
                     product.getPrice().toString(),
-                    style: AppTextStyle.f24PoppinsBlueGreyw600,
+                    style: isSmallScreen
+                        ? AppTextStyle.f24PoppinsBlackw600
+                            .copyWith(fontSize: 18)
+                        : AppTextStyle.f24PoppinsBlueGreyw600,
                   )
                 ],
               ),
@@ -141,12 +162,18 @@ class ProductListTile extends StatelessWidget {
                 children: [
                   Text(
                     'Quantity',
-                    style: AppTextStyle.f18PoppinsDarkGreyw400,
+                    style: isSmallScreen
+                        ? AppTextStyle.f18PoppinsDarkGreyw400
+                            .copyWith(fontSize: 14)
+                        : AppTextStyle.f18PoppinsDarkGreyw400,
                   ),
                   const Spacer(),
                   Text(
                     "X\t${product.quantity}",
-                    style: AppTextStyle.f24PoppinsBlueGreyw600,
+                    style: isSmallScreen
+                        ? AppTextStyle.f24PoppinsBlackw600
+                            .copyWith(fontSize: 18)
+                        : AppTextStyle.f24PoppinsBlueGreyw600,
                   )
                 ],
               ),
@@ -167,7 +194,10 @@ class ProductListTile extends StatelessWidget {
                   const Spacer(),
                   Text(
                     "₹ ${product.getAmount()}",
-                    style: AppTextStyle.f28PoppinsBlackw600,
+                    style: isSmallScreen
+                        ? AppTextStyle.f28PoppinsBlackw600
+                            .copyWith(fontSize: 18)
+                        : AppTextStyle.f28PoppinsBlackw600,
                   )
                 ],
               )
@@ -176,115 +206,3 @@ class ProductListTile extends StatelessWidget {
         });
   }
 }
-
-// [
-//
-//
-// Padding
-// (
-// padding: EdgeInsets.symmetric(horizontal: 6, vertical: 5),
-// child: CachedNetworkImage(
-// imageUrl: product.productImage.isNotEmpty
-// ? product.productImage.first
-//     : "",
-// errorWidget: (context, url, error) => CachedNetworkImage(
-// imageUrl:
-// "https://image.spreadshirtmedia.com/image-server/v1/products/T1412A330PA3703PT17X246Y19D1040247317W6640H6184/views/1,width=550,height=550,appearanceId=330,backgroundColor=F2F2F2,modelId=5186,crop=list/42-dont-panic-life-universe-everything-mens-pique-polo-shirt.jpg",
-// fit: BoxFit.fill,
-// ),
-// fit: BoxFit.fitHeight,
-// width: 120,
-// ),
-// ),
-// Padding(
-// padding: EdgeInsets.symmetric(horizontal: 6, vertical: 5),
-// child: SizedBox(
-// width: 150,
-// child: Column(
-// crossAxisAlignment: CrossAxisAlignment.start,
-// children: [
-// SizedBox(
-// height: 5,
-// ),
-// Text(
-// product.productName,
-// maxLines: 2,
-// style: AppTextStyle.f14BlackW500,
-// ),
-// const Spacer(),
-// if (product.variant != null)
-// Text(
-// "${product.variant!.selectedVariant.name}",
-// style: AppTextStyle.f16OutfitBlackW500,
-// ),
-// if (product.variant != null)
-// SizedBox(
-// height: 5,
-// ),
-// Text(
-// "₹${product.getPrice()}",
-// style: AppTextStyle.f16OutfitBlackW500,
-// ),
-// ],
-// ),
-// ),
-// ),
-// const Spacer(),
-// Column(
-// mainAxisAlignment: MainAxisAlignment.spaceBetween,
-// crossAxisAlignment: CrossAxisAlignment.end,
-// children: [
-// GestureDetector(
-// onTap: () {
-// CartHelper.removeProduct(product.productId,
-// variant: product.variant);
-// CubitsInjector.homeCubit.updateCartProductList(
-// product.productId,
-// variant: product.variant);
-// },
-// child: Container(
-// decoration: BoxDecoration(
-// borderRadius: BorderRadius.circular(6),
-// border: Border(
-// left: BorderSide(color: AppColors.kGrey400, width: 2),
-// bottom: BorderSide(color: AppColors.kGrey400, width: 2),
-// )),
-// padding: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-// child: Icon(
-// Icons.delete,
-// color: AppColors.kRed,
-// size: 20,
-// ),
-// ),
-// ),
-// StreamBuilder<BoxEvent>(
-// stream:
-// CartHelper.watchCart(product.productId, product.variant),
-// builder: (context, eventSnapshot) {
-// if (eventSnapshot.hasData) {
-// final data = eventSnapshot.data?.value ?? {};
-// String id = "${product.productId}";
-// if (product.variant != null) {
-// id +=
-// "_${product.variant!.variantTitle}.${product.variant!.selectedVariant.name}";
-// }
-// if (id == eventSnapshot.data?.key) {
-// product.quantity = data['quantity'] ?? 0;
-// CubitsInjector.homeCubit.updateCartBilling();
-// }
-// }
-// return Padding(
-// padding: EdgeInsets.symmetric(horizontal: 6, vertical: 5),
-// child: AddToCartWidget(
-// quantity: product.quantity,
-// productId: product.productId,
-// variant: product.variant,
-// isCart: true,
-// ),
-// );
-// })
-// ,
-// ]
-// ,
-// )
-// ]

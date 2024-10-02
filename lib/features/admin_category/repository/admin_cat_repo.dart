@@ -1,5 +1,7 @@
 import 'package:mafatlal_ecommerce/features/admin_category/model/admin_cat_model.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/model/admin_org-model.dart';
+import 'package:mafatlal_ecommerce/features/home/SubCategory/model/district_model.dart';
+import 'package:mafatlal_ecommerce/features/home/SubCategory/model/state_model.dart';
 import 'package:mafatlal_ecommerce/routes/api_routes.dart';
 import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
 
@@ -110,6 +112,62 @@ class AdminCatRepo {
     }
   }
 
+  static Future<void> addOrganisation(int userId,
+      {required String organisationName,
+      required String imageUrl,
+      int? stateId,
+      int? districtId}) async {
+    final Map<String, dynamic> org = {
+      "name": organisationName,
+      "image": imageUrl,
+    };
+
+    if (stateId != null) {
+      org['state'] = stateId;
+    }
+    if (districtId != null) {
+      org['district'] = districtId;
+    }
+
+    final data = {
+      "user_id": 13,
+      "organizations": [org]
+    };
+    final response = await DioUtil()
+        .getInstance()
+        ?.post(ApiRoutes.crudOrganisationList, data: data);
+    if (response?.statusCode == 200) {
+      return;
+    }
+  }
+
+  static Future<void> updateOrganisation(int userId,
+      {required String organisationName,
+      required int organisationId,
+      required String imageUrl,
+      int? stateId,
+      int? districtId}) async {
+    final Map<String, dynamic> data = {
+      "id": organisationId,
+      "user_id": userId,
+      "name": organisationName,
+      "image": imageUrl,
+    };
+
+    if (stateId != null) {
+      data['state'] = stateId;
+    }
+    if (districtId != null) {
+      data['district'] = districtId;
+    }
+    final response = await DioUtil()
+        .getInstance()
+        ?.patch(ApiRoutes.crudOrganisationList, data: data);
+    if (response?.statusCode == 200) {
+      return;
+    }
+  }
+
   static Future<void> deleteCategory(
     int categoryId,
   ) async {
@@ -124,5 +182,37 @@ class AdminCatRepo {
     await DioUtil()
         .getInstance()
         ?.delete(ApiRoutes.crudSubCategoryList, data: {'id': subCategoryId});
+  }
+
+  static Future<void> deleteOrganisation(
+    int organisationId,
+  ) async {
+    await DioUtil()
+        .getInstance()
+        ?.delete(ApiRoutes.crudOrganisationList, data: {'id': organisationId});
+  }
+
+  static Future<ApiResponse<List<StateModel>>> getAllStates() async {
+    final response = await DioUtil().getInstance()?.get(
+          ApiRoutes.get_all_state,
+        );
+
+    return ApiResponse<List<StateModel>>.fromJson(
+      response!.data,
+      (data) => List<StateModel>.from(data.map((e) => StateModel.fromJson(e))),
+    );
+  }
+
+  static Future<ApiResponse<List<DistrictModel>>> getDistrictsByStateId(
+      int stateId) async {
+    final response = await DioUtil()
+        .getInstance()
+        ?.get(ApiRoutes.get_district, queryParameters: {'state': stateId});
+
+    return ApiResponse<List<DistrictModel>>.fromJson(
+      response!.data,
+      (data) =>
+          List<DistrictModel>.from(data.map((e) => DistrictModel.fromJson(e))),
+    );
   }
 }

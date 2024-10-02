@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
+import 'package:mafatlal_ecommerce/components/custom_dropdown.dart';
 import 'package:mafatlal_ecommerce/components/custom_textfield.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
@@ -30,8 +31,10 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
   bool isEdit = false;
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
-  XFile? selectedFile;
+  MediaInfo? selectedFile;
   StateModel? selectedState;
+  final List<StateModel> _states = [];
+  final List<DistrictModel> _districts = [];
 
   DistrictModel? selectedDistrict;
 
@@ -40,6 +43,7 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
     if (widget.organisation != null) {
       isEdit = true;
       nameController.text = widget.organisation!.name;
+
       if (widget.organisation!.stateId != null) {
         selectedState = StateModel(
             id: widget.organisation!.stateId!,
@@ -53,6 +57,8 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
             stateName: widget.organisation!.stateName!);
       }
     }
+    widget.bloc.fetchStates();
+
     super.initState();
   }
 
@@ -61,20 +67,46 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
     return BlocConsumer<AdminCategoryCubit, AdminCategoryState>(
       bloc: widget.bloc,
       listener: (context, state) {
-        if (state is AddCategoryFailedState ||
-            state is AddSubCategoryFailedState) {
+        if (state is AddOrganisationFailedState) {
           errMsg = (state as dynamic).message;
         }
-        if (state is AddCategorySuccessState ||
-            state is AddSubCategorySuccessState) {
+        if (state is AddOrganisationSuccessState) {
           Navigator.pop(context);
           ToastUtils.showSuccessToast("Organisation Added Successfully");
         }
+        if (state is FetchStatesSuccessState) {
+          _states.clear();
+          _states.addAll(state.states);
+          if (selectedState != null && isEdit) {
+            if (_states.contains(selectedState)) {
+              widget.bloc.fetchDistricts(selectedState!.id);
+            } else {
+              selectedState = null;
+              selectedDistrict = null;
+            }
+          }
+        }
+        if (state is FetchDistrictsSuccessState) {
+          _districts.clear();
+          _districts.addAll(state.districts);
+          if (selectedDistrict != null && isEdit) {
+            if (!_districts.contains(selectedDistrict)) {
+              selectedDistrict = null;
+            }
+          }
+        }
+        if (state is UpdateSelectedState) {
+          selectedState = state.state;
+          widget.bloc.fetchDistricts(selectedState!.id);
+        }
+        if (state is UpdateSelectedDistrict) {
+          selectedDistrict = state.district;
+        }
       },
       buildWhen: (previous, current) {
-        return current is AddCategoryFailedState ||
-            current is AddCategorySuccessState ||
-            current is AddCategoryLoadingState;
+        return current is AddOrganisationFailedState ||
+            current is AddOrganisationSuccessState ||
+            current is AddOrganisationLoadingState;
       },
       builder: (context, state) {
         return Container(
@@ -120,8 +152,7 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      final img = await ImagePicker()
-                          .pickImage(source: ImageSource.gallery);
+                      final img = await ImagePickerWeb.getImageInfo();
                       if (img != null) {
                         setState(() {
                           selectedFile = img;
@@ -137,15 +168,15 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
                           borderRadius: BorderRadius.circular(12)),
                       alignment: Alignment.center,
                       child: selectedFile != null
-                          ? Image.network(selectedFile!.path)
+                          ? Image.memory(selectedFile!.data!)
                           : widget.organisation?.image != null
                               ? CachedNetworkImage(
                                   imageUrl: widget.organisation!.image!)
                               : CustomElevatedButton(
                                   width: 180,
                                   onPressed: () async {
-                                    final img = await ImagePicker()
-                                        .pickImage(source: ImageSource.gallery);
+                                    final img =
+                                        await ImagePickerWeb.getImageInfo();
                                     if (img != null) {
                                       setState(() {
                                         selectedFile = img;
@@ -178,6 +209,52 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
                   const SizedBox(
                     height: 10,
                   ),
+                  BlocBuilder<AdminCategoryCubit, AdminCategoryState>(
+                    buildWhen: (previous, current) =>
+                        current is FetchStatesSuccessState ||
+                        current is FetchStatesFailedState ||
+                        current is UpdateSelectedState ||
+                        current is FetchStatesLoadingState,
+                    bloc: widget.bloc,
+                    builder: (context, state) {
+                      return CustomDropDown<StateModel>(
+                          label: "Select State",
+                          selectedValue: selectedState,
+                          items: _states,
+                          onChanged: (value) {
+                            widget.bloc.selectState(value!);
+                          },
+                          labelFormat: (value) {
+                            return value.name;
+                          });
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  BlocBuilder<AdminCategoryCubit, AdminCategoryState>(
+                    buildWhen: (previous, current) =>
+                        current is FetchDistrictsSuccessState ||
+                        current is FetchDistrictsFailedState ||
+                        current is UpdateSelectedDistrict ||
+                        current is FetchDistrictsLoadingState,
+                    bloc: widget.bloc,
+                    builder: (context, state) {
+                      return CustomDropDown<DistrictModel>(
+                          label: "Select District",
+                          selectedValue: selectedDistrict,
+                          items: _districts,
+                          onChanged: (value) {
+                            widget.bloc.selectDistrict(value!);
+                          },
+                          labelFormat: (value) {
+                            return value.name;
+                          });
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   state is AddCategoryLoadingState ||
                           state is AddSubCategoryLoadingState
                       ? const LoadingAnimation()
@@ -188,15 +265,28 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
                               vertical: 12, horizontal: 20),
                           onPressed: () async {
                             errMsg = null;
+
                             if (widget.organisation?.image == null &&
                                 selectedFile == null) {
                               errMsg = "Please add image";
-                              setState(() {});
+                              widget.bloc.showErrorMessage(
+                                  AddOrganisationFailedState(errMsg!));
                               return;
                             }
                             if (_formKey.currentState!.validate()) {
                               if (isEdit) {
-                              } else {}
+                                widget.bloc.updateOrganisation(
+                                    nameController.text,
+                                    organisationId: widget.organisation!.id,
+                                    image: selectedFile,
+                                    state: selectedState,
+                                    district: selectedDistrict);
+                              } else {
+                                widget.bloc.addOrganisation(nameController.text,
+                                    image: selectedFile!,
+                                    state: selectedState,
+                                    district: selectedDistrict);
+                              }
                             }
                           })
                 ],

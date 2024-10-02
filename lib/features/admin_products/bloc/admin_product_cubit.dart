@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:mafatlal_ecommerce/constants/app_strings.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/admin_products/model/admin_product.dart';
@@ -105,9 +106,13 @@ class AdminProductCubit extends Cubit<AdminProductState> {
       emit(AddProductLoadingState());
       List<String> imageUrl = [];
       for (var image in images) {
-        final imgUrl = (await AuthRepo.uploadImage(image)).data;
-        if (imgUrl != null) {
-          imageUrl.add(imgUrl);
+        if (image is MediaInfo) {
+          final imgUrl = (await AuthRepo.uploadImage(image)).data;
+          if (imgUrl != null) {
+            imageUrl.add(imgUrl);
+          }
+        } else if (image is String) {
+          imageUrl.add(image);
         }
       }
       if (imageUrl.isEmpty) {

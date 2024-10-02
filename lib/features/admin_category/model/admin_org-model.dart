@@ -23,9 +23,9 @@ class AdminOrganisation {
       name: json['name'],
       image: json['image'],
       stateId: json['state_id'] is int ? json['state_id'] : null,
-      stateName: json['state_name'],
+      stateName: json['state'],
       districtId: json['district_id'] is int ? json['district_id'] : null,
-      districtName: json['district_name'],
+      districtName: json['district'],
     );
   }
 }
