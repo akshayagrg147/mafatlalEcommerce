@@ -32,6 +32,7 @@ class ApiRoutes {
   //admin
   static const String adminOrderStats = "$baseUrl/order_stats";
   static const String adminOrderList = "$baseUrl/order_list";
+  static const String adminhomegraph = "$baseUrl/order_stats";
   static const String getOrderDetails = "$baseUrl/order_details";
   static const String updateOrderStatus = "$baseUrl/order_status_update";
   static const String crudOrganisationList =
