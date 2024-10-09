@@ -542,6 +542,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "simple_gesture_detector",
+      "rootUri": "file:///C:/Users/ankit/AppData/Local/Pub/Cache/hosted/pub.dev/simple_gesture_detector-0.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///C:/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -592,6 +598,12 @@
     {
       "name": "synchronized",
       "rootUri": "file:///C:/Users/ankit/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.1.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "table_calendar",
+      "rootUri": "file:///C:/Users/ankit/AppData/Local/Pub/Cache/hosted/pub.dev/table_calendar-3.1.2",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -716,7 +728,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-10-08T10:41:00.111662Z",
+  "generated": "2024-10-09T20:21:18.063253Z",
   "generator": "pub",
   "generatorVersion": "3.2.6"
 }

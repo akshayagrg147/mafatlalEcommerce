@@ -4,10 +4,10 @@ import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
 
 class AdminHomeRepository {
   static Future<ApiResponse<GraphModel>> fetchOrderStats(
-      String fromDate, int userId) async {
+      String fromDate, int userId, String toDate) async {
     final response = await DioUtil().getInstance()?.get(
       ApiRoutes.adminhomegraph,
-      queryParameters: {'from': fromDate, 'user_id': userId},
+      queryParameters: {'from': fromDate, 'user_id': userId, "to": toDate},
     );
 
     return ApiResponse.fromJson(
