@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,58 +55,50 @@ class AdminHomeCubit extends Cubit<AdminHomeState> {
     return DateTimeRange(start: lastWeek, end: today);
   }
 
-  List<dynamic> calculateSpotsAndMaxOrderValue(
-      Map<String, List<Statistic>> statistics) {
+  List<dynamic> calculateSpotsAndMaxOrderValue(Map<String, List<Statistic>> statistics) {
     print("calculateSpotsAndMaxOrderValue called");
 
     List<FlSpot> spots = [];
-    double maxOrderValue = 0.0;
+    double maxOrderValue = double.negativeInfinity;
     double minOrderValue = double.infinity;
 
-    // Parse the dates and ensure unique dates
-    final List<DateTime> dates = statistics.keys
-        .map((dateString) => DateTime.parse(dateString))
-        .toSet()
-        .toList();
+    // Parse the dates and ensure unique dates with summed order values
+    final Map<DateTime, double> dateOrderMap = {};
 
-    // Sort the dates to prevent duplicates and order them on the X-axis
-    dates.sort();
-
-    // Find the minimum date for X-axis reference. Fallback to DateTime.now() if no dates.
-    DateTime minDate = dates.isNotEmpty
-        ? dates.reduce((a, b) => a.isBefore(b) ? a : b)
-        : DateTime.now();
-
-    // Calculate the spots, max and min order values for y-axis adjustments
     for (var dateString in statistics.keys) {
-      List<double> dailyOrderValues = statistics[dateString]!
+      DateTime currentDate = DateTime.parse(dateString);
+
+      // Sum the daily order values for each date
+      double dailyTotalOrderValue = statistics[dateString]!
           .map((stat) => double.tryParse(stat.orderValue) ?? 0.0)
-          .toList();
+          .reduce((a, b) => a + b);
 
-      if (dailyOrderValues.isNotEmpty) {
-        double dailyMax = dailyOrderValues.reduce((a, b) => a > b ? a : b);
-        double dailyMin = dailyOrderValues.reduce((a, b) => a < b ? a : b);
+      // Add or sum the total for each unique date in the map
+      dateOrderMap[currentDate] = (dateOrderMap[currentDate] ?? 0.0) + dailyTotalOrderValue;
 
-        // Add to FlSpot for plotting
-        DateTime currentDate = DateTime.parse(dateString);
-        spots.add(FlSpot(
-          currentDate.difference(minDate).inDays.toDouble(),
-          dailyMax,
-        ));
-
-        // Update the overall max and min order values
-        if (dailyMax > maxOrderValue) {
-          maxOrderValue = dailyMax;
-        }
-        if (dailyMin < minOrderValue) {
-          minOrderValue = dailyMin;
-        }
-      }
+      // Update max and min order values
+      maxOrderValue = max(maxOrderValue, dailyTotalOrderValue);
+      minOrderValue = min(minOrderValue, dailyTotalOrderValue);
     }
 
-    return [spots, maxOrderValue, minDate];
-  }
+    // Sort the dates
+    final List<DateTime> sortedDates = dateOrderMap.keys.toList()..sort();
 
+    // Find the minimum date
+    DateTime minDate = sortedDates.first;
+
+    // Prepare spots for the graph based on summed values
+    for (var date in sortedDates) {
+      final orderValue = dateOrderMap[date]!;
+      spots.add(FlSpot(
+        date.difference(minDate).inDays.toDouble(),
+        orderValue,
+      ));
+      print("Date: $date, Value: $orderValue"); // Debug print
+    }
+
+    return [spots, maxOrderValue, minOrderValue, minDate];
+  }
   Future<void> startDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
