@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:mafatlal_ecommerce/constants/app_strings.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/bloc/admin_category_state.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/repository/admin_cat_repo.dart';
 import 'package:mafatlal_ecommerce/features/auth/repo/auth_repo.dart';
+import 'package:mafatlal_ecommerce/features/home/SubCategory/model/district_model.dart';
+import 'package:mafatlal_ecommerce/features/home/SubCategory/model/state_model.dart';
 
 class AdminCategoryCubit extends Cubit<AdminCategoryState> {
   AdminCategoryCubit() : super(AdminCategoryInitial());
@@ -39,7 +41,22 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
     }
   }
 
-  void addCategory(String name, {required XFile image}) async {
+  void fetchOrganisation() async {
+    try {
+      emit(FetchOrganisationLoadingState());
+      final response = await AdminCatRepo.fetchOrganisation(
+        CubitsInjector.authCubit.currentUser!.id,
+      );
+      emit(FetchOrganisationSuccessState(organisations: response.data ?? []));
+    } on DioException catch (e) {
+      emit(FetchOrganisationFailedState(
+          e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(FetchOrganisationFailedState(AppStrings.somethingWentWrong));
+    }
+  }
+
+  void addCategory(String name, {required MediaInfo image}) async {
     try {
       emit(AddCategoryLoadingState());
       final imgUrl = (await AuthRepo.uploadImage(image)).data;
@@ -56,7 +73,7 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
   }
 
   void addSubCategory(int categoryId,
-      {required String name, required XFile image}) async {
+      {required String name, required MediaInfo image}) async {
     try {
       emit(AddSubCategoryLoadingState());
       final imgUrl = (await AuthRepo.uploadImage(image)).data;
@@ -76,7 +93,7 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
   }
 
   void updateCategory(String name,
-      {required int categoryId, XFile? image, String? img}) async {
+      {required int categoryId, MediaInfo? image, String? img}) async {
     try {
       emit(AddCategoryLoadingState());
       String? imgUrl;
@@ -105,7 +122,7 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
   }
 
   void updateSubCategory(String name,
-      {required int subCategoryId, XFile? image, String? img}) async {
+      {required int subCategoryId, MediaInfo? image, String? img}) async {
     try {
       emit(AddSubCategoryLoadingState());
       String? imgUrl;
@@ -157,5 +174,116 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
     } catch (e) {
       emit(AddSubCategoryFailedState(AppStrings.somethingWentWrong));
     }
+  }
+
+  void addOrganisation(String name,
+      {required MediaInfo image,
+      StateModel? state,
+      DistrictModel? district}) async {
+    try {
+      emit(AddOrganisationLoadingState());
+      final imgUrl = (await AuthRepo.uploadImage(image)).data;
+      if (imgUrl == null) {
+        throw Exception();
+      }
+      await AdminCatRepo.addOrganisation(
+          CubitsInjector.authCubit.currentUser!.id,
+          organisationName: name,
+          imageUrl: imgUrl,
+          stateId: state?.id,
+          districtId: district?.id);
+      emit(AddOrganisationSuccessState());
+    } on DioException catch (e) {
+      emit(AddOrganisationFailedState(
+          e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(AddOrganisationFailedState(AppStrings.somethingWentWrong));
+    }
+  }
+
+  void updateOrganisation(String name,
+      {required int organisationId,
+      MediaInfo? image,
+      String? img,
+      StateModel? state,
+      DistrictModel? district}) async {
+    try {
+      emit(AddOrganisationLoadingState());
+      String? imgUrl;
+      if (image != null) {
+        imgUrl = (await AuthRepo.uploadImage(image)).data;
+      } else {
+        imgUrl = img;
+      }
+
+      if (imgUrl == null) {
+        throw Exception();
+      }
+      await AdminCatRepo.updateOrganisation(
+          CubitsInjector.authCubit.currentUser!.id,
+          organisationId: organisationId,
+          organisationName: name,
+          imageUrl: imgUrl,
+          stateId: state?.id,
+          districtId: district?.id);
+      emit(AddOrganisationSuccessState());
+    } on DioException catch (e) {
+      emit(AddOrganisationFailedState(
+          e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(AddOrganisationFailedState(AppStrings.somethingWentWrong));
+    }
+  }
+
+  void deleteOrganisation(int organisationId) async {
+    try {
+      emit(AddOrganisationLoadingState());
+
+      await AdminCatRepo.deleteOrganisation(organisationId);
+      emit(AddOrganisationSuccessState());
+    } on DioException catch (e) {
+      emit(AddOrganisationFailedState(
+          e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(AddOrganisationFailedState(AppStrings.somethingWentWrong));
+    }
+  }
+
+  void showErrorMessage(AdminCategoryState state) {
+    emit(state);
+  }
+
+  void fetchStates() async {
+    try {
+      emit(FetchStatesLoadingState());
+      final response = await AdminCatRepo.getAllStates();
+      emit(FetchStatesSuccessState(states: response.data ?? []));
+    } on DioException catch (e) {
+      emit(FetchStatesFailedState(
+          e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(FetchStatesFailedState(AppStrings.somethingWentWrong));
+    }
+  }
+
+  void selectState(StateModel state) {
+    emit(UpdateSelectedState(state: state));
+  }
+
+  void fetchDistricts(int stateId) async {
+    try {
+      emit(FetchDistrictsLoadingState());
+      final response = await AdminCatRepo.getDistrictsByStateId(stateId);
+      emit(FetchDistrictsSuccessState(districts: response.data ?? []));
+    } on DioException catch (e) {
+      emit(FetchDistrictsFailedState(
+          e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(FetchDistrictsFailedState(AppStrings.somethingWentWrong));
+    }
+  }
+
+  void selectDistrict(DistrictModel district) {
+    emit(UpdateSelectedDistrict(district: district));
   }
 }

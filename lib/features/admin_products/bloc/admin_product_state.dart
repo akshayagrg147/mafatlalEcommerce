@@ -1,6 +1,5 @@
 import 'package:mafatlal_ecommerce/features/admin_products/model/admin_product.dart';
 import 'package:mafatlal_ecommerce/features/admin_products/model/organisation_model.dart';
-import 'package:mafatlal_ecommerce/features/admin_products/model/subcategory_model.dart';
 
 abstract class AdminProductState {}
 
@@ -20,13 +19,19 @@ class FetchProductsErrorState extends AdminProductState {
 }
 
 class UpdateSelectedOrganisationState extends AdminProductState {
-  final Organisation organisation;
+  final DataObject organisation;
 
   UpdateSelectedOrganisationState(this.organisation);
 }
 
+class UpdateSelectedCategoryState extends AdminProductState {
+  final DataObject category;
+
+  UpdateSelectedCategoryState(this.category);
+}
+
 class UpdateSelectedSubCategoryState extends AdminProductState {
-  final SubCategory subCategory;
+  final DataObject subCategory;
 
   UpdateSelectedSubCategoryState(this.subCategory);
 }
@@ -34,7 +39,7 @@ class UpdateSelectedSubCategoryState extends AdminProductState {
 class FetchOrganisationsLoadingState extends AdminProductState {}
 
 class FetchOrganisationsSuccessState extends AdminProductState {
-  final List<Organisation> organisations;
+  final List<DataObject> organisations;
 
   FetchOrganisationsSuccessState(this.organisations);
 }
@@ -44,10 +49,23 @@ class FetchOrganisationsErrorState extends AdminProductState {
   FetchOrganisationsErrorState(this.message);
 }
 
+class FetchCategoryLoadingState extends AdminProductState {}
+
+class FetchCategorySuccessState extends AdminProductState {
+  final List<DataObject> categories;
+
+  FetchCategorySuccessState(this.categories);
+}
+
+class FetchCategoriesErrorState extends AdminProductState {
+  final String message;
+  FetchCategoriesErrorState(this.message);
+}
+
 class FetchSubCategoriesLoadingState extends AdminProductState {}
 
 class FetchSubCategoriesSuccessState extends AdminProductState {
-  final List<SubCategory> subCategories;
+  final List<DataObject> subCategories;
 
   FetchSubCategoriesSuccessState(this.subCategories);
 }
@@ -55,4 +73,15 @@ class FetchSubCategoriesSuccessState extends AdminProductState {
 class FetchSubCategoriesErrorState extends AdminProductState {
   final String message;
   FetchSubCategoriesErrorState(this.message);
+}
+
+class UpdateProductImageState extends AdminProductState {}
+
+class AddProductLoadingState extends AdminProductState {}
+
+class AddProductSuccessState extends AdminProductState {}
+
+class AddProductErrorState extends AdminProductState {
+  final String message;
+  AddProductErrorState(this.message);
 }

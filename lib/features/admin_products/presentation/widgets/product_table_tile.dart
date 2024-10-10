@@ -21,7 +21,9 @@ class ProductTableTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: AppColors.kGrey400)),
           child: CachedNetworkImage(
-            imageUrl: product.productImage ?? "",
+            imageUrl: product.productImage?.isNotEmpty == true
+                ? product.productImage!.first
+                : "",
             errorWidget: (context, url, error) =>
                 const Icon(Icons.error, color: AppColors.kBlack),
           ),

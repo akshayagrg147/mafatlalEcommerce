@@ -191,7 +191,7 @@ class _CartScreenState extends State<CartScreen> {
                     },
                   );
                 }),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             BlocBuilder<AuthCubit, AuthState>(
@@ -215,7 +215,7 @@ class _CartScreenState extends State<CartScreen> {
                     },
                   );
                 }),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             BlocConsumer<HomeCubit, HomeState>(
@@ -258,14 +258,15 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget buildTotal() {
+  Widget buildTotal(
+      {double horizontalPadding = 48, bool isSmallScreen = false}) {
     return BlocBuilder<HomeCubit, HomeState>(
       buildWhen: (previous, current) => current is UpdateCartBillingState,
       builder: (context, state) {
         final quantity = state is UpdateCartBillingState ? state.itemCount : 0;
         final amount = state is UpdateCartBillingState ? state.amount : 0;
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 48.0),
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -277,21 +278,41 @@ class _CartScreenState extends State<CartScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Grand Total :",
-                        style: AppTextStyle.f28PoppinsDarkGreyw600),
-                    Text(
-                      "Total Items ($quantity)",
-                      style: AppTextStyle.f18PoppinsBlackw400,
-                    ),
-                    Text(
-                      "₹ $amount",
-                      style: AppTextStyle.f28PoppinsBlackw600,
-                    ),
-                  ],
-                )
+                if (isSmallScreen)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Grand Total :",
+                          style: AppTextStyle.f28PoppinsDarkGreyw600
+                              .copyWith(fontSize: 20)),
+                      Text(
+                        "Total Items ($quantity)",
+                        style: AppTextStyle.f18PoppinsBlackw400
+                            .copyWith(fontSize: 14),
+                      ),
+                      Text(
+                        "₹ $amount",
+                        style: AppTextStyle.f28PoppinsBlackw600
+                            .copyWith(fontSize: 20),
+                      ),
+                    ],
+                  )
+                else
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Grand Total :",
+                          style: AppTextStyle.f28PoppinsDarkGreyw600),
+                      Text(
+                        "Total Items ($quantity)",
+                        style: AppTextStyle.f18PoppinsBlackw400,
+                      ),
+                      Text(
+                        "₹ $amount",
+                        style: AppTextStyle.f28PoppinsBlackw600,
+                      ),
+                    ],
+                  )
               ]),
         );
       },
@@ -304,32 +325,17 @@ class _CartScreenState extends State<CartScreen> {
           elevation: 5,
           backgroundColor: AppColors.kWhite,
           surfaceTintColor: AppColors.kWhite,
-          title: const Text("My Cart", style: AppTextStyle.f16BlackW400),
-        ),
-        bottomSheet: BlocBuilder<HomeCubit, HomeState>(
-          buildWhen: (previous, current) => current is UpdateCartBillingState,
-          builder: (context, state) {
-            if (state is UpdateCartBillingState &&
-                CubitsInjector.homeCubit.cartProducts.isNotEmpty) {
-              return CheckOutBottomWidget(
-                amount: state.amount,
-                itemCount: state.itemCount,
-              );
-            }
-
-            return const SizedBox.shrink();
-          },
+          title: Text(
+            "Cart / Checkout",
+            style: AppTextStyle.f24PoppinsBluew400.copyWith(fontSize: 18),
+          ),
         ),
         body: BlocBuilder<HomeCubit, HomeState>(
           buildWhen: (previous, current) =>
               current is FetchCartLoadingState ||
               current is FetchCartSuccessState ||
-              current is FetchCartFailedState ||
-              current is UpdateCartBillingState,
+              current is FetchCartFailedState,
           builder: (context, state) {
-            if (state is FetchCartLoadingState) {
-              return const LoadingAnimation();
-            }
             if (state is FetchCartFailedState) {
               return Center(
                 child: Text(
@@ -337,6 +343,9 @@ class _CartScreenState extends State<CartScreen> {
                   style: AppTextStyle.f16BlackW600,
                 ),
               );
+            }
+            if (state is FetchCartLoadingState) {
+              return const LoadingAnimation();
             }
             if (CubitsInjector.homeCubit.cartProducts.isEmpty) {
               return const Center(
@@ -346,25 +355,44 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               );
             }
-            return ListView.separated(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                itemCount: CubitsInjector.homeCubit.cartProducts.length + 1,
-                separatorBuilder: (context, index) {
-                  return const SizedBox(
-                    height: 15,
-                  );
-                },
-                itemBuilder: (context, index) {
-                  if (index >= CubitsInjector.homeCubit.cartProducts.length) {
-                    return const SizedBox(
-                      height: 200,
-                    );
-                  }
-                  return ProductListTile(
-                    product: CubitsInjector.homeCubit.cartProducts[index],
-                  );
-                });
+
+            return ListView(
+              children: [
+                const SizedBox(height: 15),
+                ListView.separated(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 18, vertical: 16),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return ProductListTile(
+                        isSmallScreen: true,
+                        product: CubitsInjector.homeCubit.cartProducts[index],
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return const Divider(
+                        height: 40,
+                        color: AppColors.paleGray,
+                      );
+                    },
+                    itemCount: CubitsInjector.homeCubit.cartProducts.length),
+                if (CubitsInjector.homeCubit.cartProducts.isNotEmpty)
+                  buildTotal(
+                    horizontalPadding: 18,
+                    isSmallScreen: true,
+                  ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                  child: buildCheckout(),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Footer()
+              ],
+            );
           },
         ));
   }

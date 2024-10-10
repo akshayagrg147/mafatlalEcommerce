@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
 import 'package:mafatlal_ecommerce/components/custom_textfield.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
@@ -33,7 +33,7 @@ class AddUpdateCat extends StatefulWidget {
 class _AddUpdateCatState extends State<AddUpdateCat> {
   bool isEdit = false;
   final nameController = TextEditingController();
-  XFile? selectedFile;
+  MediaInfo? selectedFile;
   String? errMsg;
   final _formKey = GlobalKey<FormState>();
   @override
@@ -61,7 +61,7 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
             state is AddSubCategorySuccessState) {
           Navigator.pop(context);
           ToastUtils.showSuccessToast(
-              "${widget.isCategory ? "Category" : "Sub Category"} Added Successfully");
+              "${widget.isCategory ? "Category" : "Sub Category"} ${!isEdit ? 'Added' : 'Updated'} Successfully");
         }
       },
       buildWhen: (previous, current) {
@@ -113,8 +113,8 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      final img = await ImagePicker()
-                          .pickImage(source: ImageSource.gallery);
+                      final img = await ImagePickerWeb.getImageInfo();
+
                       if (img != null) {
                         setState(() {
                           selectedFile = img;
@@ -130,7 +130,7 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
                           borderRadius: BorderRadius.circular(12)),
                       alignment: Alignment.center,
                       child: selectedFile != null
-                          ? Image.network(selectedFile!.path)
+                          ? Image.memory(selectedFile!.data!)
                           : widget.isCategory && widget.category?.image != null
                               ? CachedNetworkImage(
                                   imageUrl: widget.category!.image)
@@ -141,9 +141,9 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
                                   : CustomElevatedButton(
                                       width: 180,
                                       onPressed: () async {
-                                        final img = await ImagePicker()
-                                            .pickImage(
-                                                source: ImageSource.gallery);
+                                        final img =
+                                            await ImagePickerWeb.getImageInfo();
+
                                         if (img != null) {
                                           setState(() {
                                             selectedFile = img;

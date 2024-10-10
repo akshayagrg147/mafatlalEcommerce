@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mafatlal_ecommerce/components/searchable_dropdown.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
-import 'package:searchable_paginated_dropdown/searchable_paginated_dropdown.dart';
 
 class CustomSearchableDropdown<T> extends StatelessWidget {
   final List<T> items;
@@ -21,23 +21,37 @@ class CustomSearchableDropdown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 300,
       decoration: BoxDecoration(
         color: AppColors.kWhite,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppColors.kGrey200),
       ),
       child: SearchableDropdown<T>(
-        hintText: Text(hintText),
-        margin: const EdgeInsets.all(15),
-        searchHintText: searchHintText,
-        items: List.generate(
-            items.length,
-            (i) => SearchableDropdownMenuItem<T>(
-                value: items[i],
-                label: label(items[i]),
-                child: Text(label(items[i])))),
+        items: items,
+        displayItem: label,
+        hintText: hintText,
         onChanged: onChanged,
+        selectedItem: selectedItem,
+        filterFunction: (query, item) {
+          return label(item).toLowerCase().startsWith(query.toLowerCase());
+        },
       ),
+
+      // SearchableDropdown<T>(
+      //   hintText: Text(hintText),
+      //   margin: const EdgeInsets.all(15),
+      //   searchHintText: searchHintText,
+      //   isDialogExpanded: false,
+      //   width: 300,
+      //   items: List.generate(
+      //       items.length,
+      //       (i) => SearchableDropdownMenuItem<T>(
+      //           value: items[i],
+      //           label: label(items[i]),
+      //           child: Text(label(items[i])))),
+      //   onChanged: onChanged,
+      // ),
     );
   }
 }

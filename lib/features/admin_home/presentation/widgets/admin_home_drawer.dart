@@ -69,6 +69,18 @@ class AdminHomeDrawer extends StatelessWidget {
                   style: AppTextStyle.f14OutfitBlackW500,
                 ),
               ),
+              ListTile(
+                selected: state is UpdateDrawerPage ? state.page == 4 : false,
+                selectedTileColor: AppColors.kWhite,
+                onTap: () {
+                  CubitsInjector.adminHomeCubit.updatePageIndex(4);
+                },
+                leading: const Icon(Icons.business),
+                title: Text(
+                  "Organisation",
+                  style: AppTextStyle.f14OutfitBlackW500,
+                ),
+              ),
             ],
           ),
         );

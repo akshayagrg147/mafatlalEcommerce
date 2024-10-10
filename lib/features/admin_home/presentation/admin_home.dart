@@ -4,6 +4,7 @@ import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/presentation/admin_category_screen.dart';
+import 'package:mafatlal_ecommerce/features/admin_category/presentation/admin_organisation_screen.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/presentation/admin_home_screen.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/presentation/widgets/admin_header.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/presentation/widgets/admin_home_drawer.dart';
@@ -53,7 +54,8 @@ class AdminHome extends StatelessWidget {
                         AdminHomeScreen(),
                         OrderHistoryScreen(),
                         ProductHomeScreen(),
-                        AdminCategoryScreen()
+                        AdminCategoryScreen(),
+                        AdminOrganisationScreen()
                       ],
                     ),
                   ))

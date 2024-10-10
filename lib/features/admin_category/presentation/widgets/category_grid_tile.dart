@@ -34,80 +34,79 @@ class CategoryGridTile extends StatelessWidget {
         ],
         border: Border.all(color: AppColors.kGrey200),
       ),
-      padding: EdgeInsets.all(12),
-      child: Stack(
-        children: [
-          SizedBox.expand(
-            child: Column(
-              children: [
-                Expanded(
-                    flex: 5,
-                    child: CachedNetworkImage(
-                      imageUrl: data.image ?? '',
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error, color: AppColors.kBlack),
-                    )),
-                SizedBox(
-                  height: 10,
-                ),
-                Spacer(),
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    data.name ?? '',
-                    maxLines: 2,
-                    style: AppTextStyle.f16OutfitBlackW500,
+      // padding: EdgeInsets.all(12),
+      child: SizedBox.expand(
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      final bloc = BlocProvider.of<AdminCategoryCubit>(context);
+                      final widget = isCategory
+                          ? AddUpdateCat.category(
+                              bloc: bloc,
+                              category: data,
+                            )
+                          : AddUpdateCat.subCategory(
+                              bloc: bloc,
+                              subCategory: data,
+                            );
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return Center(
+                              child: widget,
+                            );
+                          });
+                    },
+                    icon: const Icon(Icons.edit),
+                    color: AppColors.kGreen,
                   ),
-                )
-              ],
+                  IconButton(
+                    onPressed: () {
+                      ShowDeleteCatConfirmation.show(context,
+                          data: data, isCategory: isCategory, onDeleteTap: () {
+                        isCategory
+                            ? BlocProvider.of<AdminCategoryCubit>(context)
+                                .deleteCategory(data.id)
+                            : BlocProvider.of<AdminCategoryCubit>(context)
+                                .deleteSubCategory(data.id);
+                      });
+                    },
+                    icon: const Icon(Icons.delete),
+                    color: AppColors.kRed,
+                  ),
+                ],
+              ),
             ),
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    final bloc = BlocProvider.of<AdminCategoryCubit>(context);
-                    final widget = isCategory
-                        ? AddUpdateCat.category(
-                            bloc: bloc,
-                            category: data,
-                          )
-                        : AddUpdateCat.subCategory(
-                            bloc: bloc,
-                            subCategory: data,
-                          );
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return Center(
-                            child: widget,
-                          );
-                        });
-                  },
-                  icon: const Icon(Icons.edit),
-                  color: AppColors.kGreen,
+            Expanded(
+                flex: 4,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: CachedNetworkImage(
+                    imageUrl: data.image ?? '',
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error, color: AppColors.kBlack),
+                  ),
+                )),
+            Expanded(
+              flex: 3,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                child: Text(
+                  data.name ?? '',
+                  maxLines: 2,
+                  style: AppTextStyle.f16OutfitBlackW500,
                 ),
-                IconButton(
-                  onPressed: () {
-                    ShowDeleteConfirmation.show(context,
-                        data: data, isCategory: isCategory, onDeleteTap: () {
-                      isCategory
-                          ? BlocProvider.of<AdminCategoryCubit>(context)
-                              .deleteCategory(data.id)
-                          : BlocProvider.of<AdminCategoryCubit>(context)
-                              .deleteSubCategory(data.id);
-                    });
-                  },
-                  icon: const Icon(Icons.delete),
-                  color: AppColors.kRed,
-                ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

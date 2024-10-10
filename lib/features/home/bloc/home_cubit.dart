@@ -12,6 +12,7 @@ import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
+import 'package:mafatlal_ecommerce/features/home/model/productdetial_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/search_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/repo/home_repo.dart';
@@ -28,6 +29,7 @@ class HomeCubit extends Cubit<HomeState> {
   bool isCategoryScreenShown = false;
   final List<Product_new> cartProducts = [];
   final searchController = TextEditingController();
+  ProductDetail? productDetail;
 
   // Timer? _timer;
 
@@ -271,6 +273,7 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       emit(FetchProductDetailsLoadingState());
       final response = await HomeRepo.fetchProductDetails(productId);
+      productDetail = response.data;
       print("e---${response.data!.price}");
 
       emit(FetchProductDetailsSuccessState(product: response.data!));

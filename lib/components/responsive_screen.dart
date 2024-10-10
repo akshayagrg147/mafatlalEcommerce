@@ -45,6 +45,16 @@ class ResponsiveWidget extends StatelessWidget {
     }
   }
 
+  static int getOrganisationGridCount(BuildContext context) {
+    if (isSmallScreen(context)) {
+      return 2;
+    } else if (isMediumScreen(context)) {
+      return 3;
+    } else {
+      return 5;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(

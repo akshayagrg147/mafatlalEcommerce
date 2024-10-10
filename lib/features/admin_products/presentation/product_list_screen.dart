@@ -20,6 +20,7 @@ class ProductListScreen extends StatefulWidget {
 
 class _ProductListScreenState extends State<ProductListScreen> {
   final List<AdminProduct> products = [];
+  int page = 1;
   @override
   void initState() {
     context.read<AdminProductCubit>().getProducts();
@@ -153,7 +154,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       ),
                       DataCell(
                         Text(
-                          products[index].organisationName ?? "--",
+                          products[index].categoryName ?? "--",
                           style: AppTextStyle.f14OutfitGreyW500,
                         ),
                       ),

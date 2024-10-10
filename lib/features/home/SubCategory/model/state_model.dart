@@ -1,4 +1,6 @@
-class StateModel {
+import 'package:equatable/equatable.dart';
+
+class StateModel extends Equatable {
   final int id;
   final String name;
 
@@ -10,4 +12,7 @@ class StateModel {
       name: json['name'],
     );
   }
+
+  @override
+  List<Object?> get props => [id, name];
 }

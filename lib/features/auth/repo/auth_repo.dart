@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:mafatlal_ecommerce/features/auth/model/user_model.dart';
 import 'package:mafatlal_ecommerce/routes/api_routes.dart';
 import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
@@ -55,12 +54,15 @@ class AuthRepo {
         response.data, (data) => User.fromJson(data));
   }
 
-  static Future<ApiResponse<String?>> uploadImage(XFile file) async {
-    final fileName = file.name.split('.').first;
-    final mimeType = file.name.split('.').last;
-    final mltFile = !kIsWeb
-        ? await MultipartFile.fromFile(file.path, filename: fileName)
-        : MultipartFile.fromBytes(await file.readAsBytes(), filename: fileName);
+  static Future<ApiResponse<String?>> uploadImage(MediaInfo file) async {
+    final fileName = file.fileName!.split('.').first;
+    final mimeType = file.fileName!.split('.').last;
+    final mltFile =
+        // !kIsWeb
+        // ? await MultipartFile.fromFile(file.path, filename: fileName)
+        // :
+
+        MultipartFile.fromBytes(file.data!, filename: fileName);
     var data =
         FormData.fromMap({'mime_type': mimeType, 'image_name': fileName});
     final img = MapEntry<String, MultipartFile>('photo_dec', mltFile);
