@@ -16,6 +16,7 @@ class OrganisationGridTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -56,6 +57,9 @@ class OrganisationGridTile extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(
+                          height: 10,
+                        ),
                         Text(
                           data.name ?? '',
                           maxLines: 2,

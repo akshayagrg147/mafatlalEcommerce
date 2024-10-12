@@ -21,6 +21,8 @@ class CategoryGridTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.hardEdge,
+
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -116,7 +118,9 @@ class CategoryGridTile extends StatelessWidget {
                         const Icon(Icons.error, color: AppColors.kBlack),
                   ),
                 )),
-            SizedBox(height: 4,),
+            SizedBox(
+              height: 4,
+            ),
             Expanded(
               flex: 3,
               child: Padding(
@@ -132,6 +136,7 @@ class CategoryGridTile extends StatelessWidget {
             if (isCategory)
               Center(
                   child: Text("Click to See its SubCategories",
+                      textAlign: TextAlign.center,
                       style: AppTextStyle.f12GreyW400)),
           ],
         ),

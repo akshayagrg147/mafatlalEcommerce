@@ -5,6 +5,10 @@ class Utils {
     return DateFormat("EEEE, dd MMM yy, hh:mm a").format(dateTime);
   }
 
+  static String formatDateTimeToDateString(DateTime dateTime) {
+    return DateFormat("yyyy-MM-dd").format(dateTime);
+  }
+
   static DateTime getTodayDate() {
     DateTime startOfToday = DateTime.now();
     DateTime todayStart =

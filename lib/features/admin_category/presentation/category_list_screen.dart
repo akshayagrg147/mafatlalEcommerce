@@ -102,6 +102,7 @@ class _AdminCategoryListScreenState extends State<AdminCategoryListScreen> {
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       mainAxisSpacing: 12,
                       crossAxisSpacing: 12,
+                      childAspectRatio: 0.9,
                       crossAxisCount:
                           ResponsiveWidget.getCategoryGridCount(context),
                     ),
