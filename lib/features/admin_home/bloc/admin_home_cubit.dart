@@ -52,10 +52,12 @@ class AdminHomeCubit extends Cubit<AdminHomeState> {
   DateTimeRange getTodayAndLastWeek() {
     DateTime today = DateTime.now();
     DateTime lastWeek = today.subtract(Duration(days: 7));
+    lastWeek = DateTime(lastWeek.year, lastWeek.month, lastWeek.day);
     return DateTimeRange(start: lastWeek, end: today);
   }
 
-  List<dynamic> calculateSpotsAndMaxOrderValue(Map<String, List<Statistic>> statistics) {
+  List<dynamic> calculateSpotsAndMaxOrderValue(
+      Map<String, List<Statistic>> statistics) {
     print("calculateSpotsAndMaxOrderValue called");
 
     List<FlSpot> spots = [];
@@ -74,7 +76,8 @@ class AdminHomeCubit extends Cubit<AdminHomeState> {
           .reduce((a, b) => a + b);
 
       // Add or sum the total for each unique date in the map
-      dateOrderMap[currentDate] = (dateOrderMap[currentDate] ?? 0.0) + dailyTotalOrderValue;
+      dateOrderMap[currentDate] =
+          (dateOrderMap[currentDate] ?? 0.0) + dailyTotalOrderValue;
 
       // Update max and min order values
       maxOrderValue = max(maxOrderValue, dailyTotalOrderValue);
@@ -84,21 +87,25 @@ class AdminHomeCubit extends Cubit<AdminHomeState> {
     // Sort the dates
     final List<DateTime> sortedDates = dateOrderMap.keys.toList()..sort();
 
-    // Find the minimum date
-    DateTime minDate = sortedDates.first;
+    if (sortedDates.isNotEmpty) {
+      // Find the minimum date
+      DateTime minDate = sortedDates.first;
 
-    // Prepare spots for the graph based on summed values
-    for (var date in sortedDates) {
-      final orderValue = dateOrderMap[date]!;
-      spots.add(FlSpot(
-        date.difference(minDate).inDays.toDouble(),
-        orderValue,
-      ));
-      print("Date: $date, Value: $orderValue"); // Debug print
+      // Prepare spots for the graph based on summed values
+      for (var date in sortedDates) {
+        final orderValue = dateOrderMap[date]!;
+        spots.add(FlSpot(
+          date.difference(minDate).inDays.toDouble(),
+          orderValue,
+        ));
+        print("Date: $date, Value: $orderValue"); // Debug print
+      }
+
+      return [spots, maxOrderValue, minOrderValue, minDate];
     }
-
-    return [spots, maxOrderValue, minOrderValue, minDate];
+    return [];
   }
+
   Future<void> startDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,

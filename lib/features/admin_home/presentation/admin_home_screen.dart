@@ -1,10 +1,13 @@
+import 'dart:math' as math;
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
+import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/bloc/admin_home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/bloc/admin_home_state.dart';
-import 'dart:math' as math;
+
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({Key? key}) : super(key: key);
 
@@ -141,7 +144,23 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           if (state is GetGraphDataSuccessState) {
             final statistics = state.graphModel.statistics;
             final result = cubit.calculateSpotsAndMaxOrderValue(statistics);
-
+            if (result.isEmpty) {
+              return Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                height: 300,
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade400)),
+                child: Center(
+                  child: Text(
+                    "No Data",
+                    style: AppTextStyle.f18PoppinsBlackw400,
+                  ),
+                ),
+              );
+            }
             final spots = result[0] as List<FlSpot>;
             final maxOrderValue = result[1] as double;
             final minOrderValue = result[2] as double;
@@ -157,9 +176,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             final yRange = maxOrderValue - minOrderValue;
 
             // Ensure intervals are not zero
-            final xInterval = xRange > 0 ? (xRange / 5).clamp(0.1, double.infinity) : 1.0;
-            final yInterval = yRange > 0 ? (yRange / 5).clamp(0.1, double.infinity) : 1.0;
-            final yAxisInterval = calculateYAxisInterval(minOrderValue, maxOrderValue);
+            final xInterval =
+                xRange > 0 ? (xRange / 5).clamp(0.1, double.infinity) : 1.0;
+            final yInterval =
+                yRange > 0 ? (yRange / 5).clamp(0.1, double.infinity) : 1.0;
+            final yAxisInterval =
+                calculateYAxisInterval(minOrderValue, maxOrderValue);
 
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -262,16 +284,18 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         },
       ),
     );
-
   }
+
   double calculateYAxisInterval(double min, double max) {
     final range = max - min;
-    if (range <= 0) return 1.0; // Return a default value if range is zero or negative
+    if (range <= 0)
+      return 1.0; // Return a default value if range is zero or negative
 
-    final roughInterval = range / 5;  // We want about 5 intervals
+    final roughInterval = range / 5; // We want about 5 intervals
 
     // Round to a nice number
-    final magnitude = math.pow(10, (math.log(roughInterval) / math.ln10).floor());
+    final magnitude =
+        math.pow(10, (math.log(roughInterval) / math.ln10).floor());
     final niceInterval = (roughInterval / magnitude).round() * magnitude;
 
     return (niceInterval as double).clamp(0.1, double.infinity);
