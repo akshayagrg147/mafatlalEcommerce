@@ -10,6 +10,8 @@ import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/searchmodel.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/ProductSearchTile.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
 
 class SearchScreen extends StatefulWidget {
   static const String route = "/searchScreen";
@@ -51,70 +53,82 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget largeScreen() {
-    return SingleChildScrollView(
-      child: Center(
-        child: SizedBox(
-          width: 1280,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
+    return Scaffold(
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(150),
+        child: Header(),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Center(
+              child: SizedBox(
+                width: 1280,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(Icons.arrow_back)),
+                        const SizedBox(
+                          width: 50,
+                        ),
+                        Text(
+                          "Search Results",
+                          style: AppTextStyle.f16OutfitBlackW500,
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    BlocConsumer<HomeCubit, HomeState>(
+                      listener: (context, state) {
+                        if (state is SearchSuccessState) {
+                          productlist.clear();
+                          productlist.addAll(state.organisations);
+                        }
+                        if (state is SearchFailedState) {
+                          productlist.clear();
+                        }
                       },
-                      icon: const Icon(Icons.arrow_back)),
-                  const SizedBox(
-                    width: 50,
-                  ),
-                  Text(
-                    "Search Results",
-                    style: AppTextStyle.f16OutfitBlackW500,
-                  )
-                ],
+                      buildWhen: (previous, current) =>
+                          current is SearchSuccessState ||
+                          current is SearchFailedState ||
+                          current is SearchLoadingState,
+                      builder: (context, state) {
+                        if (state is SearchLoadingState) {
+                          return const LoadingAnimation();
+                        }
+                        return GridView.count(
+                          shrinkWrap: true,
+                          crossAxisCount:
+                              ResponsiveWidget.getGridCount(context),
+                          childAspectRatio: 0.7,
+                          mainAxisSpacing: 18,
+                          crossAxisSpacing: 18,
+                          children: List.generate(productlist.length, (index) {
+                            return ProductSearchTile(
+                              product: productlist[index],
+                            );
+                          }),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              BlocConsumer<HomeCubit, HomeState>(
-                listener: (context, state) {
-                  if (state is SearchSuccessState) {
-                    productlist.clear();
-                    productlist.addAll(state.organisations);
-                  }
-                  if (state is SearchFailedState) {
-                    productlist.clear();
-                  }
-                },
-                buildWhen: (previous, current) =>
-                    current is SearchSuccessState ||
-                    current is SearchFailedState ||
-                    current is SearchLoadingState,
-                builder: (context, state) {
-                  if (state is SearchLoadingState) {
-                    return const LoadingAnimation();
-                  }
-                  return GridView.count(
-                    shrinkWrap: true,
-                    crossAxisCount: ResponsiveWidget.getGridCount(context),
-                    childAspectRatio: 0.7,
-                    mainAxisSpacing: 18,
-                    crossAxisSpacing: 18,
-                    children: List.generate(productlist.length, (index) {
-                      return ProductSearchTile(
-                        product: productlist[index],
-                      );
-                    }),
-                  );
-                },
-              )
-            ],
-          ),
+            ),
+            const Footer()
+          ],
         ),
       ),
     );

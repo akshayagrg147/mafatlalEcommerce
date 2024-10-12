@@ -130,6 +130,9 @@ class AdminProductCubit extends Cubit<AdminProductState> {
           description: description,
           imageUrl: imageUrl,
           price: price,
+          orgId: orgId,
+          categoryId: categoryId,
+          subCategoryId: subCategoryId,
           size: size);
       emit(AddProductSuccessState());
     } on DioException catch (e) {

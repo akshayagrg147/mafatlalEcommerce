@@ -106,7 +106,20 @@ class OrganisationGridTile extends StatelessWidget {
                             );
                           });
                     },
-                    icon: const Icon(Icons.edit),
+                    icon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.edit,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          "Edit",
+                          style: AppTextStyle.f14OutfitBlackW500,
+                        )
+                      ],
+                    ),
                     color: AppColors.kGreen,
                   ),
                   IconButton(
@@ -118,7 +131,17 @@ class OrganisationGridTile extends StatelessWidget {
                             .deleteOrganisation(data.id);
                       });
                     },
-                    icon: const Icon(Icons.delete),
+                    icon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.delete, size: 20),
+                        const SizedBox(width: 5),
+                        Text(
+                          "Delete",
+                          style: AppTextStyle.f14OutfitBlackW500,
+                        )
+                      ],
+                    ),
                     color: AppColors.kRed,
                   ),
                 ],

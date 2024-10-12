@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
 import 'package:mafatlal_ecommerce/components/custom_textfield.dart';
@@ -442,8 +441,8 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
                     errorWidget: (context, url, error) =>
                         const Center(child: Icon(Icons.error)),
                   )
-                : img is XFile
-                    ? Image.network(img.path)
+                : img is MediaInfo
+                    ? Image.memory(img.data!, fit: BoxFit.cover)
                     : SizedBox.shrink(),
           ),
         ),

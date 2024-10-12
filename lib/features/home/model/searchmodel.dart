@@ -50,21 +50,25 @@ class ProductSearch {
   factory ProductSearch.fromJson(Map<String, dynamic> json) {
     final idStr = json['id']?.toString() ?? '0';
     final id = int.tryParse(idStr);
-
+    final variant = _parseVariant(json['size_available']);
     return ProductSearch(
       id: id,
       name: json['name'] ?? '',
       productImage: _parseProductImage(json['img']),
-      variant: _parseVariant(json['size_available']),
+      variant: variant,
       price: json['price'] ?? '0.0',
       description: json['description'] ?? '',
-      productCategoryId: json['product_category_id'] as int?,
+      productCategoryId: json['product_category_id'] is int
+          ? json['product_category_id']
+          : null,
       productCategoryName: json['product_category_name'] ?? '',
-      productSubcategoryId: json['product_subcategory_id'] as int?,
+      productSubcategoryId: json['product_subcategory_id'] is int
+          ? json['product_subcategory_id']
+          : null,
       productSubcategoryName: json['product_subcategory_name'] ?? '',
       productOrganizationId: json['product_organization_id']?.toString() ?? '',
       productOrganizationName: json['product_organization_name'] ?? '',
-      quantity: CartHelper.getProductQuantity(id ?? 0),
+      quantity: CartHelper.getProductQuantity(id ?? 0, variant: variant),
     );
   }
 }

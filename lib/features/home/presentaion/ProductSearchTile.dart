@@ -32,12 +32,10 @@ class ProductSearchTile extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  ProductDetailsScreen(productId: product.id!.toInt()),
-            ),
+            ProductDetailsScreen.route,
+            arguments: product.id,
           );
         },
         child: Container(

@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+import 'package:mafatlal_ecommerce/features/admin_home/presentation/admin_home.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/splash_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
+import 'package:mafatlal_ecommerce/helper/enums.dart';
 import 'package:mafatlal_ecommerce/helper/shared_preference_helper.dart';
 import 'package:mafatlal_ecommerce/routes/app_routes.dart';
+import 'package:mafatlal_ecommerce/services/navigation_service.dart';
 
 void main() async {
   CubitsInjector();
@@ -32,6 +35,8 @@ class MyApp extends StatelessWidget {
         providers: CubitsInjector.blocProviders,
         child: MaterialApp(
           title: 'Mafatlal Store',
+          navigatorKey: CubitsInjector.homeCubit.homeNavigatorKey,
+          navigatorObservers: [AppNavObserver()],
           theme: ThemeData(
             textTheme: GoogleFonts.robotoTextTheme(
               Theme.of(context).textTheme,
@@ -41,7 +46,11 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),
           debugShowCheckedModeBanner: false,
-          initialRoute: kIsWeb ? HomeScreen.route : SplashScreen.route,
+          initialRoute: kIsWeb
+              ? CubitsInjector.authCubit.currentUser?.userType == UserType.admin
+                  ? AdminHome.route
+                  : HomeScreen.route
+              : SplashScreen.route,
           onGenerateRoute: GenerateRoute.onGenerateRoute,
         ));
   }

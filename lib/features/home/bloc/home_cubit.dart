@@ -18,6 +18,7 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/search_screen.dart'
 import 'package:mafatlal_ecommerce/features/home/repo/home_repo.dart';
 import 'package:mafatlal_ecommerce/helper/enums.dart';
 import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
+import 'package:mafatlal_ecommerce/services/navigation_service.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitialState());
@@ -69,11 +70,18 @@ class HomeCubit extends Cubit<HomeState> {
 
       await Future.delayed(const Duration(milliseconds: 200));
       final response = await HomeRepo.search(searchText);
-      homeNavigatorKey.currentState!.push(MaterialPageRoute(
-          builder: (_) => SearchScreen(
-                products: response.data ?? [],
-              )));
-      isSearchScreenShown = true;
+      if (isSearchScreenShown == false) {
+        homeNavigatorKey.currentState!
+            .pushNamed(SearchScreen.route, arguments: response.data ?? []);
+        isSearchScreenShown = true;
+      } else {
+        final route = NavigationService.getCurrentRouteName();
+        if (route != SearchScreen.route) {
+          homeNavigatorKey.currentState!
+              .pushNamed(SearchScreen.route, arguments: response.data ?? []);
+          isSearchScreenShown = true;
+        }
+      }
       print(response.data);
       emit(SearchSuccessState(
         organisations: response.data ?? [],
