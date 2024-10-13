@@ -37,6 +37,19 @@ class _SearchableDropdownState<T> extends State<SearchableDropdown<T>> {
     super.initState();
     _filteredItems = widget.items;
     selectedItem = widget.selectedItem;
+    if (widget.selectedItem != null) {
+      _controller.text = widget.displayItem(widget.selectedItem!);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant SearchableDropdown<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedItem != oldWidget.selectedItem && selectedItem == null) {
+      if (widget.selectedItem != null) {
+        _controller.text = widget.displayItem(widget.selectedItem!);
+      }
+    }
   }
 
   void _filterItems(String query) {

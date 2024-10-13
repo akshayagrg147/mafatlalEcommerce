@@ -44,6 +44,8 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
   DataObject? selectedSubCategory;
   DataObject? selectedCategory;
 
+  bool isSubCatChanged = false;
+
   final List<AdminVariantOption> sizes = [];
   bool isUpdate = false;
 
@@ -53,7 +55,8 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
       nameController.text = widget.productDetails!.productName;
       priceController.text = widget.productDetails!.price.toString();
       descriptionController.text = widget.productDetails!.description;
-
+      images.addAll(widget.productDetails?.productImage ?? []);
+      sizes.addAll(widget.productDetails?.variant?.variantOptions ?? []);
       isUpdate = true;
     }
     context.read<AdminProductCubit>().fetchOrganizations();
@@ -68,14 +71,47 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
         if (state is FetchOrganisationsSuccessState) {
           organizations.clear();
           organizations.addAll(state.organisations);
+          if (widget.productDetails?.organisationId != null) {
+            final org = DataObject(
+                id: widget.productDetails!.organisationId!,
+                name: widget.productDetails!.organisationName!,
+                image: '');
+            if (organizations.contains(org)) {
+              context.read<AdminProductCubit>().updateSelectedOrganisation(org);
+            }
+          }
         }
         if (state is FetchSubCategoriesSuccessState) {
           subCategories.clear();
           subCategories.addAll(state.subCategories);
+          if (widget.productDetails?.subCategoryId != null &&
+              isSubCatChanged == false) {
+            isSubCatChanged = true;
+            final subCat = DataObject(
+                id: widget.productDetails!.subCategoryId!,
+                name: widget.productDetails!.subCategoryName!,
+                image: '');
+            if (subCategories.contains(subCat)) {
+              selectedSubCategory = subCat;
+              context
+                  .read<AdminProductCubit>()
+                  .updateSelectedSubCategory(subCat);
+            }
+          }
         }
         if (state is FetchCategorySuccessState) {
           categories.clear();
           categories.addAll(state.categories);
+          if (widget.productDetails?.categoryId != null) {
+            final cat = DataObject(
+                id: widget.productDetails!.categoryId!,
+                name: widget.productDetails!.categoryName!,
+                image: '');
+            if (categories.contains(cat)) {
+              context.read<AdminProductCubit>().updateSelectedCategory(cat);
+              context.read<AdminProductCubit>().fetchSubCategories(cat.id);
+            }
+          }
         }
 
         if (state is UpdateSelectedOrganisationState) {
@@ -262,7 +298,9 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
                       return CustomSearchableDropdown<DataObject>(
                           items: organizations,
                           selectedItem: selectedOrganisation,
-                          label: (DataObject o) => o.name,
+                          label: (DataObject o) {
+                            return o.name;
+                          },
                           searchHintText: "Search Organisation by name",
                           hintText: "Select Organisation",
                           onChanged: (DataObject? value) {
@@ -391,17 +429,32 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
                           return;
                         }
                         if (_formKey.currentState!.validate()) {
-                          context.read<AdminProductCubit>().addProduct(
-                              name: nameController.text,
-                              description: descriptionController.text,
-                              images: images,
-                              price: priceController.text.isEmpty
-                                  ? 0
-                                  : int.parse(priceController.text),
-                              categoryId: selectedCategory?.id,
-                              subCategoryId: selectedSubCategory?.id,
-                              orgId: selectedOrganisation?.id,
-                              sizes: sizes);
+                          if (isUpdate) {
+                            context.read<AdminProductCubit>().updateProduct(
+                                productId: widget.productDetails!.productId,
+                                name: nameController.text,
+                                description: descriptionController.text,
+                                images: images,
+                                price: priceController.text.isEmpty
+                                    ? 0
+                                    : int.parse(priceController.text),
+                                categoryId: selectedCategory?.id,
+                                subCategoryId: selectedSubCategory?.id,
+                                orgId: selectedOrganisation?.id,
+                                sizes: sizes);
+                          } else {
+                            context.read<AdminProductCubit>().addProduct(
+                                name: nameController.text,
+                                description: descriptionController.text,
+                                images: images,
+                                price: priceController.text.isEmpty
+                                    ? 0
+                                    : int.parse(priceController.text),
+                                categoryId: selectedCategory?.id,
+                                subCategoryId: selectedSubCategory?.id,
+                                orgId: selectedOrganisation?.id,
+                                sizes: sizes);
+                          }
                         }
                       },
                       label: "${isUpdate ? "Update" : "Add"} Product");
