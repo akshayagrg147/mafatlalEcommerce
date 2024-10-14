@@ -4,6 +4,8 @@ import 'package:mafatlal_ecommerce/features/auth/presentaion/forgot_password_scr
 import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/sign_up_screen.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/splash_screen.dart';
+import 'package:mafatlal_ecommerce/features/home/SubCategory/presentation/subcategory_detail.dart';
+import 'package:mafatlal_ecommerce/features/home/model/searchmodel.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/category_product_screen.dart';
@@ -17,6 +19,14 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/order_succe
 class GenerateRoute {
   static Route<dynamic>? Function(RouteSettings)? onGenerateRoute =
       (RouteSettings settings) {
+    if (settings.name?.startsWith(ProductDetailsScreen.route) ?? false) {
+      return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => ProductDetailsScreen(
+                productId: settings.arguments as int,
+              ));
+    }
+
     switch (settings.name) {
       //Before Login
       case SplashScreen.route:
@@ -42,13 +52,28 @@ class GenerateRoute {
                 ));
       case SearchScreen.route:
         return MaterialPageRoute(
-            settings: settings, builder: (_) => const SearchScreen());
+            settings: settings,
+            builder: (_) => SearchScreen(
+                  products: settings.arguments as List<ProductSearch>?,
+                ));
       case CategoryProductScreen.route:
         return MaterialPageRoute(
             settings: settings,
             builder: (_) => CategoryProductScreen(
                   category: settings.arguments as Category_new,
                 ));
+
+      case SubCategoryDetail.route:
+        final arguments = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+            settings: settings,
+            builder: (_) {
+              return SubCategoryDetail(
+                subcategories:
+                    arguments['subcategories'] as List<SubCategory_new>,
+                selectedname: arguments['name'] as String,
+              );
+            });
       case CartScreen.route:
         return MaterialPageRoute(
             settings: settings, builder: (_) => const CartScreen());

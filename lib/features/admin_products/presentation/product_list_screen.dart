@@ -80,6 +80,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       products.clear();
                       products.addAll(state.products);
                     }
+                    if (state is AddProductSuccessState) {
+                      context.read<AdminProductCubit>().getProducts();
+                    }
                   },
                   buildWhen: (previous, current) =>
                       current is FetchProductsSuccessState ||
@@ -132,11 +135,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
             (index) => DataRow2(
                     specificRowHeight: 60,
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (_) => OrderDetailsScreen(
-                      //             orderId: orders[index].orderId)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => ProductAddUpdateScreen(
+                                    productDetails: products[index],
+                                  )));
                     },
                     cells: [
                       DataCell(

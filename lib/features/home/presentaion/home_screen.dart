@@ -54,18 +54,24 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Header(),
       ),
       body: Align(
-        alignment: Alignment.topCenter,
-        child: Navigator(
-          key: CubitsInjector.homeCubit.homeNavigatorKey,
-          initialRoute: "/",
-          onGenerateRoute: (settings) {
-            if (settings.name == "/") {
-              return MaterialPageRoute(
-                  builder: (_) => const HomeBody(isWeb: true));
-            }
-          },
-        ),
-      ),
+          alignment: Alignment.topCenter, child: const HomeBody(isWeb: true)
+
+          // Navigator(
+          //   key: CubitsInjector.homeCubit.homeNavigatorKey,
+          //   initialRoute: "/",
+          //   onGenerateRoute: (settings) {
+          //     if (settings.name == "/") {
+          //       return MaterialPageRoute(
+          //           builder: (_) => );
+          //     } else if (settings.name == '/search') {
+          //       return MaterialPageRoute(
+          //           builder: (_) => SearchScreen(
+          //               products:
+          //                   (settings.arguments as List<ProductSearch>?) ?? []));
+          //     }
+          //   },
+          // ),
+          ),
     );
   }
 

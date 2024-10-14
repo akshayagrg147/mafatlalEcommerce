@@ -130,6 +130,61 @@ class AdminProductCubit extends Cubit<AdminProductState> {
           description: description,
           imageUrl: imageUrl,
           price: price,
+          orgId: orgId,
+          categoryId: categoryId,
+          subCategoryId: subCategoryId,
+          size: size);
+      emit(AddProductSuccessState());
+    } on DioException catch (e) {
+      emit(AddProductErrorState(e.message ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(AddProductErrorState(AppStrings.somethingWentWrong));
+    }
+  }
+
+  void updateProduct({
+    required int productId,
+    required String name,
+    required String description,
+    required List images,
+    int? categoryId,
+    int? subCategoryId,
+    int? orgId,
+    required int price,
+    List<AdminVariantOption>? sizes,
+  }) async {
+    try {
+      emit(AddProductLoadingState());
+      List<String> imageUrl = [];
+      for (var image in images) {
+        if (image is MediaInfo) {
+          final imgUrl = (await AuthRepo.uploadImage(image)).data;
+          if (imgUrl != null) {
+            imageUrl.add(imgUrl);
+          }
+        } else if (image is String) {
+          imageUrl.add(image);
+        }
+      }
+      if (imageUrl.isEmpty) {
+        throw Exception();
+      }
+      Map<String, int> size = {};
+      if (sizes?.isNotEmpty == true) {
+        for (var element in sizes!) {
+          size[element.name] = element.price;
+        }
+      }
+      await AdminProductRepo.updateProduct(
+          CubitsInjector.authCubit.currentUser!.id,
+          productId: productId,
+          name: name,
+          description: description,
+          imageUrl: imageUrl,
+          price: price,
+          orgId: orgId,
+          categoryId: categoryId,
+          subCategoryId: subCategoryId,
           size: size);
       emit(AddProductSuccessState());
     } on DioException catch (e) {

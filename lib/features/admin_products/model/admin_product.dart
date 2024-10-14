@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class AdminProduct {
   final int productId;
   final String productName;
@@ -38,7 +40,12 @@ class AdminProduct {
     Map<String, dynamic> json,
   ) {
     final id = json['product_id'] ?? json['id'];
+    print("id :- $id ${json['product_name'] ?? json['name']}\n jsn:- $json");
+    if (id == 76) {
+      log("message");
+    }
     final variants = (json['size_available'] as Map?);
+
     AdminVariant? variant;
     if (variants?.isNotEmpty == true) {
       variant = AdminVariant.fromJson(variants!.entries.first);

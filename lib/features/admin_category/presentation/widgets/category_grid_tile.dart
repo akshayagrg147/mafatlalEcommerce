@@ -21,6 +21,8 @@ class CategoryGridTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.hardEdge,
+
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -63,7 +65,20 @@ class CategoryGridTile extends StatelessWidget {
                             );
                           });
                     },
-                    icon: const Icon(Icons.edit),
+                    icon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.edit,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          "Edit",
+                          style: AppTextStyle.f14OutfitBlackW500,
+                        )
+                      ],
+                    ),
                     color: AppColors.kGreen,
                   ),
                   IconButton(
@@ -77,7 +92,17 @@ class CategoryGridTile extends StatelessWidget {
                                 .deleteSubCategory(data.id);
                       });
                     },
-                    icon: const Icon(Icons.delete),
+                    icon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.delete, size: 20),
+                        const SizedBox(width: 5),
+                        Text(
+                          "Delete",
+                          style: AppTextStyle.f14OutfitBlackW500,
+                        )
+                      ],
+                    ),
                     color: AppColors.kRed,
                   ),
                 ],
@@ -93,18 +118,26 @@ class CategoryGridTile extends StatelessWidget {
                         const Icon(Icons.error, color: AppColors.kBlack),
                   ),
                 )),
+            SizedBox(
+              height: 4,
+            ),
             Expanded(
               flex: 3,
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 child: Text(
                   data.name ?? '',
                   maxLines: 2,
                   style: AppTextStyle.f16OutfitBlackW500,
                 ),
               ),
-            )
+            ),
+            if (isCategory)
+              Center(
+                  child: Text("Click to See its SubCategories",
+                      textAlign: TextAlign.center,
+                      style: AppTextStyle.f12GreyW400)),
           ],
         ),
       ),

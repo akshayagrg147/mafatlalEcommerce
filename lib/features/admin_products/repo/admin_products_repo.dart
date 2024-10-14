@@ -88,4 +88,43 @@ class AdminProductRepo {
     await DioUtil().getInstance()?.post(ApiRoutes.crudProductList,
         queryParameters: {'user_id': userId}, data: data);
   }
+
+  static Future<void> updateProduct(
+    int userId, {
+    required int productId,
+    required String name,
+    required String description,
+    required List<String> imageUrl,
+    int? categoryId,
+    int? subCategoryId,
+    int? orgId,
+    required int price,
+    required Map<String, int> size,
+  }) async {
+    final data = {
+      "user_id": userId,
+      "id": productId,
+      "name": name,
+      "description": description,
+      "price": price.toString(),
+      "image": imageUrl,
+    };
+
+    if (categoryId != null) {
+      data["category"] = categoryId.toString();
+    }
+
+    if (subCategoryId != null) {
+      data["sub_category"] = subCategoryId.toString();
+    }
+
+    if (orgId != null) {
+      data["organization"] = orgId.toString();
+    }
+    if (size.isNotEmpty) {
+      data["size"] = {"size": size};
+    }
+    await DioUtil().getInstance()?.patch(ApiRoutes.crudProductList,
+        queryParameters: {'user_id': userId}, data: data);
+  }
 }

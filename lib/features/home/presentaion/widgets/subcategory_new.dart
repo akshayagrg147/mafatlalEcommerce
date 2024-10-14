@@ -55,12 +55,10 @@ class _SubCategoryItemState extends State<SubCategoryItem> {
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return SubCategoryDetail(
-              subcategories: widget.subcategories,
-              selectedname: widget.name,
-            );
-          }));
+          Navigator.pushNamed(context, SubCategoryDetail.route, arguments: {
+            "subcategories": widget.subcategories,
+            "name": widget.name
+          });
         },
         child: Container(
           padding: EdgeInsets.all(10),

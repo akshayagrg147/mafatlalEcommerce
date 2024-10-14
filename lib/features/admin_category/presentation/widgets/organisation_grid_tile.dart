@@ -16,6 +16,7 @@ class OrganisationGridTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -56,6 +57,9 @@ class OrganisationGridTile extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(
+                          height: 10,
+                        ),
                         Text(
                           data.name ?? '',
                           maxLines: 2,
@@ -106,7 +110,20 @@ class OrganisationGridTile extends StatelessWidget {
                             );
                           });
                     },
-                    icon: const Icon(Icons.edit),
+                    icon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.edit,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          "Edit",
+                          style: AppTextStyle.f14OutfitBlackW500,
+                        )
+                      ],
+                    ),
                     color: AppColors.kGreen,
                   ),
                   IconButton(
@@ -118,7 +135,17 @@ class OrganisationGridTile extends StatelessWidget {
                             .deleteOrganisation(data.id);
                       });
                     },
-                    icon: const Icon(Icons.delete),
+                    icon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.delete, size: 20),
+                        const SizedBox(width: 5),
+                        Text(
+                          "Delete",
+                          style: AppTextStyle.f14OutfitBlackW500,
+                        )
+                      ],
+                    ),
                     color: AppColors.kRed,
                   ),
                 ],

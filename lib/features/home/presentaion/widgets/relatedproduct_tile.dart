@@ -32,13 +32,9 @@ class RelatedProductTile extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  ProductDetailsScreen(productId: int.parse(product.id)),
-            ),
-          );
+          Navigator.pushNamed(
+              context, "${ProductDetailsScreen.route}product_id=${product.id}",
+              arguments: int.parse(product.id));
         },
         child: Container(
           width: 150,

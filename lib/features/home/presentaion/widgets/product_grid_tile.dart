@@ -32,12 +32,10 @@ class ProductGridTile extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  ProductDetailsScreen(productId: product.productId),
-            ),
+            ProductDetailsScreen.route,
+            arguments: product.productId,
           );
         },
         child: Container(

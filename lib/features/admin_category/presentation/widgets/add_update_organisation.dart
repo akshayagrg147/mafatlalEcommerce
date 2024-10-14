@@ -279,6 +279,7 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
                                     nameController.text,
                                     organisationId: widget.organisation!.id,
                                     image: selectedFile,
+                                    img: widget.organisation?.image,
                                     state: selectedState,
                                     district: selectedDistrict);
                               } else {
