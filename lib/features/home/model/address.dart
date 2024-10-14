@@ -6,6 +6,7 @@ class Address {
   final String district;
   final String landmark;
   final String city;
+  final String mobile;
 
   Address(
       {required this.address,
@@ -13,6 +14,7 @@ class Address {
       required this.pincode,
       required this.district,
       required this.city,
+      required this.mobile,
       required this.address2,
       required this.landmark});
 
@@ -25,6 +27,7 @@ class Address {
         pincode: json['pincode'],
         district: json['district'],
         city: json['city'],
+        mobile: json['phone_number'],
         landmark: json['landmark'] ?? "");
   }
 
@@ -40,6 +43,7 @@ class Address {
       'pincode': pincode,
       'district': district,
       'landmark': landmark,
+      'phone_number': mobile,
       'city': city,
     };
   }

@@ -4,11 +4,13 @@ import 'package:mafatlal_ecommerce/components/custom_btn.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
+import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/admin_orders/bloc/admin_orders_cubit.dart';
 import 'package:mafatlal_ecommerce/features/admin_orders/bloc/admin_orders_state.dart';
 import 'package:mafatlal_ecommerce/features/admin_orders/model/order_detail.dart';
 import 'package:mafatlal_ecommerce/features/admin_orders/presentation/widgets/ordered_product_tile.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/delivery_status.dart';
+import 'package:mafatlal_ecommerce/helper/enums.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class OrderedProductList extends StatefulWidget {
@@ -81,7 +83,8 @@ class _OrderedProductListState extends State<OrderedProductList> {
           const SizedBox(
             height: 22,
           ),
-          if (widget.orderDetails.orderStatus == 'Pending')
+          if (widget.orderDetails.orderStatus == 'Pending' &&
+              CubitsInjector.authCubit.currentUser?.userType == UserType.admin)
             BlocBuilder<AdminOrderCubit, AdminOrderState>(
               buildWhen: (previous, current) =>
                   current is ShowDispatchFormState ||

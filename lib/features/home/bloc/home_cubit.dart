@@ -19,11 +19,13 @@ import 'package:mafatlal_ecommerce/features/home/repo/home_repo.dart';
 import 'package:mafatlal_ecommerce/helper/enums.dart';
 import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
 import 'package:mafatlal_ecommerce/services/navigation_service.dart';
+import 'package:razorpay_web/razorpay_web.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitialState());
 
   CategoriesAndProducts? _storeData;
+  final _razorpay = Razorpay();
 
   CategoriesAndProducts? get storeData => _storeData;
 
@@ -346,6 +348,65 @@ class HomeCubit extends Cubit<HomeState> {
               CubitsInjector.authCubit.currentUser!.shippingAddress!,
           billingAddress:
               CubitsInjector.authCubit.currentUser!.billingAddress!);
+      if (response.status) {
+        // CartHelper.clear();
+        startPayment(
+            orderId: response.data?['razorpay_order_id'] ?? "",
+            amount: response.data?['price'] ?? 0);
+      } else {
+        emit(PlaceOrderFailedState(message: response.message));
+      }
+    } on DioException catch (e) {
+      emit(PlaceOrderFailedState(
+          message: e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(PlaceOrderFailedState(message: AppStrings.somethingWentWrong));
+    }
+  }
+
+  void startPayment({
+    required String orderId,
+    required double amount,
+  }) async {
+    try {
+      _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+      _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+
+      var options = {
+        'key': 'rzp_test_d6vCM7qPSQHngx',
+        'amount': amount * 100,
+        'name': 'Mafatlal Store',
+        'order_id': orderId,
+        'prefill': {'email': CubitsInjector.authCubit.currentUser!.email}
+      };
+      _razorpay.open(options);
+    } catch (e) {
+      _razorpay.clear();
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    // Do something when payment succeeds
+    log("message");
+    verifyPayment(response);
+    _razorpay.clear();
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    // Do something when payment fails
+    log("message");
+    emit(PlaceOrderFailedState(
+        message: response.message ?? AppStrings.somethingWentWrong));
+    _razorpay.clear();
+  }
+
+  void verifyPayment(PaymentSuccessResponse successResponse) async {
+    try {
+      final response = await HomeRepo.verifyPayment(
+          orderId: successResponse.orderId!,
+          paymentId: successResponse.paymentId!,
+          signature: successResponse.signature!);
+
       if (response.status) {
         CartHelper.clear();
         emit(PlaceOrderSuccessState());

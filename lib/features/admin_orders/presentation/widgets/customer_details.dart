@@ -77,6 +77,12 @@ class CustomerDetailis extends StatelessWidget {
             shippingAddress?.addressString ?? "",
             style: AppTextStyle.f14OutfitBlackW500,
           ),
+          if (shippingAddress?.mobile.isNotEmpty == true)
+            Text(
+              shippingAddress?.mobile ?? '',
+              style:
+                  AppTextStyle.f14OutfitBlackW500.copyWith(color: Colors.blue),
+            ),
           SizedBox(
             height: 16,
           ),
@@ -91,6 +97,12 @@ class CustomerDetailis extends StatelessWidget {
             billingAddress?.addressString ?? "",
             style: AppTextStyle.f14OutfitBlackW500,
           ),
+          if (billingAddress?.mobile.isNotEmpty == true)
+            Text(
+              billingAddress?.mobile ?? '',
+              style:
+                  AppTextStyle.f14OutfitBlackW500.copyWith(color: Colors.blue),
+            ),
         ],
       ),
     );
