@@ -69,6 +69,7 @@ class _AddEditAddressState extends State<AddEditAddress> {
   final TextEditingController _landmarkController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _pinCodeController = TextEditingController();
+  final TextEditingController _mobileNumberController = TextEditingController();
   String? selectedDistrict;
   String? selectedState;
   final _formKey = GlobalKey<FormState>();
@@ -79,6 +80,7 @@ class _AddEditAddressState extends State<AddEditAddress> {
       _cityController.text = widget.address!.city;
       _pinCodeController.text = widget.address!.pincode;
       _landmarkController.text = widget.address!.landmark;
+      _mobileNumberController.text = widget.address!.mobile;
       selectedState = widget.address!.state;
       selectedDistrict = widget.address!.district;
     }
@@ -252,6 +254,27 @@ class _AddEditAddressState extends State<AddEditAddress> {
               ],
             ),
             SizedBox(
+              height: 12,
+            ),
+            CustomTextField(
+              hint: "Mobile Number",
+              textEditingController: _mobileNumberController,
+              textInputType: TextInputType.number,
+              formatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(10),
+              ],
+              validation: (value) {
+                if (value?.trim().isEmpty == true) {
+                  return "Mobile Number is Required";
+                }
+                if (value?.trim().length != 10) {
+                  return "Invalid Mobile Number";
+                }
+                return null;
+              },
+            ),
+            SizedBox(
               height: 20,
             ),
             BlocConsumer<HomeCubit, HomeState>(
@@ -272,6 +295,7 @@ class _AddEditAddressState extends State<AddEditAddress> {
                   onPressed: () {
                     if (_formKey.currentState?.validate() == true) {
                       final address = Address(
+                          mobile: _mobileNumberController.text,
                           address: _addressController.text,
                           address2: _addressController2.text,
                           state: selectedState!,

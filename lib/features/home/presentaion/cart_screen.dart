@@ -221,9 +221,11 @@ class _CartScreenState extends State<CartScreen> {
             BlocConsumer<HomeCubit, HomeState>(
                 listener: (context, state) {
                   if (state is PlaceOrderFailedState) {
+                    Navigator.pop(context);
                     ToastUtils.showErrorToast(state.message);
                   }
                   if (state is PlaceOrderSuccessState) {
+                    Navigator.pop(context);
                     Navigator.pushReplacementNamed(context, OrderSuccess.route);
                   }
                   if (state is PlaceOrderLoadingState) {

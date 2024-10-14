@@ -45,7 +45,7 @@ class Order {
       orderStatus: json['order_status'],
       shipping: shippingAddress,
       billing: billingAdress,
-      createdOn: DateTime.parse(json['created_on']),
+      createdOn: DateTime.parse(json['created_on']).toLocal(),
       createdBy: json['created_by']?.toString(),
       updatedOn: json['updated_on'] != null
           ? DateTime.parse(json['updated_on'])

@@ -122,4 +122,19 @@ class HomeRepo {
           categories.map((e) => ProductSearch.fromJson(e)));
     });
   }
+
+  static Future<ApiResponse<Map<String, dynamic>>> verifyPayment(
+      {required String orderId,
+      required String paymentId,
+      required String signature}) async {
+    final response =
+        await DioUtil().getInstance()?.post(ApiRoutes.verifyPayment, data: {
+      "razorpay_order_id": orderId,
+      "razorpay_payment_id": paymentId,
+      "razorpay_signature": signature
+    });
+    return ApiResponse<Map<String, dynamic>>.fromJson(response?.data, (data) {
+      return data;
+    });
+  }
 }
