@@ -28,11 +28,11 @@ class ProductDetail {
   });
 
   static Variant? _parseVariant(dynamic sizeAvailable) {
-    if (sizeAvailable is Map) {
+    if (sizeAvailable is Map && sizeAvailable.isNotEmpty) {
       return Variant.fromJson(
           sizeAvailable.entries.first); // Adjust based on your Variant model
     }
-    return null;
+    return null; // Return null if size_available is empty or not a Map
   }
 
   static List<String> _parseProductImage(dynamic productImage) {
@@ -48,12 +48,13 @@ class ProductDetail {
         .map((product) => RelatedProduct.fromJson(product))
         .toList();
     final id = json['id'];
+    final variant = _parseVariant(json['size_available']);
     return ProductDetail(
       id: json['id'],
       name: json['name'],
       productCategory: json['product_category'],
       productSubCategory: json['product_sub_category'],
-      variant: _parseVariant(json['size_available']),
+      variant: variant,
       productImage: _parseProductImage(json['product_image']),
       price: json['price'],
       description: json['description'],
@@ -97,11 +98,11 @@ class RelatedProduct {
   });
 
   static Variant? _parseVariant(dynamic sizeAvailable) {
-    if (sizeAvailable is Map) {
+    if (sizeAvailable is Map && sizeAvailable.isNotEmpty) {
       return Variant.fromJson(
           sizeAvailable.entries.first); // Adjust based on your Variant model
     }
-    return null;
+    return null; // Return null if size_available is empty or not a Map
   }
 
   factory RelatedProduct.fromJson(Map<String, dynamic> json) {

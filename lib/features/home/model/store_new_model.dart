@@ -114,12 +114,12 @@ class Product_new {
   });
 
   factory Product_new.fromJson(Map<String, dynamic> json) {
-    // Use the conversion method for both IDs
     final id = json['product_id'] ?? json['id'];
-    final categoryId = json['Selected_category_id'] ?? 0;
+    final categoryId =
+        json['product_category_id'] ?? 0; // Adjusted for category ID
     final variant = _parseVariant(json['size_available']);
-    final name =
-        json['product_name']?.toString() ?? json['name']?.toString() ?? '';
+    final name = json['product_name']?.toString() ?? '';
+
     return Product_new(
       productId: id,
       categoryId: categoryId,
@@ -131,6 +131,7 @@ class Product_new {
       quantity: CartHelper.getProductQuantity(id, variant: variant),
     );
   }
+
   num getPrice() {
     if (variant != null) {
       return variant!.selectedVariant.price;
@@ -142,23 +143,12 @@ class Product_new {
     return getPrice() * quantity;
   }
 
-  static int _convertToInt(dynamic value) {
-    if (value is int) {
-      return value; // Already an int
-    } else if (value is String) {
-      // Attempt to parse the string to an int
-      final parsedValue = int.tryParse(value);
-      return parsedValue ?? 0; // Return 0 if parsing fails
-    }
-    return 0; // Default case for unexpected types
-  }
-
   static Variant? _parseVariant(dynamic sizeAvailable) {
-    if (sizeAvailable is Map) {
+    if (sizeAvailable is Map && sizeAvailable.isNotEmpty) {
       return Variant.fromJson(
           sizeAvailable.entries.first); // Adjust based on your Variant model
     }
-    return null;
+    return null; // Return null if size_available is empty or not a Map
   }
 
   static List<String> _parseProductImage(dynamic productImage) {
@@ -172,12 +162,16 @@ class Product_new {
     final Map<String, dynamic> map = {
       'product_id': productId,
       'quantity': quantity,
-      'price': price
+      'price': price,
     };
+
     if (variant != null) {
       map[variant!.variantTitle] = variant!.selectedVariant.name;
       map['price'] = variant!.selectedVariant.price;
+    } else {
+      map['variant'] = ''; // Ensure to add a placeholder for no variant
     }
+
     return map;
   }
 }
