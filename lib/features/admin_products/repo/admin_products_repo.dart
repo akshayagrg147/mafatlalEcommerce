@@ -127,4 +127,13 @@ class AdminProductRepo {
     await DioUtil().getInstance()?.patch(ApiRoutes.crudProductList,
         queryParameters: {'user_id': userId}, data: data);
   }
+
+  static Future<void> deleteProduct(
+      {required int userId, required int productId}) async {
+    await DioUtil().getInstance()?.delete(ApiRoutes.crudProductList, data: {
+      'id': productId
+    }, queryParameters: {
+      'user_id': userId,
+    });
+  }
 }

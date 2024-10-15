@@ -274,8 +274,8 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
                       DataCell(
                         Text("₹${orders[index].price}"),
                       ),
-                      const DataCell(
-                        Text('Not Paid'),
+                      DataCell(
+                        Text(orders[index].paymentStatus ?? ''),
                       ),
                       DataCell(
                         Text(orders[index].orderStatus),

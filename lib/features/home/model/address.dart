@@ -27,7 +27,7 @@ class Address {
         pincode: json['pincode'],
         district: json['district'],
         city: json['city'],
-        mobile: json['phone_number'],
+        mobile: json['phone_number'] ?? '',
         landmark: json['landmark'] ?? "");
   }
 

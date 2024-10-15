@@ -59,7 +59,7 @@ class ProductDetail {
       price: json['price'],
       description: json['description'],
       relatedProducts: relatedProductsList,
-      quantity: CartHelper.getProductQuantity(int.parse(id)),
+      quantity: CartHelper.getProductQuantity(int.parse(id), variant: variant),
     );
   }
 }

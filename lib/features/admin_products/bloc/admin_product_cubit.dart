@@ -194,6 +194,22 @@ class AdminProductCubit extends Cubit<AdminProductState> {
     }
   }
 
+  void deleteProduct(int productId) async {
+    try {
+      emit(AddProductLoadingState());
+
+      await AdminProductRepo.deleteProduct(
+          userId: CubitsInjector.authCubit.currentUser!.id,
+          productId: productId);
+      emit(AddProductSuccessState());
+    } on DioException catch (e) {
+      emit(AddProductErrorState(
+          e.response?.statusMessage ?? AppStrings.somethingWentWrong));
+    } catch (e) {
+      emit(AddProductErrorState(AppStrings.somethingWentWrong));
+    }
+  }
+
   void showError(String msg) {
     emit(AddProductErrorState(msg));
   }

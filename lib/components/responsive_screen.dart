@@ -31,7 +31,7 @@ class ResponsiveWidget extends StatelessWidget {
     } else if (isMediumScreen(context)) {
       return 3;
     } else {
-      return 5;
+      return 3;
     }
   }
 

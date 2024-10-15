@@ -494,13 +494,18 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                           physics: const NeverScrollableScrollPhysics(),
                           crossAxisCount:
                               ResponsiveWidget.getGridCount(context),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: MediaQuery.sizeOf(context).width < 600
+                                  ? 0
+                                  : 40),
                           childAspectRatio:
                               MediaQuery.sizeOf(context).width < 600
-                                  ? 0.38
+                                  ? 0.5
                                   : 0.8,
-                          mainAxisSpacing: 18,
                           crossAxisSpacing:
-                              MediaQuery.sizeOf(context).width < 600 ? 20 : 42,
+                              MediaQuery.sizeOf(context).width < 600 ? 20 : 60,
+                          mainAxisSpacing:
+                              MediaQuery.sizeOf(context).width < 600 ? 10 : 30,
                           children: List.generate(
                             state.products.length,
                             (index) {

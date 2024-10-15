@@ -63,6 +63,7 @@ dependencies:
   image_picker_web: ^4.0.0
   fl_chart: ^0.69.0
   razorpay_web: ^1.4.2
+  input_quantity: ^2.4.1
 
 dev_dependencies:
   flutter_test:

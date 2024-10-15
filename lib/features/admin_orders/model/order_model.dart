@@ -13,9 +13,11 @@ class OrderModel {
   final Address? shipping;
   final Address? billing;
   final String? trackingUrl;
+  final String paymentStatus;
 
   OrderModel({
     required this.orderId,
+    required this.paymentStatus,
     required this.createdOn,
     required this.customerName,
     required this.productQuantity,
@@ -39,6 +41,7 @@ class OrderModel {
         price: json["price"],
         delieveryMethod: json["delievery_method"],
         orderStatus: json["order_status"],
+        paymentStatus: json['payment_status'] ?? '',
         shipping: json["shipping"] == null
             ? null
             : Address.fromJson(json["shipping"]),
@@ -60,5 +63,6 @@ class OrderModel {
         "shipping": shipping?.toJson(),
         "billing": billing?.toJson(),
         "tracking_url": trackingUrl,
+        "payment_status": paymentStatus
       };
 }

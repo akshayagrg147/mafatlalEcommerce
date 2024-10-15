@@ -112,9 +112,18 @@ class _SearchScreenState extends State<SearchScreen> {
                           shrinkWrap: true,
                           crossAxisCount:
                               ResponsiveWidget.getGridCount(context),
-                          childAspectRatio: 0.7,
-                          mainAxisSpacing: 18,
-                          crossAxisSpacing: 18,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: MediaQuery.sizeOf(context).width < 600
+                                  ? 0
+                                  : 40),
+                          childAspectRatio:
+                              MediaQuery.sizeOf(context).width < 600
+                                  ? 0.5
+                                  : 0.8,
+                          crossAxisSpacing:
+                              MediaQuery.sizeOf(context).width < 600 ? 20 : 60,
+                          mainAxisSpacing:
+                              MediaQuery.sizeOf(context).width < 600 ? 10 : 30,
                           children: List.generate(productlist.length, (index) {
                             return ProductSearchTile(
                               product: productlist[index],

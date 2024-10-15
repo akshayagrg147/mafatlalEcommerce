@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:input_quantity/input_quantity.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
@@ -41,6 +42,31 @@ class AddToCartWidget extends StatelessWidget {
         ),
       );
     }
+
+    return InputQty(
+      minVal: 0,
+      initVal: quantity,
+      maxVal: 100000,
+      decoration: QtyDecorationProps(
+        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+        border: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.transparent),
+        ),
+        plusBtn: quantityBtn(Icons.add),
+        minusBtn: quantityBtn(Icons.remove),
+      ),
+      onQtyChanged: (val) {
+        if (val < 1) {
+          CartHelper.removeProduct(productId, variant: variant);
+          if (isCart) {
+            CubitsInjector.homeCubit
+                .updateCartProductList(productId, variant: variant);
+          }
+        } else {
+          CartHelper.updateProduct(productId, val, variant: variant);
+        } // num
+      },
+    );
 
     return Container(
       decoration: BoxDecoration(
@@ -92,4 +118,19 @@ class AddToCartWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget quantityBtn(IconData icon) {
+  return Container(
+      decoration: BoxDecoration(
+        color: AppColors.kRed,
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(6),
+        child: Icon(
+          icon,
+          color: AppColors.kWhite,
+        ),
+      ));
 }

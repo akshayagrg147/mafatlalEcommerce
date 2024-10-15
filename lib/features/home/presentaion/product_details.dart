@@ -315,12 +315,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           crossAxisCount:
                               ResponsiveWidget.getGridCount(context),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: MediaQuery.sizeOf(context).width < 600
+                                  ? 0
+                                  : 40),
                           childAspectRatio:
                               MediaQuery.sizeOf(context).width < 600
                                   ? 0.5
-                                  : 0.7,
+                                  : 0.8,
                           crossAxisSpacing:
-                              MediaQuery.sizeOf(context).width < 600 ? 30 : 42,
+                              MediaQuery.sizeOf(context).width < 600 ? 20 : 60,
+                          mainAxisSpacing:
+                              MediaQuery.sizeOf(context).width < 600 ? 10 : 30,
                           children: List.generate(
                             state.product.relatedProducts.length,
                             (index) {

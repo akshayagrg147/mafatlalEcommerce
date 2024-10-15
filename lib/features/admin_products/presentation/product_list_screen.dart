@@ -10,6 +10,7 @@ import 'package:mafatlal_ecommerce/features/admin_products/bloc/admin_product_st
 import 'package:mafatlal_ecommerce/features/admin_products/model/admin_product.dart';
 import 'package:mafatlal_ecommerce/features/admin_products/presentation/product_add_update_screen.dart';
 import 'package:mafatlal_ecommerce/features/admin_products/presentation/widgets/product_table_tile.dart';
+import 'package:mafatlal_ecommerce/features/admin_products/presentation/widgets/show_product_delete_confirmation.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
@@ -21,6 +22,7 @@ class ProductListScreen extends StatefulWidget {
 class _ProductListScreenState extends State<ProductListScreen> {
   final List<AdminProduct> products = [];
   int page = 1;
+
   @override
   void initState() {
     context.read<AdminProductCubit>().getProducts();
@@ -129,6 +131,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
             label: Text('Price'),
             size: ColumnSize.S,
           ),
+          DataColumn2(
+            label: Text('Actions'),
+            size: ColumnSize.S,
+          ),
         ],
         rows: List<DataRow2>.generate(
             products.length,
@@ -174,6 +180,20 @@ class _ProductListScreenState extends State<ProductListScreen> {
                           style: AppTextStyle.f14OutfitBlackW500,
                         ),
                       ),
+                      DataCell(IconButton(
+                        onPressed: () {
+                          ShowProductDeleteConfirmation.show(context,
+                              data: products[index], onDeleteTap: () {
+                            context
+                                .read<AdminProductCubit>()
+                                .deleteProduct(products[index].productId);
+                          });
+                        },
+                        icon: Icon(
+                          Icons.delete,
+                          color: AppColors.kRed,
+                        ),
+                      )),
                     ])));
   }
 }
