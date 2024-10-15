@@ -233,7 +233,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ),
                                   const SizedBox(height: 10),
                                   SizedBox(
-                                    width: 100,
+                                    width: 200,
                                     child: BlocBuilder<HomeCubit, HomeState>(
                                       buildWhen: (previous, current) =>
                                           (current

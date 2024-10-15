@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:input_quantity/input_quantity.dart';
+import 'package:mafatlal_ecommerce/components/input_quantity.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
