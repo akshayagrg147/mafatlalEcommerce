@@ -74,7 +74,6 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
         ));
       }
     } catch (e) {
-      // Handle error case
       emit(UpdateProductUsingSubCategoryFailedState());
     }
   }
@@ -84,12 +83,9 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
     try {
       final response = await SubCategoryRepo.getProductsByState(stateid, subid);
 
-      // Check if response data is empty
       if (response.data == null || response.data!.isEmpty) {
-        // Handle the case where no products are returned
         products = [];
 
-        // Check for organizations and handle accordingly
         final organization =
             (organizations.isNotEmpty) ? organizations.first : null;
 
@@ -100,15 +96,10 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
               '', // It can be null if no organization is available
         ));
       } else {
-        // If there are products in the response
         products = response.data!;
-
         print(response.data!.first.productId);
-
-        // Check for organizations and handle accordingly
         final organization =
             (organizations.isNotEmpty) ? organizations.first : null;
-
         emit(UpdateProductUsingSubCategorySuccessState(
           products: products,
           organization: organization,
@@ -117,7 +108,6 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
         ));
       }
     } catch (e) {
-      // Handle error case
       emit(UpdateProductUsingSubCategoryFailedState());
     }
   }
@@ -176,13 +166,11 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
         if (states.isNotEmpty) {
           emit(GetAllStateSuccessState(states: states, name: ''));
         } else {
-          // Handling no states found case with UpdateproductAccordingtoCategory
           UpdateproductAccordingtoCategory(subcategory.id);
           emit(GetAllOrganizationSuccessState(
               organization: organizations, name: SelectedSubcategoryname!));
         }
       } else {
-        // No state handling case with UpdateproductAccordingtoCategory
         UpdateproductAccordingtoCategory(subcategory?.id ?? 0);
       }
     } catch (e) {
@@ -202,7 +190,13 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
     // emit(GetAllOrganizationSuccessState(
     //     organization: organizations, name: SelectedOrganizationname!));
     emit(GetAllStateSuccessState(states: states, name: SelectedStatename!));
-
+    final state = states.firstWhere(
+      (item) => item.name == SelectedStatename,
+    );
+    final subcategory = subcategorieslist?.firstWhere(
+      (item) => item.name == SelectedSubcategoryname,
+    );
+    UpdateProductAccordingtoState(state.id, subcategory!.id);
     getdistrict();
   }
 
@@ -240,9 +234,11 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
       } else {
         // If the subcategory is not a district, proceed with product update
         emit(GetAllDistrictSuccessState(district: districts, name: ''));
-        final state = states.firstWhere((s) => s.name == SelectedStatename);
+        final state = states.firstWhere(
+          (item) => item.name == SelectedStatename,
+        );
         final subcategory = subcategorieslist?.firstWhere(
-          (item) => item.name == SelectedSDistrictname,
+          (item) => item.name == SelectedSubcategoryname,
         );
         UpdateProductAccordingtoState(state.id, subcategory!.id);
       }
@@ -255,6 +251,13 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
     SelectedSDistrictname = name;
     organizations.clear();
     emit(GetAllOrganizationSuccessState(organization: organizations, name: ''));
+    final state = states.firstWhere(
+      (item) => item.name == SelectedStatename,
+    );
+    final subcategory = subcategorieslist?.firstWhere(
+      (item) => item.name == SelectedSubcategoryname,
+    );
+    UpdateProductAccordingtoState(state.id, subcategory!.id);
     getorganization();
     emit(GetAllDistrictSuccessState(
         district: districts, name: SelectedSDistrictname!));
