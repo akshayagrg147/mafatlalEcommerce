@@ -16,6 +16,7 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/order_history.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/search_field.dart';
+import 'package:mafatlal_ecommerce/services/navigation_service.dart';
 
 class Header extends StatefulWidget {
   const Header({Key? key}) : super(key: key);
@@ -58,7 +59,7 @@ class _HeaderState extends State<Header> {
               GestureDetector(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return HomeScreen();
+                    return const HomeScreen();
                   }));
                 },
                 child: Container(
@@ -160,6 +161,9 @@ class _HeaderState extends State<Header> {
   }
 
   Widget CartIcons() {
+    if (NavigationService.getCurrentRouteName() == CartScreen.route) {
+      return const SizedBox.shrink();
+    }
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
