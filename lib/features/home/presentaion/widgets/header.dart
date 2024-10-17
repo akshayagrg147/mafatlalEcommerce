@@ -144,14 +144,7 @@ class _HeaderState extends State<Header> {
                 ),
                 Row(
                   children: [
-                    _textWithDownArrow(
-                      CubitsInjector
-                                  .homeCubit.storeData?.categories.isNotEmpty ==
-                              true
-                          ? CubitsInjector
-                              .homeCubit.storeData!.categories.first.name
-                          : 'Loading...', // Show 'Loading...' until data is available
-                    ),
+                    _textWithDownArrow(),
                     const SizedBox(width: 20),
                     if (CubitsInjector.authCubit.currentUser == null)
                       CustomElevatedButton(
@@ -204,7 +197,7 @@ class _HeaderState extends State<Header> {
     );
   }
 
-  Widget _textWithDownArrow(String initialLabel) {
+  Widget _textWithDownArrow() {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: PopupMenuButton<String>(
@@ -235,11 +228,28 @@ class _HeaderState extends State<Header> {
           }).toList();
         },
         child: BlocBuilder<HomeCubit, HomeState>(
-          buildWhen: (previous, current) => current is UpdateLabelSuccessState,
+          buildWhen: (previous, current) =>
+              current is UpdateLabelSuccessState ||
+              current is FetchStoreDataSuccessState,
           builder: (context, state) {
-            String label = initialLabel;
             if (state is UpdateLabelSuccessState) {
-              label = state.selectedCategoryName;
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      state.selectedCategoryName,
+                      style: AppTextStyle.f16BlackW400,
+                    ),
+                  ),
+                  const Icon(
+                    Icons.arrow_drop_down,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                ],
+              );
             }
             return Row(
               mainAxisSize: MainAxisSize.min,
@@ -247,7 +257,7 @@ class _HeaderState extends State<Header> {
                 Container(
                   margin: const EdgeInsets.only(top: 5),
                   child: Text(
-                    label,
+                    homeCubit.storeData?.categories.first.name ?? '',
                     style: AppTextStyle.f16BlackW400,
                   ),
                 ),

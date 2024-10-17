@@ -128,6 +128,7 @@ class _FooterState extends State<Footer> {
       children: [
         Container(
           padding: const EdgeInsets.all(10),
+          margin: const EdgeInsets.all(8),
           child: Image.asset('assets/Mafatlallogo.png'),
         ),
         const SizedBox(height: 16),
@@ -187,31 +188,34 @@ class _FooterState extends State<Footer> {
   }
 
   Widget _footerContainer3() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          AppStrings.developmentoffice,
-          style: AppTextStyle.f10WhiteW600,
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          AppStrings.address1,
-          style: AppTextStyle.f10WhiteW600,
-        ),
-        const SizedBox(height: 16),
-        const Text(
-          AppStrings.branchoffice,
-          style: AppTextStyle.f10WhiteW600,
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          AppStrings.address4,
-          style: AppTextStyle.f10WhiteW600,
-        ),
-        const SizedBox(height: 8),
-        _contactRow(Icons.phone, AppStrings.mobile3),
-      ],
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            AppStrings.developmentoffice,
+            style: AppTextStyle.f10WhiteW600,
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            AppStrings.address1,
+            style: AppTextStyle.f10WhiteW600,
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            AppStrings.branchoffice,
+            style: AppTextStyle.f10WhiteW600,
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            AppStrings.address4,
+            style: AppTextStyle.f10WhiteW600,
+          ),
+          const SizedBox(height: 8),
+          _contactRow(Icons.phone, AppStrings.mobile3),
+        ],
+      ),
     );
   }
 
