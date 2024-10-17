@@ -19,6 +19,7 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widg
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_banner.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/product_list_tile.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/same_as_shipping_address_widget.dart';
 import 'package:mafatlal_ecommerce/helper/toast_utils.dart';
 
 import 'widgets/order_success_widget.dart';
@@ -206,13 +207,26 @@ class _CartScreenState extends State<CartScreen> {
                       null) {
                     return addressWidget(context, isShipping: false);
                   }
-                  return CustomElevatedButton(
-                    label: 'Add Billing Address',
-                    backgroundColor: AppColors.kRed,
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    onPressed: () {
-                      AddEditAddress.show(context, isShipping: false);
-                    },
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CustomElevatedButton(
+                        label: 'Add Billing Address',
+                        backgroundColor: AppColors.kRed,
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        onPressed: () {
+                          AddEditAddress.show(context, isShipping: false);
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          "Or",
+                          style: AppTextStyle.f18PoppinsBlackw400,
+                        ),
+                      ),
+                      const SameAsShippingAddressWidget()
+                    ],
                   );
                 }),
             const SizedBox(
