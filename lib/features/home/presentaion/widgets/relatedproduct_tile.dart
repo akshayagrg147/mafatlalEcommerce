@@ -38,7 +38,6 @@ class RelatedProductTile extends StatelessWidget {
         },
         child: Container(
           width: 150,
-          margin: const EdgeInsets.only(left: 30),
           decoration: const BoxDecoration(
             color: Color(0xFFFFFFFF),
             boxShadow: [

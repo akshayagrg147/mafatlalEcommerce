@@ -317,25 +317,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ResponsiveWidget.getGridCount(context),
                           padding: EdgeInsets.symmetric(
                               horizontal: MediaQuery.sizeOf(context).width < 600
-                                  ? 0
+                                  ? 10
                                   : 40),
                           childAspectRatio:
                               MediaQuery.sizeOf(context).width < 600
                                   ? 0.5
                                   : 0.8,
                           crossAxisSpacing:
-                              MediaQuery.sizeOf(context).width < 600 ? 20 : 60,
+                              MediaQuery.sizeOf(context).width < 600 ? 15 : 60,
                           mainAxisSpacing:
-                              MediaQuery.sizeOf(context).width < 600 ? 10 : 30,
+                              MediaQuery.sizeOf(context).width < 600 ? 15 : 30,
                           children: List.generate(
                             state.product.relatedProducts.length,
                             (index) {
-                              return Container(
-                                  margin: const EdgeInsets.all(10),
-                                  child: RelatedProductTile(
-                                    product:
-                                        state.product.relatedProducts[index],
-                                  ));
+                              return RelatedProductTile(
+                                product: state.product.relatedProducts[index],
+                              );
                             },
                           ),
                         ),

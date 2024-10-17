@@ -243,12 +243,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     }
                     return GridView.count(
                       shrinkWrap: true,
+                      padding: EdgeInsets.symmetric(horizontal: 10),
                       crossAxisCount: ResponsiveWidget.getGridCount(context),
-                      childAspectRatio:
-                          MediaQuery.sizeOf(context).width < 600 ? 0.38 : 0.8,
-                      mainAxisSpacing: 18,
-                      crossAxisSpacing:
-                          MediaQuery.sizeOf(context).width < 600 ? 20 : 42,
+                      childAspectRatio: 0.5,
+                      mainAxisSpacing: 15,
+                      crossAxisSpacing: 15,
                       children: List.generate(productlist.length, (index) {
                         return ProductSearchTile(
                           product: productlist[index],
