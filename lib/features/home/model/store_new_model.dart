@@ -131,7 +131,7 @@ class Product_new {
   factory Product_new.fromJson(Map<String, dynamic> json) {
     // Convert product_id and product_category_id to int
     final int id = _convertToInt(json['product_id'] ?? json['id']);
-    final int categoryId = _convertToInt(json['product_category_id']);
+    final int categoryId = _convertToInt(json['product_category_id'] ?? -1);
 
     // Convert price to num
     final num price = _convertToNum(json['price']);
