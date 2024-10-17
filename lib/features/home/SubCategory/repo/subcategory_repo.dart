@@ -36,6 +36,16 @@ class SubCategoryRepo {
         (data) =>
             List<Product_new>.from(data.map((e) => Product_new.fromJson(e))));
   }
+  static Future<ApiResponse<List<Product_new>>> getProductsByState(
+      int stateid) async {
+    final response = await DioUtil().getInstance()?.get(
+        ApiRoutes.getProductsAccToCategory,
+        queryParameters: {'state': stateid});
+    return ApiResponse<List<Product_new>>.fromJson(
+        response?.data,
+        (data) =>
+            List<Product_new>.from(data.map((e) => Product_new.fromJson(e))));
+  }
 
   static Future<List<StateModel>> getallstate() async {
     final response = await DioUtil().getInstance()?.get(
