@@ -117,4 +117,8 @@ class AuthCubit extends Cubit<AuthState> {
     CubitsInjector.homeCubit.clear();
     emit(LogoutState());
   }
+
+  void toggleObsecure(bool isObsecure) {
+    emit(TogglePwdObsecureState(isObsecure: isObsecure));
+  }
 }

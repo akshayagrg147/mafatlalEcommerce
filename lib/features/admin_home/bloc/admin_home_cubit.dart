@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/bloc/admin_home_state.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/model/graph_model.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/repo/admin_home_repo.dart';
@@ -13,6 +15,9 @@ class AdminHomeCubit extends Cubit<AdminHomeState> {
   TextEditingController dateController2 = TextEditingController();
   final PageController homePageController =
       PageController(initialPage: 0, keepPage: false);
+
+  DateTime? todate;
+  DateTime? fromDate;
 
   void updatePageIndex(int page) {
     if (homePageController.page == page) {
@@ -28,10 +33,16 @@ class AdminHomeCubit extends Cubit<AdminHomeState> {
     try {
       emit(GetGraphDataLoadingState());
       DateTimeRange dateRange = getTodayAndLastWeek();
-      dateController1.text = dateRange.start.toString();
-      dateController2.text = dateRange.end.toString();
-      final result = await AdminHomeRepository.fetchOrderStats(
-          dateController1.text.toString(), 15, dateController2.text.toString());
+      fromDate = dateRange.start;
+      todate = dateRange.end;
+      dateController1.text = DateFormat("dd MMM, yyyy").format(fromDate!);
+      dateController2.text = DateFormat("dd MMM, yyyy").format(todate!);
+      final fromDateString = DateFormat("yyyy-MM-dd").format(fromDate!);
+      final endDate = todate!.add(const Duration(days: 1));
+      final toDateString = DateFormat("yyyy-MM-dd")
+          .format(DateTime(endDate.year, endDate.month, endDate.day));
+      final result = await AdminHomeRepository.fetchOrderStats(fromDateString,
+          CubitsInjector.authCubit.currentUser!.id, toDateString);
       emit(GetGraphDataSuccessState(graphModel: result.data!));
     } on Exception catch (e) {
       emit(GetGraphDataFailedState(message: e.toString()));
@@ -41,8 +52,12 @@ class AdminHomeCubit extends Cubit<AdminHomeState> {
   fetchDataAccordingtoDate() async {
     try {
       emit(GetGraphDataLoadingState());
-      final result = await AdminHomeRepository.fetchOrderStats(
-          dateController1.text.toString(), 15, dateController2.text.toString());
+      final fromDateString = DateFormat("yyyy-MM-dd").format(fromDate!);
+      final endDate = todate!.add(const Duration(days: 1));
+      final toDateString = DateFormat("yyyy-MM-dd")
+          .format(DateTime(endDate.year, endDate.month, endDate.day));
+      final result = await AdminHomeRepository.fetchOrderStats(fromDateString,
+          CubitsInjector.authCubit.currentUser!.id, toDateString);
       emit(GetGraphDataSuccessState(graphModel: result.data!));
     } on Exception catch (e) {
       emit(GetGraphDataFailedState(message: e.toString()));
@@ -109,26 +124,34 @@ class AdminHomeCubit extends Cubit<AdminHomeState> {
   Future<void> startDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: fromDate ?? DateTime.now(),
       firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
+      lastDate: DateTime.now(),
     );
-    if (picked != null && picked != DateTime.now()) {
-      dateController1.text =
-          "${picked.toLocal()}".split(' ')[0]; // Set the date to the TextField
+    if (picked != null) {
+      fromDate = picked;
+      dateController1.text = DateFormat("dd MMM, yyyy")
+          .format(fromDate!); // Set the date to the TextField
+      if (fromDate != null && todate != null) {
+        fetchDataAccordingtoDate();
+      }
     }
   }
 
   Future<void> endDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: todate ?? DateTime.now(),
       firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
+      lastDate: DateTime.now(),
     );
-    if (picked != null && picked != DateTime.now()) {
-      dateController2.text = "${picked.toLocal()}".split(' ')[0];
-      fetchDataAccordingtoDate();
+    if (picked != null) {
+      todate = picked;
+
+      dateController2.text = DateFormat("dd MMM, yyyy").format(todate!);
+      if (fromDate != null && todate != null) {
+        fetchDataAccordingtoDate();
+      }
     }
   }
 }

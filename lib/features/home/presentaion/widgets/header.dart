@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
 import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
+import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
@@ -13,7 +16,7 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/order_history.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/search_field.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:mafatlal_ecommerce/services/navigation_service.dart';
 
 class Header extends StatefulWidget {
   const Header({Key? key}) : super(key: key);
@@ -56,7 +59,7 @@ class _HeaderState extends State<Header> {
               GestureDetector(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return HomeScreen();
+                    return const HomeScreen();
                   }));
                 },
                 child: Container(
@@ -85,56 +88,35 @@ class _HeaderState extends State<Header> {
             alignment: Alignment.topRight,
             child: Column(
               children: [
-                Row(
+                const Row(
                   children: [
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: _launchPhone, // Makes phone number clickable
-                        child: const Icon(
-                          Icons.phone,
-                          color: AppColors.kBlack,
-                          size: 9,
-                        ),
+                    Icon(
+                      Icons.phone,
+                      color: AppColors.kBlack,
+                      size: 9,
+                    ),
+                    SizedBox(width: 2),
+                    Text(
+                      '+91-22-6771 3800',
+                      style: TextStyle(
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
                       ),
                     ),
-                    const SizedBox(width: 2),
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: _launchPhone, // Makes phone number clickable
-                        child: const Text(
-                          '+91-22-6771 3800',
-                          style: TextStyle(
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
+                    SizedBox(width: 10),
+                    Icon(
+                      Icons.email,
+                      color: AppColors.kBlack,
+                      size: 9,
                     ),
-                    const SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: _launchEmail, // Makes email clickable
-                      child: const Icon(
-                        Icons.email,
-                        color: AppColors.kBlack,
-                        size: 9,
-                      ),
-                    ),
-                    const SizedBox(width: 2),
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: _launchEmail, // Makes email clickable
-                        child: const Text(
-                          'technology@mafatlals.com',
-                          style: TextStyle(
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
+                    SizedBox(width: 2),
+                    Text(
+                      'technology@mafatlals.com',
+                      style: TextStyle(
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -144,7 +126,7 @@ class _HeaderState extends State<Header> {
                 ),
                 Row(
                   children: [
-                    _textWithDownArrow(),
+                    _textWithDownArrow('Uniform'),
                     const SizedBox(width: 20),
                     if (CubitsInjector.authCubit.currentUser == null)
                       CustomElevatedButton(
@@ -167,7 +149,7 @@ class _HeaderState extends State<Header> {
                       UserButton(),
                     CartIcons(),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -179,6 +161,9 @@ class _HeaderState extends State<Header> {
   }
 
   Widget CartIcons() {
+    if (NavigationService.getCurrentRouteName() == CartScreen.route) {
+      return const SizedBox.shrink();
+    }
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -186,18 +171,45 @@ class _HeaderState extends State<Header> {
           Navigator.pushNamed(context, CartScreen.route);
         },
         child: Container(
+          height: 35,
           padding: const EdgeInsets.only(right: 20, left: 20),
-          child: const Icon(
-            Icons.shopping_cart,
-            size: 24,
-            color: AppColors.kGrey,
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              const Icon(
+                Icons.shopping_cart,
+                size: 24,
+                color: AppColors.kGrey,
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: StreamBuilder<BoxEvent>(
+                    stream: CartHelper.watchCart(),
+                    builder: (context, eventSnapshot) {
+                      final quantity = CartHelper.getAllProductQuantity();
+                      if (quantity == 0) {
+                        return const SizedBox.shrink();
+                      }
+                      return Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                            color: AppColors.kRed, shape: BoxShape.circle),
+                        child: Text(
+                          NumberFormat.compact().format(quantity),
+                          style: AppTextStyle.f10WhiteW600,
+                        ),
+                      );
+                    }),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _textWithDownArrow() {
+  Widget _textWithDownArrow(String label) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: PopupMenuButton<String>(
@@ -210,10 +222,10 @@ class _HeaderState extends State<Header> {
           );
           homeCubit.UpdateSubCategory(
               category.subCategories, selectedCategoryName);
-          homeCubit.UpdateproductAccordingtoCategory(category.id);
         },
         itemBuilder: (BuildContext context) {
           var categories = CubitsInjector.homeCubit.storeData!.categories;
+
           return categories.map((category) {
             return PopupMenuItem<String>(
               value: category.name,
@@ -228,9 +240,7 @@ class _HeaderState extends State<Header> {
           }).toList();
         },
         child: BlocBuilder<HomeCubit, HomeState>(
-          buildWhen: (previous, current) =>
-              current is UpdateLabelSuccessState ||
-              current is FetchStoreDataSuccessState,
+          buildWhen: (previous, current) => current is UpdateLabelSuccessState,
           builder: (context, state) {
             if (state is UpdateLabelSuccessState) {
               return Row(
@@ -257,7 +267,7 @@ class _HeaderState extends State<Header> {
                 Container(
                   margin: const EdgeInsets.only(top: 5),
                   child: Text(
-                    homeCubit.storeData?.categories.first.name ?? '',
+                    label,
                     style: AppTextStyle.f16BlackW400,
                   ),
                 ),
@@ -330,24 +340,5 @@ class _HeaderState extends State<Header> {
         ),
       ),
     );
-  }
-
-  void _launchPhone() async {
-    const phoneUrl = 'tel:+91-22-6771-3800';
-    if (await canLaunchUrl(Uri.parse(phoneUrl))) {
-      await launchUrl(Uri.parse(phoneUrl));
-    } else {
-      throw 'Could not launch $phoneUrl';
-    }
-  }
-
-  // Function to launch email
-  void _launchEmail() async {
-    const emailUrl = 'mailto:technology@mafatlals.com';
-    if (await canLaunchUrl(Uri.parse(emailUrl))) {
-      await launchUrl(Uri.parse(emailUrl));
-    } else {
-      throw 'Could not launch $emailUrl';
-    }
   }
 }

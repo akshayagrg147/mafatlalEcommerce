@@ -11,6 +11,7 @@ import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/bloc/admin_category_cubit.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/bloc/admin_category_state.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/model/admin_org-model.dart';
+import 'package:mafatlal_ecommerce/features/admin_products/presentation/widgets/custom_searchable_dropdown.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/model/district_model.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/model/state_model.dart';
 import 'package:mafatlal_ecommerce/helper/toast_utils.dart';
@@ -217,6 +218,16 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
                         current is FetchStatesLoadingState,
                     bloc: widget.bloc,
                     builder: (context, state) {
+                      return CustomSearchableDropdown<StateModel>(
+                          width: double.maxFinite,
+                          items: _states,
+                          selectedItem: selectedState,
+                          label: (StateModel o) => o.name,
+                          searchHintText: "Search State by name",
+                          hintText: "Select State",
+                          onChanged: (StateModel? value) {
+                            widget.bloc.selectState(value!);
+                          });
                       return CustomDropDown<StateModel>(
                           label: "Select State",
                           selectedValue: selectedState,
@@ -240,6 +251,16 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
                         current is FetchDistrictsLoadingState,
                     bloc: widget.bloc,
                     builder: (context, state) {
+                      return CustomSearchableDropdown<DistrictModel>(
+                          width: double.maxFinite,
+                          items: _districts,
+                          selectedItem: selectedDistrict,
+                          label: (DistrictModel o) => o.name,
+                          searchHintText: "Search District by name",
+                          hintText: "Select District",
+                          onChanged: (DistrictModel? value) {
+                            widget.bloc.selectDistrict(value!);
+                          });
                       return CustomDropDown<DistrictModel>(
                           label: "Select District",
                           selectedValue: selectedDistrict,

@@ -68,6 +68,7 @@ class AppTextStyle {
       color: AppColors.kGrey, fontSize: 10, fontWeight: FontWeight.w500);
   static const TextStyle f8WhiteW600 = TextStyle(
       color: AppColors.kWhite, fontSize: 8, fontWeight: FontWeight.w600);
+
   static const TextStyle f32BlackW600 = TextStyle(
       color: AppColors.kBlack, fontSize: 32, fontWeight: FontWeight.w600);
   static const TextStyle f22BlackW600 = TextStyle(
