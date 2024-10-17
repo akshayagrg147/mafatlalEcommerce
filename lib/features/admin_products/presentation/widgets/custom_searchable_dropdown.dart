@@ -9,19 +9,21 @@ class CustomSearchableDropdown<T> extends StatelessWidget {
   final Function(T?)? onChanged;
   final String searchHintText;
   final String hintText;
+  final double width;
   const CustomSearchableDropdown(
       {super.key,
       required this.items,
       this.selectedItem,
       required this.label,
       this.onChanged,
+      this.width = 300,
       required this.searchHintText,
       required this.hintText});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
+      width: width,
       decoration: BoxDecoration(
         color: AppColors.kWhite,
         borderRadius: BorderRadius.circular(10),

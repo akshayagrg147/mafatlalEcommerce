@@ -45,3 +45,9 @@ class UpdateDistrictState extends AuthState {
 }
 
 class LogoutState extends AuthState {}
+
+class TogglePwdObsecureState extends AuthState {
+  final bool isObsecure;
+
+  TogglePwdObsecureState({required this.isObsecure});
+}

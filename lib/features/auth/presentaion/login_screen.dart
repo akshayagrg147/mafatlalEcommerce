@@ -125,21 +125,41 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 30,
             ),
-            CustomTextField(
-              width: width ?? double.maxFinite,
-              hint: "Password",
-              suffixWidget: const Icon(Icons.lock_outline),
-              textEditingController: _pwdController,
-              formatters: [
-                FilteringTextInputFormatter.deny(RegExp(r'\s')),
-              ],
-              validation: (value) {
-                if (value?.isEmpty == true) {
-                  return "Password is Required";
-                }
-                return (value?.length ?? 0) > 4
-                    ? null
-                    : "Password should be of at least 4 characters";
+            BlocBuilder<AuthCubit, AuthState>(
+              buildWhen: (previous, current) =>
+                  current is TogglePwdObsecureState,
+              builder: (context, state) {
+                return CustomTextField(
+                  maxLines: 1,
+                  width: width ?? double.maxFinite,
+                  isObscure:
+                      state is TogglePwdObsecureState ? state.isObsecure : true,
+                  hint: "Password",
+                  suffixWidget: GestureDetector(
+                    onTap: () {
+                      final isObsecure = state is TogglePwdObsecureState
+                          ? state.isObsecure
+                          : true;
+                      CubitsInjector.authCubit.toggleObsecure(!isObsecure);
+                    },
+                    child: state is TogglePwdObsecureState &&
+                            state.isObsecure == false
+                        ? const Icon(Icons.visibility_off)
+                        : const Icon(Icons.visibility),
+                  ),
+                  textEditingController: _pwdController,
+                  formatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
+                  validation: (value) {
+                    if (value?.isEmpty == true) {
+                      return "Password is Required";
+                    }
+                    return (value?.length ?? 0) > 4
+                        ? null
+                        : "Password should be of at least 4 characters";
+                  },
+                );
               },
             ),
             const SizedBox(

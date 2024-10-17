@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
 import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
+import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
@@ -164,11 +167,38 @@ class _HeaderState extends State<Header> {
           Navigator.pushNamed(context, CartScreen.route);
         },
         child: Container(
+          height: 35,
           padding: const EdgeInsets.only(right: 20, left: 20),
-          child: const Icon(
-            Icons.shopping_cart,
-            size: 24,
-            color: AppColors.kGrey,
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              const Icon(
+                Icons.shopping_cart,
+                size: 24,
+                color: AppColors.kGrey,
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: StreamBuilder<BoxEvent>(
+                    stream: CartHelper.watchCart(),
+                    builder: (context, eventSnapshot) {
+                      final quantity = CartHelper.getAllProductQuantity();
+                      if (quantity == 0) {
+                        return const SizedBox.shrink();
+                      }
+                      return Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                            color: AppColors.kRed, shape: BoxShape.circle),
+                        child: Text(
+                          NumberFormat.compact().format(quantity),
+                          style: AppTextStyle.f10WhiteW600,
+                        ),
+                      );
+                    }),
+              ),
+            ],
           ),
         ),
       ),
