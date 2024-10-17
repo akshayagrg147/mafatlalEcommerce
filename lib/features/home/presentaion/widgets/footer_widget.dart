@@ -4,6 +4,7 @@ import 'package:mafatlal_ecommerce/constants/app_strings.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/size_config.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Footer extends StatefulWidget {
   const Footer({Key? key}) : super(key: key);
@@ -127,12 +128,16 @@ class _FooterState extends State<Footer> {
       children: [
         Container(
           padding: const EdgeInsets.all(10),
+          margin: const EdgeInsets.all(8),
           child: Image.asset('assets/Mafatlallogo.png'),
         ),
         const SizedBox(height: 16),
-        const Text(
-          AppStrings.mafatlaldescription,
-          style: TextStyle(fontSize: 10, color: AppColors.kWhite),
+        const Padding(
+          padding: EdgeInsets.only(left: 2),
+          child: Text(
+            AppStrings.mafatlaldescription,
+            style: TextStyle(fontSize: 10, color: AppColors.kWhite),
+          ),
         ),
         const SizedBox(height: 16),
         Row(
@@ -183,31 +188,34 @@ class _FooterState extends State<Footer> {
   }
 
   Widget _footerContainer3() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          AppStrings.developmentoffice,
-          style: AppTextStyle.f10WhiteW600,
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          AppStrings.address1,
-          style: AppTextStyle.f10WhiteW600,
-        ),
-        const SizedBox(height: 16),
-        const Text(
-          AppStrings.branchoffice,
-          style: AppTextStyle.f10WhiteW600,
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          AppStrings.address4,
-          style: AppTextStyle.f10WhiteW600,
-        ),
-        const SizedBox(height: 8),
-        _contactRow(Icons.phone, AppStrings.mobile3),
-      ],
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            AppStrings.developmentoffice,
+            style: AppTextStyle.f10WhiteW600,
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            AppStrings.address1,
+            style: AppTextStyle.f10WhiteW600,
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            AppStrings.branchoffice,
+            style: AppTextStyle.f10WhiteW600,
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            AppStrings.address4,
+            style: AppTextStyle.f10WhiteW600,
+          ),
+          const SizedBox(height: 8),
+          _contactRow(Icons.phone, AppStrings.mobile3),
+        ],
+      ),
     );
   }
 
@@ -237,8 +245,21 @@ class _FooterState extends State<Footer> {
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
-          onTap: () {
-            print('Tapped $label');
+          onTap: () async {
+            // const phoneUrl = 'tel:+91-22-6771-3800';
+            // if (await canLaunchUrl(Uri.parse(phoneUrl))) {
+            //   await launchUrl(Uri.parse(phoneUrl));
+            // } else {
+            //   throw 'Could not launch $phoneUrl';
+            // }
+            //
+            // // Function to launch email
+            // const emailUrl = 'mailto:technology@mafatlals.com';
+            // if (await canLaunchUrl(Uri.parse(emailUrl))) {
+            //   await launchUrl(Uri.parse(emailUrl));
+            // } else {
+            //   throw 'Could not launch $emailUrl';
+            // }
           },
           child: Icon(
             icon,
@@ -251,19 +272,44 @@ class _FooterState extends State<Footer> {
   }
 
   Widget _contactRow(IconData icon, String text) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: AppColors.kWhite,
-          size: 10,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () async {
+          // Check if the icon is phone
+          if (icon == Icons.phone) {
+            String phoneUrl = 'tel:${text.toString()}';
+            if (await canLaunchUrl(Uri.parse(phoneUrl))) {
+              await launchUrl(Uri.parse(phoneUrl));
+            } else {
+              throw 'Could not launch $phoneUrl';
+            }
+          }
+          // Check if the icon is email
+          else if (icon == Icons.mail) {
+            const emailUrl = 'mailto:technology@mafatlals.com';
+            if (await canLaunchUrl(Uri.parse(emailUrl))) {
+              await launchUrl(Uri.parse(emailUrl));
+            } else {
+              throw 'Could not launch $emailUrl';
+            }
+          }
+        },
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: AppColors.kWhite,
+              size: 10,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              text,
+              style: AppTextStyle.f10WhiteW600,
+            ),
+          ],
         ),
-        const SizedBox(width: 8),
-        Text(
-          text,
-          style: AppTextStyle.f10WhiteW600,
-        ),
-      ],
+      ),
     );
   }
 
@@ -284,7 +330,7 @@ class _FooterState extends State<Footer> {
         cursor: SystemMouseCursors.click,
         child: Container(
           decoration: _isHoveringList[index]
-              ? BoxDecoration(
+              ? const BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
                       color: Colors.white, // Underline color

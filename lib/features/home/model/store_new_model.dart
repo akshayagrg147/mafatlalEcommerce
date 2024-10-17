@@ -94,12 +94,12 @@ class SubCategory_new {
 
 class Product_new {
   final int productId;
-  final int categoryId;
+  final int categoryId; // Should be an int
   final String productName;
   final String productCategory;
   final Variant? variant;
   final List<String> productImage;
-  final num price;
+  final num price; // Should be num
   int quantity;
 
   Product_new({
@@ -113,22 +113,39 @@ class Product_new {
     required this.quantity,
   });
 
+  // Method to handle dynamic type conversion
+  static int _convertToInt(dynamic value) {
+    if (value is String) {
+      return int.tryParse(value) ?? 0; // Convert String to int, default to 0
+    }
+    return value as int; // Return value as int if already int
+  }
+
+  static num _convertToNum(dynamic value) {
+    if (value is String) {
+      return num.tryParse(value) ?? 0; // Convert String to num, default to 0
+    }
+    return value as num; // Return value as num if already num
+  }
+
   factory Product_new.fromJson(Map<String, dynamic> json) {
-    final id = json['product_id'] ?? json['id'];
-    final categoryId =
-        json['product_category_id'] ?? 0; // Adjusted for category ID
-    final variant = _parseVariant(json['size_available']);
-    final name = json['product_name']?.toString() ?? '';
+    // Convert product_id and product_category_id to int
+    final int id = _convertToInt(json['product_id'] ?? json['id']);
+    final int categoryId = _convertToInt(json['product_category_id'] ?? -1);
+
+    // Convert price to num
+    final num price = _convertToNum(json['price']);
 
     return Product_new(
       productId: id,
       categoryId: categoryId,
-      productName: name,
+      productName: json['product_name']?.toString() ?? '',
       productCategory: json['product_category']?.toString() ?? '',
-      variant: variant,
+      variant: _parseVariant(json['size_available']),
       productImage: _parseProductImage(json['product_image']),
-      price: num.tryParse(json['price'].toString()) ?? 0,
-      quantity: CartHelper.getProductQuantity(id, variant: variant),
+      price: price,
+      quantity: CartHelper.getProductQuantity(id,
+          variant: _parseVariant(json['size_available'])),
     );
   }
 
@@ -136,7 +153,7 @@ class Product_new {
     if (variant != null) {
       return variant!.selectedVariant.price;
     }
-    return price;
+    return price; // Price is always num now
   }
 
   num getAmount() {
@@ -164,14 +181,12 @@ class Product_new {
       'quantity': quantity,
       'price': price,
     };
-
     if (variant != null) {
       map[variant!.variantTitle] = variant!.selectedVariant.name;
       map['price'] = variant!.selectedVariant.price;
     } else {
       map['variant'] = ''; // Ensure to add a placeholder for no variant
     }
-
     return map;
   }
 }

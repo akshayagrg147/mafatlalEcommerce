@@ -1,5 +1,4 @@
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/features/home/SubCategory/model/organization_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
 import 'package:mafatlal_ecommerce/features/home/model/order.dart';
 import 'package:mafatlal_ecommerce/features/home/model/productdetial_model.dart';
@@ -19,14 +18,14 @@ class HomeRepo {
         response?.data, (data) => CategoriesAndProducts.fromJson(data));
   }
 
-  static Future<List<Organization>> getsubcateddetails(int subid) async {
-    final response = await DioUtil()
-        .getInstance()
-        ?.get(ApiRoutes.getorgainzation, queryParameters: {'sub_id': 27});
-    List<dynamic> organizationsJson = response?.data['data'];
-    return organizationsJson
-        .map((json) => Organization.fromJson(json))
-        .toList();
+  static Future<ApiResponse<CategoriesAndProducts>> getcateddetails(
+      int catid) async {
+    final response = await DioUtil().getInstance()?.get(
+        ApiRoutes.getProductsAccToCategory,
+        queryParameters: {'category': catid});
+    print(response?.data);
+    return ApiResponse<CategoriesAndProducts>.fromJson(
+        response?.data, (data) => CategoriesAndProducts.fromJson(data));
   }
 
   static Future<ApiResponse<List<Product_new>>> getProductsBySubCatId(
