@@ -133,12 +133,12 @@ class HomeCubit extends Cubit<HomeState> {
     emit(UpdateSubCategorySuccessState(subcategoy: subCategories));
   }
 
-  Future<void> UpdateproductAccordingtoCategory(int subid) async {
+  Future<void> UpdateproductAccordingtoCategory(int catid) async {
     emit(UpdateProductUsingSubCategoryLoadingState());
-    final response = await HomeRepo.getProductsBySubCatId(subid);
+    final response = await HomeRepo.getcateddetails(catid);
     print(response);
     emit(UpdateProductUsingSubCategorySuccessState(
-        products: response.data!, subCategoryId: subid));
+        products: response.data!.products, subCategoryId: catid));
   }
 
   void updateState(String state) {
@@ -174,6 +174,7 @@ class HomeCubit extends Cubit<HomeState> {
           await HomeRepo.getStoreData(CubitsInjector.authCubit.currentUser?.id);
       if (response.data != null) {
         _storeData = response.data;
+        // UpdateproductAccordingtoCategory(storeData!.categories.first.id);
         emit(FetchStoreDataSuccessState());
       } else {
         emit(FetchStoreDataFailedState(response.message));

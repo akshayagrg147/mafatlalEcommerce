@@ -115,11 +115,9 @@ class Product_new {
 
   factory Product_new.fromJson(Map<String, dynamic> json) {
     final id = json['product_id'] ?? json['id'];
-    final categoryId =
-        json['product_category_id'] ?? 0; // Adjusted for category ID
+    final categoryId = json['product_category_id'] ?? 0;
     final variant = _parseVariant(json['size_available']);
     final name = json['product_name']?.toString() ?? '';
-
     return Product_new(
       productId: id,
       categoryId: categoryId,

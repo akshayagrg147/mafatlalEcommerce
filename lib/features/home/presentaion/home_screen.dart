@@ -48,13 +48,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget largeScreen() {
-    return Scaffold(
-      appBar: const PreferredSize(
+    return const Scaffold(
+      appBar: PreferredSize(
         preferredSize: Size.fromHeight(150),
         child: Header(),
       ),
-      body: Align(
-          alignment: Alignment.topCenter, child: const HomeBody(isWeb: true)
+      body: Align(alignment: Alignment.topCenter, child: HomeBody(isWeb: true)
 
           // Navigator(
           //   key: CubitsInjector.homeCubit.homeNavigatorKey,

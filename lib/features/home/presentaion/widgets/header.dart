@@ -13,6 +13,7 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/order_history.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/search_field.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Header extends StatefulWidget {
   const Header({Key? key}) : super(key: key);
@@ -84,35 +85,56 @@ class _HeaderState extends State<Header> {
             alignment: Alignment.topRight,
             child: Column(
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(
-                      Icons.phone,
-                      color: AppColors.kBlack,
-                      size: 9,
-                    ),
-                    SizedBox(width: 2),
-                    Text(
-                      '+91-22-6771 3800',
-                      style: TextStyle(
-                        fontSize: 10.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: _launchPhone, // Makes phone number clickable
+                        child: const Icon(
+                          Icons.phone,
+                          color: AppColors.kBlack,
+                          size: 9,
+                        ),
                       ),
                     ),
-                    SizedBox(width: 10),
-                    Icon(
-                      Icons.email,
-                      color: AppColors.kBlack,
-                      size: 9,
+                    const SizedBox(width: 2),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: _launchPhone, // Makes phone number clickable
+                        child: const Text(
+                          '+91-22-6771 3800',
+                          style: TextStyle(
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
                     ),
-                    SizedBox(width: 2),
-                    Text(
-                      'technology@mafatlals.com',
-                      style: TextStyle(
-                        fontSize: 10.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: _launchEmail, // Makes email clickable
+                      child: const Icon(
+                        Icons.email,
+                        color: AppColors.kBlack,
+                        size: 9,
+                      ),
+                    ),
+                    const SizedBox(width: 2),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: _launchEmail, // Makes email clickable
+                        child: const Text(
+                          'technology@mafatlals.com',
+                          style: TextStyle(
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -122,7 +144,14 @@ class _HeaderState extends State<Header> {
                 ),
                 Row(
                   children: [
-                    _textWithDownArrow('Uniform'),
+                    _textWithDownArrow(
+                      CubitsInjector
+                                  .homeCubit.storeData?.categories.isNotEmpty ==
+                              true
+                          ? CubitsInjector
+                              .homeCubit.storeData!.categories.first.name
+                          : 'Loading...', // Show 'Loading...' until data is available
+                    ),
                     const SizedBox(width: 20),
                     if (CubitsInjector.authCubit.currentUser == null)
                       CustomElevatedButton(
@@ -145,7 +174,7 @@ class _HeaderState extends State<Header> {
                       UserButton(),
                     CartIcons(),
                   ],
-                ),
+                )
               ],
             ),
           ),
@@ -175,7 +204,7 @@ class _HeaderState extends State<Header> {
     );
   }
 
-  Widget _textWithDownArrow(String label) {
+  Widget _textWithDownArrow(String initialLabel) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: PopupMenuButton<String>(
@@ -188,10 +217,10 @@ class _HeaderState extends State<Header> {
           );
           homeCubit.UpdateSubCategory(
               category.subCategories, selectedCategoryName);
+          homeCubit.UpdateproductAccordingtoCategory(category.id);
         },
         itemBuilder: (BuildContext context) {
           var categories = CubitsInjector.homeCubit.storeData!.categories;
-
           return categories.map((category) {
             return PopupMenuItem<String>(
               value: category.name,
@@ -208,24 +237,9 @@ class _HeaderState extends State<Header> {
         child: BlocBuilder<HomeCubit, HomeState>(
           buildWhen: (previous, current) => current is UpdateLabelSuccessState,
           builder: (context, state) {
+            String label = initialLabel;
             if (state is UpdateLabelSuccessState) {
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      state.selectedCategoryName,
-                      style: AppTextStyle.f16BlackW400,
-                    ),
-                  ),
-                  const Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.black,
-                    size: 24,
-                  ),
-                ],
-              );
+              label = state.selectedCategoryName;
             }
             return Row(
               mainAxisSize: MainAxisSize.min,
@@ -306,5 +320,24 @@ class _HeaderState extends State<Header> {
         ),
       ),
     );
+  }
+
+  void _launchPhone() async {
+    const phoneUrl = 'tel:+91-22-6771-3800';
+    if (await canLaunchUrl(Uri.parse(phoneUrl))) {
+      await launchUrl(Uri.parse(phoneUrl));
+    } else {
+      throw 'Could not launch $phoneUrl';
+    }
+  }
+
+  // Function to launch email
+  void _launchEmail() async {
+    const emailUrl = 'mailto:technology@mafatlals.com';
+    if (await canLaunchUrl(Uri.parse(emailUrl))) {
+      await launchUrl(Uri.parse(emailUrl));
+    } else {
+      throw 'Could not launch $emailUrl';
+    }
   }
 }

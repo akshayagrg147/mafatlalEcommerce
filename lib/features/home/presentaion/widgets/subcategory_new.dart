@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/presentation/subcategory_detail.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SubCategoryList extends StatelessWidget {
   final List<SubCategory_new> subcategoriesss;
@@ -61,7 +62,7 @@ class _SubCategoryItemState extends State<SubCategoryItem> {
           });
         },
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -71,8 +72,18 @@ class _SubCategoryItemState extends State<SubCategoryItem> {
                   imageUrl: widget.imagePath,
                   height: 60,
                   width: MediaQuery.sizeOf(context).width / widget.itemlength,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
+                  placeholder: (context, url) => Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      height: 60,
+                      // Same height as the image
+                      width:
+                          MediaQuery.sizeOf(context).width / widget.itemlength,
+                      // Same width as the image
+                      color: Colors.white,
+                    ),
+                  ),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
                 const SizedBox(height: 8),

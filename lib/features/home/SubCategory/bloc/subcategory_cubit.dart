@@ -79,10 +79,10 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
     }
   }
 
-  Future<void> UpdateProductAccordingtoState(int id) async {
+  Future<void> UpdateProductAccordingtoState(int stateid, int subid) async {
     emit(UpdateProductUsingSubCategoryLoadingState());
     try {
-      final response = await SubCategoryRepo.getProductsByState(id);
+      final response = await SubCategoryRepo.getProductsByState(stateid, subid);
 
       // Check if response data is empty
       if (response.data == null || response.data!.isEmpty) {
@@ -209,6 +209,7 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
   Future<void> getdistrict() async {
     emit(GetAllDistrictLoadingState());
     try {
+      // Get the subcategory based on the selected district name
       final subcategory = subcategorieslist?.firstWhere(
           (item) => item.name == SelectedSDistrictname,
           orElse: () => SubCategory_new(
@@ -237,10 +238,13 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
           emit(GetAllDistrictFailedState(message: 'No districts found'));
         }
       } else {
+        // If the subcategory is not a district, proceed with product update
         emit(GetAllDistrictSuccessState(district: districts, name: ''));
-
         final state = states.firstWhere((s) => s.name == SelectedStatename);
-        UpdateProductAccordingtoState(state.id);
+        final subcategory = subcategorieslist?.firstWhere(
+          (item) => item.name == SelectedSDistrictname,
+        );
+        UpdateProductAccordingtoState(state.id, subcategory!.id);
       }
     } catch (e) {
       emit(GetAllDistrictFailedState(message: 'Failed to fetch districts'));
