@@ -48,7 +48,7 @@ class AddToCartWidget extends StatelessWidget {
       initVal: quantity,
       maxVal: 100000,
       decoration: QtyDecorationProps(
-        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+        contentPadding: EdgeInsets.symmetric(horizontal: 2),
         border: OutlineInputBorder(
           borderSide: const BorderSide(color: Colors.transparent),
         ),
@@ -127,9 +127,10 @@ Widget quantityBtn(IconData icon) {
         borderRadius: BorderRadius.circular(5.0),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.all(4),
         child: Icon(
           icon,
+          size: 20,
           color: AppColors.kWhite,
         ),
       ));
