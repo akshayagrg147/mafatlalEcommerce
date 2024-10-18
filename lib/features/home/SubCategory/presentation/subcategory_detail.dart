@@ -313,7 +313,9 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                   ),
                   onChanged: (newValue) {
                     if (newValue != null) {
-                      subcategoryCubit.selectSubCategory(newValue.name);
+                      final index = state.subcategories.indexOf(newValue);
+                      print(index);
+                      subcategoryCubit.selectSubCategory(newValue.name, index);
                     }
                   },
                 );
@@ -351,7 +353,13 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                 ),
                 onChanged: (newValue) {
                   if (newValue != null) {
-                    subcategoryCubit.selectSubCategory(newValue.name);
+                    final index = context
+                        .read<SubcategoryCubit>()
+                        .subcategorieslist!
+                        .indexOf(newValue);
+                    print(index);
+
+                    subcategoryCubit.selectSubCategory(newValue.name, index);
                   }
                 },
               );
@@ -390,7 +398,9 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                     ),
                     onChanged: (newValue) {
                       if (newValue != null) {
-                        subcategoryCubit.selectState(newValue.name);
+                        final index = state.states.indexOf(newValue);
+                        print(index);
+                        subcategoryCubit.selectState(newValue.name, index);
                       }
                     },
                   ),
@@ -424,7 +434,12 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                   ),
                   onChanged: (newValue) {
                     if (newValue != null) {
-                      subcategoryCubit.selectState(newValue.name);
+                      final index = context
+                          .read<SubcategoryCubit>()
+                          .states
+                          .indexOf(newValue);
+                      print(index);
+                      subcategoryCubit.selectState(newValue.name, index);
                     }
                   },
                 ),
@@ -464,7 +479,9 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                     ),
                     onChanged: (newValue) {
                       if (newValue != null) {
-                        subcategoryCubit.selectdistrict(newValue.name);
+                        final index = state.district.indexOf(newValue);
+                        print(index);
+                        subcategoryCubit.selectdistrict(newValue.name, index);
                       }
                     },
                   ),
@@ -499,7 +516,12 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                   ),
                   onChanged: (newValue) {
                     if (newValue != null) {
-                      subcategoryCubit.selectdistrict(newValue.name);
+                      final index = context
+                          .read<SubcategoryCubit>()
+                          .districts
+                          .indexOf(newValue);
+                      print(index);
+                      subcategoryCubit.selectdistrict(newValue.name, index);
                     }
                   },
                 ),
@@ -540,7 +562,10 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                     ),
                     onChanged: (newValue) {
                       if (newValue != null) {
-                        subcategoryCubit.selectOrganization(newValue.name);
+                        final index = state.organization.indexOf(newValue);
+                        print(index);
+                        subcategoryCubit.selectOrganization(
+                            newValue.name, index);
                       }
                     },
                   ),
@@ -580,7 +605,12 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                   ),
                   onChanged: (newValue) {
                     if (newValue != null) {
-                      subcategoryCubit.selectOrganization(newValue.name);
+                      final index = context
+                          .read<SubcategoryCubit>()
+                          .organizations
+                          .indexOf(newValue);
+                      print(index);
+                      subcategoryCubit.selectOrganization(newValue.name, index);
                     }
                   },
                 ),

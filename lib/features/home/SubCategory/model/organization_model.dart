@@ -1,5 +1,3 @@
-// Main model class to hold the response
-
 class Organization {
   final int id;
   final String name;
@@ -24,14 +22,14 @@ class Organization {
   // Factory method to create an instance from JSON
   factory Organization.fromJson(Map<String, dynamic> json) {
     return Organization(
-      id: json['id'],
-      name: json['name'],
-      stateId: json['state_id'],
-      stateName: json['state_name'],
-      districtId: json['district_id'],
-      districtName: json['district_name'],
-      subCategoryId: json['sub_category_id'],
-      subCategoryName: json['sub_category_name'],
+      id: _parseInt(json['id']),
+      name: json['name'] ?? '',
+      stateId: _parseInt(json['state_id']),
+      stateName: json['state_name'] ?? '',
+      districtId: _parseInt(json['district_id']),
+      districtName: json['district_name'] ?? '',
+      subCategoryId: _parseInt(json['sub_category_id']),
+      subCategoryName: json['sub_category_name'] ?? '',
     );
   }
 
@@ -47,5 +45,15 @@ class Organization {
       'sub_category_id': subCategoryId,
       'sub_category_name': subCategoryName,
     };
+  }
+
+  // Helper method to parse integers from dynamic types
+  static int _parseInt(dynamic value) {
+    if (value is int) {
+      return value;
+    } else if (value is String) {
+      return int.tryParse(value) ?? 0; // Return 0 if parsing fails
+    }
+    return 0; // Default return value for unrecognized types
   }
 }
