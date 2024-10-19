@@ -37,26 +37,78 @@ class _HeaderState extends State<Header> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 80,
-      decoration: BoxDecoration(
-        color: AppColors.kWhite,
-        borderRadius: BorderRadius.circular(8.0),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.kBlack.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(1, 1),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Logo and Search
-          Row(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 50,
+          color: AppColors.lightGray,
+          padding: const EdgeInsets.symmetric(horizontal: 48),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: _launchPhone, // Makes phone number clickable
+                  child: const Icon(
+                    Icons.phone,
+                    color: AppColors.kBlack,
+                    size: 16,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: _launchPhone, // Makes phone number clickable
+                  child: Text(
+                    '+91-22-6771 3800',
+                    style: AppTextStyle.f14RobotoDarkgrayW500,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 28),
+              GestureDetector(
+                onTap: _launchEmail, // Makes email clickable
+                child: const Icon(
+                  Icons.email,
+                  color: AppColors.kBlack,
+                  size: 16,
+                ),
+              ),
+              const SizedBox(width: 12),
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: _launchEmail, // Makes email clickable
+                  child: Text('technology@mafatlals.com',
+                      style: AppTextStyle.f14RobotoDarkgrayW500),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          height: 90,
+          padding: const EdgeInsets.symmetric(horizontal: 48),
+          decoration: BoxDecoration(
+            color: AppColors.kWhite,
+            borderRadius: BorderRadius.circular(8.0),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.kBlack.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 3,
+                offset: const Offset(1, 1),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              // Logo and Search
               GestureDetector(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (_) {
@@ -68,11 +120,11 @@ class _HeaderState extends State<Header> {
                   child: Image.asset(
                     AssetPath.logo1,
                     fit: BoxFit.fitHeight,
-                    height: 60,
+                    height: 70,
                   ),
                 ),
               ),
-              const SizedBox(width: 50), // Space between logo and search
+              const SizedBox(width: 35), // Space between logo and search
               Container(
                 width: 380,
                 padding: const EdgeInsets.all(5),
@@ -82,103 +134,35 @@ class _HeaderState extends State<Header> {
                   hintText: "Search here",
                 ),
               ),
+              const Spacer(),
+              _textWithDownArrow(),
+              const SizedBox(width: 20),
+              if (CubitsInjector.authCubit.currentUser == null)
+                CustomElevatedButton(
+                  width: 150,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
+                  onPressed: () {
+                    Navigator.pushNamed(context, LoginScreen.route);
+                  },
+                  backgroundColor: AppColors.kBlack,
+                  textColor: AppColors.kWhite,
+                  label: "Login",
+                )
+              else
+                const SizedBox(width: 10),
+              // Space between login button and cart
+              if (CubitsInjector.authCubit.currentUser == null)
+                const SizedBox.shrink()
+              else
+                UserButton(),
+              CartIcons(),
+
+              // Menu and Cart Icons
             ],
           ),
-          Container(
-            margin: const EdgeInsets.only(top: 2),
-            alignment: Alignment.topRight,
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: _launchPhone, // Makes phone number clickable
-                        child: const Icon(
-                          Icons.phone,
-                          color: AppColors.kBlack,
-                          size: 9,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 2),
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: _launchPhone, // Makes phone number clickable
-                        child: const Text(
-                          '+91-22-6771 3800',
-                          style: TextStyle(
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: _launchEmail, // Makes email clickable
-                      child: const Icon(
-                        Icons.email,
-                        color: AppColors.kBlack,
-                        size: 9,
-                      ),
-                    ),
-                    const SizedBox(width: 2),
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: _launchEmail, // Makes email clickable
-                        child: const Text(
-                          'technology@mafatlals.com',
-                          style: TextStyle(
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    _textWithDownArrow(),
-                    const SizedBox(width: 20),
-                    if (CubitsInjector.authCubit.currentUser == null)
-                      CustomElevatedButton(
-                        width: 150,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 2, vertical: 12),
-                        onPressed: () {
-                          Navigator.pushNamed(context, LoginScreen.route);
-                        },
-                        backgroundColor: AppColors.kBlack,
-                        textColor: AppColors.kWhite,
-                        label: "Login",
-                      )
-                    else
-                      const SizedBox(width: 10),
-                    // Space between login button and cart
-                    if (CubitsInjector.authCubit.currentUser == null)
-                      const SizedBox.shrink()
-                    else
-                      UserButton(),
-                    CartIcons(),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          // Menu and Cart Icons
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -235,6 +219,8 @@ class _HeaderState extends State<Header> {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: PopupMenuButton<String>(
+        color: AppColors.kWhite,
+        surfaceTintColor: AppColors.kWhite,
         onSelected: (selectedCategoryName) {
           var category =
               CubitsInjector.homeCubit.storeData!.categories.firstWhere(

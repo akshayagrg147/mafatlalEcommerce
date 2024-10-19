@@ -102,4 +102,10 @@ class AppTextStyle {
       color: AppColors.kblue, fontSize: 18, fontWeight: FontWeight.w600);
   static TextStyle f18PoppinsWhitew600 = GoogleFonts.poppins(
       color: AppColors.kWhite, fontSize: 18, fontWeight: FontWeight.w600);
+
+  //roboto
+  static TextStyle f14RobotoDarkgrayW500 = GoogleFonts.roboto(
+      color: AppColors.darkGray, fontSize: 14, fontWeight: FontWeight.w500);
+  static TextStyle f18RobotoDarkgrayW500 = GoogleFonts.roboto(
+      color: AppColors.darkGray, fontSize: 18, fontWeight: FontWeight.w500);
 }

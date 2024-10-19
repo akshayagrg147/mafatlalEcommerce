@@ -96,6 +96,7 @@ class Product_new {
   final int productId;
   final int categoryId; // Should be an int
   final String productName;
+  final String productOrganisation;
   final String productCategory;
   final Variant? variant;
   final List<String> productImage;
@@ -107,6 +108,7 @@ class Product_new {
     required this.categoryId,
     required this.productName,
     required this.productCategory,
+    required this.productOrganisation,
     required this.variant,
     required this.productImage,
     required this.price,
@@ -139,11 +141,12 @@ class Product_new {
     return Product_new(
       productId: id,
       categoryId: categoryId,
-      productName: json['product_name']?.toString() ?? '',
+      productName: (json['product_name'] ?? json['name'])?.toString() ?? '',
       productCategory: json['product_category']?.toString() ?? '',
       variant: _parseVariant(json['size_available']),
       productImage: _parseProductImage(json['product_image']),
       price: price,
+      productOrganisation: json['product_organization'] ?? '',
       quantity: CartHelper.getProductQuantity(id,
           variant: _parseVariant(json['size_available'])),
     );

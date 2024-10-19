@@ -18,34 +18,37 @@ class _FooterState extends State<Footer> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        double aspectRatio;
-        if (constraints.maxWidth > 1200) {
-          aspectRatio = 4 / 1; // Desktop
-        } else if (constraints.maxWidth > 800) {
-          aspectRatio = 2 / 1; // Tablet
-        } else {
-          aspectRatio = 1 / 1.5; // Mobile
-        }
+    return Padding(
+      padding: const EdgeInsets.only(top: 100),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          double aspectRatio;
+          if (constraints.maxWidth > 1200) {
+            aspectRatio = 4 / 1; // Desktop
+          } else if (constraints.maxWidth > 800) {
+            aspectRatio = 2 / 1; // Tablet
+          } else {
+            aspectRatio = 1 / 1.5; // Mobile
+          }
 
-        return AspectRatio(
-          aspectRatio: aspectRatio,
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.black,
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0x29000000),
-                  offset: Offset(0, -2),
-                  blurRadius: 4.0,
-                ),
-              ],
+          return AspectRatio(
+            aspectRatio: aspectRatio,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.black,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x29000000),
+                    offset: Offset(0, -2),
+                    blurRadius: 4.0,
+                  ),
+                ],
+              ),
+              child: _buildContent(constraints),
             ),
-            child: _buildContent(constraints),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

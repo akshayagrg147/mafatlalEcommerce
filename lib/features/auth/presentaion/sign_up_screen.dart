@@ -276,6 +276,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   const SizedBox(
                     height: 20,
                   ),
+                  // Text(data)
                   CustomTextField(
                     hint: "Gst No.",
                     suffixWidget: const Icon(Icons.numbers),

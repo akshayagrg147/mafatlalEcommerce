@@ -88,11 +88,9 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       drawer: const HomeDrawer(),
-      body: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: HomeBody(
-            isWeb: false,
-          )),
+      body: HomeBody(
+        isWeb: false,
+      ),
     ));
   }
 }

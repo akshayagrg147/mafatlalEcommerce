@@ -90,7 +90,7 @@ class ProductListTile extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Availability:',
+                    'Organization:',
                     style: isSmallScreen
                         ? AppTextStyle.f18PoppinsDarkGreyw400
                             .copyWith(fontSize: 14)
@@ -98,11 +98,11 @@ class ProductListTile extends StatelessWidget {
                   ),
                   SizedBox(width: isSmallScreen ? 15 : 39),
                   Text(
-                    'In Stock',
+                    product.productOrganisation,
                     style: isSmallScreen
-                        ? AppTextStyle.f18PoppinsGreenw600
+                        ? AppTextStyle.f18PoppinsDarkGreyw600
                             .copyWith(fontSize: 14)
-                        : AppTextStyle.f18PoppinsGreenw600,
+                        : AppTextStyle.f18PoppinsDarkGreyw600,
                   ),
                 ],
               ),
@@ -200,6 +200,26 @@ class ProductListTile extends StatelessWidget {
                         : AppTextStyle.f28PoppinsBlackw600,
                   )
                 ],
+              ),
+              const Spacer(),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: GestureDetector(
+                  onTap: () {
+                    CartHelper.removeProduct(product.productId,
+                        variant: product.variant);
+                    CubitsInjector.homeCubit.updateCartProductList(
+                        product.productId,
+                        variant: product.variant);
+                  },
+                  child: Text(
+                    'Remove Item',
+                    style: AppTextStyle.f18PoppinsDarkGreyw400.copyWith(
+                        fontSize: isSmallScreen ? 14 : 18,
+                        decoration: TextDecoration.underline,
+                        decorationColor: AppColors.darkGray),
+                  ),
+                ),
               )
             ],
           );

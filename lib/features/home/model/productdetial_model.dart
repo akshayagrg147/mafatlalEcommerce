@@ -79,6 +79,7 @@ class RelatedProduct {
   final String name;
   final String productCategory;
   final String productSubCategory;
+  final String productOrganization;
   final Variant? variant;
   final ProductImage productImage;
   final String price;
@@ -94,6 +95,7 @@ class RelatedProduct {
     required this.productImage,
     required this.price,
     this.description,
+    required this.productOrganization,
     required this.quantity,
   });
 
@@ -113,6 +115,7 @@ class RelatedProduct {
       productCategory: json['product_category'],
       productSubCategory: json['product_sub_category'],
       variant: _parseVariant(json['size_available']),
+      productOrganization: json['product_organization'] ?? '',
       productImage: ProductImage.fromJson(json['product_image']),
       price: json['price'],
       description: json['description'],

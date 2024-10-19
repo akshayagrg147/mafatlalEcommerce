@@ -9,9 +9,9 @@ import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/productdetial_model.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/product_details.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_to_cart_btn.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/size_selection_widget.dart';
+import 'package:mafatlal_ecommerce/features/product_details/presentaion/product_details.dart';
 
 class RelatedProductTile extends StatelessWidget {
   final RelatedProduct product;
@@ -79,6 +79,11 @@ class RelatedProductTile extends StatelessWidget {
                           maxLines: 2,
                           style: AppTextStyle.f16OutfitBlackW500,
                         ),
+                        Text(
+                          product.productOrganization,
+                          maxLines: 2,
+                          style: AppTextStyle.f14OutfitBlackW500,
+                        ),
                         if (product.variant != null)
                           SizeSelection(
                               variant: product.variant!,
@@ -123,10 +128,10 @@ class RelatedProductTile extends StatelessWidget {
                                         // product.selectedSize = data['size'];
                                       }
                                       return AddToCartWidget(
-                                        quantity: product.quantity,
-                                        productId: int.parse(product.id),
-                                        variant: product.variant,
-                                      );
+                                          quantity: product.quantity,
+                                          productId: int.parse(product.id),
+                                          variant: product.variant,
+                                          isGridTile: true);
                                     })
                               ],
                             );

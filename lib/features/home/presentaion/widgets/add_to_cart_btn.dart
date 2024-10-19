@@ -11,17 +11,96 @@ class AddToCartWidget extends StatelessWidget {
   final int productId;
   final Variant? variant;
   final bool isCart;
+  final bool isIntrisicWidth;
+  final bool isGridTile;
+  final Function()? onAdded;
 
-  const AddToCartWidget({
-    super.key,
-    required this.quantity,
-    required this.productId,
-    this.variant,
-    this.isCart = false,
-  });
+  const AddToCartWidget(
+      {super.key,
+      required this.quantity,
+      required this.productId,
+      this.variant,
+      this.isCart = false,
+      this.isGridTile = false,
+      this.isIntrisicWidth = true,
+      this.onAdded});
 
   @override
   Widget build(BuildContext context) {
+    int quant = quantity == 0 ? 1 : quantity;
+    if (isGridTile) {
+      return quantity > 0
+          ? Text(
+              "Added",
+              style: AppTextStyle.f14BlackW500,
+            )
+          : GestureDetector(
+              onTap: () {
+                CartHelper.addProduct(productId, 1, variant: variant);
+              },
+              child: Container(
+                alignment: Alignment.center,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.kRed),
+                  color: AppColors.kRed.withOpacity(.05),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Text(
+                  'Add',
+                  style: AppTextStyle.f14KRedOutfitW500,
+                ),
+              ),
+            );
+    }
+    if (isCart == false) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InputQty(
+            minVal: 0,
+            initVal: quant,
+            isIntrinsicWidth: isIntrisicWidth,
+            maxVal: 100000,
+            decoration: QtyDecorationProps(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 2),
+              border: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.transparent),
+              ),
+              plusBtn: quantityBtn(Icons.add),
+              minusBtn: quantityBtn(Icons.remove),
+            ),
+            onQtyChanged: (val) {
+              quant = val;
+            },
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          GestureDetector(
+            onTap: () {
+              CartHelper.addProduct(productId, quant, variant: variant);
+            },
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.kRed),
+                color: AppColors.kRed.withOpacity(.05),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Text(
+                'Add',
+                style: AppTextStyle.f14KRedOutfitW500,
+              ),
+            ),
+          )
+        ],
+      );
+    }
+
     if (quantity == 0) {
       return GestureDetector(
         onTap: () {
@@ -48,9 +127,9 @@ class AddToCartWidget extends StatelessWidget {
       initVal: quantity,
       maxVal: 100000,
       decoration: QtyDecorationProps(
-        contentPadding: EdgeInsets.symmetric(horizontal: 2),
-        border: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.transparent),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 2),
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.transparent),
         ),
         plusBtn: quantityBtn(Icons.add),
         minusBtn: quantityBtn(Icons.remove),

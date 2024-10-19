@@ -62,7 +62,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   offset: const Offset(1, 1), // changes position of shadow
                 ),
               ]),
-          child: loginForm(400),
+          child: Stack(
+            children: [
+              loginForm(400),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          HomeScreen.route, (route) => false);
+                    },
+                    child: const Icon(Icons.close)),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -94,11 +108,11 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 20,
             ),
-            Text(
+            const Text(
               AppStrings.welcomeBack,
               style: AppTextStyle.f22BlackW600,
             ),
-            Text(
+            const Text(
               AppStrings.signInWithEmailPwd,
               style: AppTextStyle.f16GreyW500,
             ),

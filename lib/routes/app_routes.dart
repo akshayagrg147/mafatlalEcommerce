@@ -12,9 +12,9 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/category_product_sc
 import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/order_details_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/order_history.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/product_details.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/search_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/order_success_widget.dart';
+import 'package:mafatlal_ecommerce/features/product_details/presentaion/product_details.dart';
 
 class GenerateRoute {
   static Route<dynamic>? Function(RouteSettings)? onGenerateRoute =
@@ -48,7 +48,7 @@ class GenerateRoute {
         return MaterialPageRoute(
             settings: settings,
             builder: (_) => ProductDetailsScreen(
-                  productId: settings.arguments as int,
+                  productId: (settings.arguments as int?) ?? 104,
                 ));
       case SearchScreen.route:
         return MaterialPageRoute(

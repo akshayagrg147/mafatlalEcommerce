@@ -9,9 +9,9 @@ import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/searchmodel.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/product_details.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_to_cart_btn.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/size_selection_widget.dart';
+import 'package:mafatlal_ecommerce/features/product_details/presentaion/product_details.dart';
 
 class ProductSearchTile extends StatelessWidget {
   final ProductSearch product;
@@ -81,6 +81,11 @@ class ProductSearchTile extends StatelessWidget {
                           maxLines: 2,
                           style: AppTextStyle.f16OutfitBlackW500,
                         ),
+                        Text(
+                          product.productOrganizationName ?? '',
+                          maxLines: 2,
+                          style: AppTextStyle.f14OutfitBlackW500,
+                        ),
                         if (product.variant != null)
                           SizeSelection(
                               variant: product.variant!,
@@ -128,6 +133,7 @@ class ProductSearchTile extends StatelessWidget {
                                         quantity: product.quantity,
                                         productId: product.id!.toInt(),
                                         variant: product.variant,
+                                        isGridTile: true,
                                       );
                                     })
                               ],

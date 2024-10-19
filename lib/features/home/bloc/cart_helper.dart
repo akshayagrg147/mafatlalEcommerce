@@ -37,8 +37,7 @@ class CartHelper {
   }
 
   static int getAllProductQuantity() {
-    final quantity = getAllProducts().fold(0,
-        (previousValue, element) => (element['quantity'] ?? 0) + previousValue);
+    final quantity = getAllProducts().length;
     return quantity;
   }
 

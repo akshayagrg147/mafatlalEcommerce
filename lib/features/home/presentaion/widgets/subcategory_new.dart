@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
+import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/presentation/subcategory_detail.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:shimmer/shimmer.dart';
@@ -14,15 +16,24 @@ class SubCategoryList extends StatelessWidget {
     return ListView.separated(
       scrollDirection: Axis.horizontal,
       itemCount: subcategoriesss.length,
-      separatorBuilder: (context, index) => const SizedBox(width: 25),
+      separatorBuilder: (context, index) =>
+          SizedBox(width: ResponsiveWidget.isSmallScreen(context) ? 20 : 60),
       itemBuilder: (context, index) {
         final subcategory = subcategoriesss[index];
-        return SubCategoryItem(
+        final widget = SubCategoryItem(
           imagePath: subcategory.img,
           name: subcategory.name,
           itemlength: subcategoriesss.length,
           subcategories: subcategoriesss,
         );
+        if (index == 0) {
+          return Padding(
+            padding: EdgeInsets.only(
+                left: ResponsiveWidget.isSmallScreen(context) ? 20 : 60),
+            child: widget,
+          );
+        }
+        return widget;
       },
     );
   }
@@ -61,45 +72,32 @@ class _SubCategoryItemState extends State<SubCategoryItem> {
             "name": widget.name
           });
         },
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              children: [
-                CachedNetworkImage(
-                  imageUrl: widget.imagePath,
-                  height: 60,
-                  width: MediaQuery.sizeOf(context).width / widget.itemlength,
-                  placeholder: (context, url) => Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      height: 60,
-                      // Same height as the image
-                      width:
-                          MediaQuery.sizeOf(context).width / widget.itemlength,
-                      // Same width as the image
-                      color: Colors.white,
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                ),
-                const SizedBox(height: 8),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    widget.name,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: _isHovered ? Colors.blue : Colors.black,
-                    ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          child: Column(
+            children: [
+              CachedNetworkImage(
+                imageUrl: widget.imagePath,
+                height: 60,
+                // width: MediaQuery.sizeOf(context).width / widget.itemlength,
+                placeholder: (context, url) => Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    height: 60,
+                    // Same height as the image
+                    // width: MediaQuery.sizeOf(context).width / widget.itemlength,
+                    // Same width as the image
+                    color: Colors.white,
                   ),
                 ),
-              ],
-            ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
+              const SizedBox(
+                height: 6,
+              ),
+              Text(widget.name, style: AppTextStyle.f18PoppinsDarkGreyw600),
+            ],
           ),
         ),
       ),

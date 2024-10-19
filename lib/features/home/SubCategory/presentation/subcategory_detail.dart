@@ -1,9 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/constants/app_strings.dart';
 import 'package:mafatlal_ecommerce/constants/asset_path.dart';
+import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
@@ -113,7 +115,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                   .toList(),
               options: CarouselOptions(
                 viewportFraction: 1,
-                height: ResponsiveWidget.isSmallScreen(context) ? 200 : 400.0,
+                height: ResponsiveWidget.isSmallScreen(context) ? 200 : 444.0,
                 autoPlay: true,
               ),
             ),
@@ -154,33 +156,26 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                   ),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.symmetric(
-                    vertical: 30,
-                    horizontal:
-                        MediaQuery.sizeOf(context).width < 600 ? 10 : 30),
-                alignment: Alignment.topLeft,
-                child: GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: ResponsiveWidget.getGridCount(context),
-                  padding: EdgeInsets.symmetric(
-                      horizontal:
-                          MediaQuery.sizeOf(context).width < 600 ? 10 : 40),
-                  childAspectRatio:
-                      MediaQuery.sizeOf(context).width < 600 ? 0.5 : 0.8,
-                  crossAxisSpacing:
-                      MediaQuery.sizeOf(context).width < 600 ? 15 : 60,
-                  mainAxisSpacing:
-                      MediaQuery.sizeOf(context).width < 600 ? 15 : 30,
-                  children: List.generate(
-                    state.products.length,
-                    (index) {
-                      return ProductGridTile(
-                        product: state.products[index],
-                      );
-                    },
-                  ),
+              GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: ResponsiveWidget.getGridCount(context),
+                padding: EdgeInsets.symmetric(
+                  horizontal: ResponsiveWidget.isSmallScreen(context) ? 20 : 48,
+                ),
+                childAspectRatio:
+                    MediaQuery.sizeOf(context).width < 600 ? 0.5 : 0.8,
+                crossAxisSpacing:
+                    ResponsiveWidget.isLargeScreen(context) ? 68 : 15,
+                mainAxisSpacing:
+                    ResponsiveWidget.isLargeScreen(context) ? 68 : 15,
+                children: List.generate(
+                  state.products.length,
+                  (index) {
+                    return ProductGridTile(
+                      product: state.products[index],
+                    );
+                  },
                 ),
               ),
             ],
@@ -204,8 +199,8 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
     required void Function(T?) onChanged,
   }) {
     return Container(
-      width: MediaQuery.sizeOf(context).width < 600 ? 150 : 200,
-      height: 30,
+      // width: 250,
+      height: 48,
       margin: const EdgeInsets.only(left: 5),
       decoration: BoxDecoration(
         color: const Color(0xFFFAFAFA),
@@ -217,41 +212,42 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T>(
-          hint: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Text(hintText, style: AppTextStyle.f12OutfitBlackW500),
-          ),
+          dropdownColor: AppColors.kWhite,
+          style: AppTextStyle.f18RobotoDarkgrayW500,
+          hint: Text(hintText, style: AppTextStyle.f18RobotoDarkgrayW500),
           value: value,
           items: items.map((item) {
             final dropdownItem = itemBuilder(item);
             return DropdownMenuItem<T>(
               value: dropdownItem.value,
               child: Container(
-                margin: const EdgeInsets.only(left: 10),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    (dropdownItem.child as Text).data!,
-                    textAlign: TextAlign.center,
-                    style:
-                        AppTextStyle.f12OutfitBlackW500, // Decreased text size
-                  ),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  (dropdownItem.child as Text).data!,
+                  textAlign: TextAlign.center,
+                  style:
+                      AppTextStyle.f18RobotoDarkgrayW500, // Decreased text size
                 ),
               ),
             );
           }).toList(),
           onChanged: onChanged,
-          isExpanded: true,
-          icon: const Row(
+          // isExpanded: true,
+          icon: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               VerticalDivider(
                 color: Colors.grey,
                 thickness: 1,
-                indent: 8,
-                endIndent: 8,
+                width: 1,
               ),
-              Icon(Icons.arrow_drop_down, color: Colors.black),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                child: SvgPicture.asset(
+                  AssetPath.arrDown,
+                  height: 20,
+                ),
+              ),
             ],
           ),
         ),
@@ -261,9 +257,13 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
 
   Widget _buildDropdownSelectors() {
     return Container(
-      padding: const EdgeInsets.only(top: 15, right: 5),
-      margin: const EdgeInsets.only(top: 20),
-      height: MediaQuery.sizeOf(context).width < 600 ? 120 : 60,
+      padding: EdgeInsets.symmetric(
+        vertical: 20,
+        horizontal: ResponsiveWidget.isSmallScreen(context) ? 20 : 48,
+      ),
+      margin: EdgeInsets.all(
+        ResponsiveWidget.isSmallScreen(context) ? 20 : 48,
+      ),
       alignment: Alignment.topLeft,
       width: MediaQuery.sizeOf(context).width,
       decoration: const BoxDecoration(
@@ -278,6 +278,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
       ),
       child: Wrap(
         runSpacing: 10,
+        spacing: 20,
         alignment: WrapAlignment.start,
         children: [
           BlocBuilder<SubcategoryCubit, SubCategoryDetailState>(

@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
@@ -17,7 +16,6 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_address
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/checkout_bottom_widget.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_banner.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/product_list_tile.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/same_as_shipping_address_widget.dart';
 import 'package:mafatlal_ecommerce/helper/toast_utils.dart';
@@ -74,18 +72,7 @@ class _CartScreenState extends State<CartScreen> {
         builder: (context, state) {
           return ListView(
             children: [
-              const SizedBox(height: 40),
-              CarouselSlider(
-                items: bannerImages
-                    .map((imagePath) => HomeBanner(imagePath: imagePath))
-                    .toList(),
-                options: CarouselOptions(
-                  viewportFraction: 1,
-                  height: ResponsiveWidget.isSmallScreen(context) ? 200 : 440.0,
-                  autoPlay: true,
-                ),
-              ),
-              const SizedBox(height: 45),
+              const SizedBox(height: 48),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 45),
                 child: Text(

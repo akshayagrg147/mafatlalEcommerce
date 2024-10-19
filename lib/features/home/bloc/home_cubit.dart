@@ -241,6 +241,7 @@ class HomeCubit extends Cubit<HomeState> {
               productId: product.productId,
               productName: product.productName,
               productCategory: product.productCategory,
+              productOrganisation: product.productOrganisation,
               productImage: product.productImage,
               price: product.price,
               quantity: cartItem['quantity'] ?? 0,
