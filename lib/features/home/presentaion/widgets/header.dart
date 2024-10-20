@@ -111,9 +111,8 @@ class _HeaderState extends State<Header> {
               // Logo and Search
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return const HomeScreen();
-                  }));
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, HomeScreen.route, (route) => false);
                 },
                 child: Container(
                   padding: const EdgeInsets.only(left: 10, top: 10),

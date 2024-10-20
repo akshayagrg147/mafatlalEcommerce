@@ -13,6 +13,7 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
   String? SelectedStatename;
   String? SelectedOrganizationname;
   String? SelectedSDistrictname;
+  String? bannerImgUrl;
 
   List<StateModel> states = [];
   List<DistrictModel> districts = [];
@@ -24,9 +25,11 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
     emit(GetSubCategoryDetailScreenLoadingState());
     subcategorieslist = subcategories;
     SelectedSubcategoryname = selectedname;
+
     var selectedSubCategory = subcategorieslist!.firstWhere(
       (id) => id.name == SelectedSubcategoryname,
     );
+    bannerImgUrl = selectedSubCategory.bannerImg;
     UpdateproductAccordingtoCategory(selectedSubCategory.id);
 
     await getallstate();
@@ -128,6 +131,8 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
     var selectedSubCategory = subcategorieslist!.firstWhere(
       (id) => id.name == SelectedSubcategoryname,
     );
+
+    bannerImgUrl = selectedSubCategory.bannerImg;
 
     if (!selectedSubCategory.isState) {
       UpdateproductAccordingtoCategory(selectedSubCategory.id);

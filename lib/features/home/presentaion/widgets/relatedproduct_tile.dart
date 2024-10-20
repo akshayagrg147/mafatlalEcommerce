@@ -113,7 +113,7 @@ class RelatedProductTile extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  "₹${product.price}",
+                                  "₹${product.getPrice().toStringAsFixed(2)}",
                                   style: AppTextStyle.f17OutfitBlackW500,
                                 ),
                                 StreamBuilder<BoxEvent>(

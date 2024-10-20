@@ -114,7 +114,7 @@ class ProductGridTile extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  "₹${product.price}",
+                                  "₹${product.getPriceWithTax().toStringAsFixed(2)}",
                                   style: AppTextStyle.f17OutfitBlackW500,
                                 ),
                                 StreamBuilder<BoxEvent>(

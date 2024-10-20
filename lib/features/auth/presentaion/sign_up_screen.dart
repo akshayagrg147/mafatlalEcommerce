@@ -49,7 +49,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String? gstNumberValidator(String? value) {
     // GST number must be 15 characters long and alphanumeric
     if (value == null || value.isEmpty) {
-      return 'GST number is required';
+      return null;
     } else if (value.length != 15) {
       return 'GST number must be 15 characters long';
     } else if (!RegExp(
@@ -98,6 +98,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       InkWell(
                           onTap: () {
@@ -119,7 +120,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text(
+                  Text(
                     AppStrings.registerAccount,
                     style: AppTextStyle.f22BlackW600,
                   ),
@@ -275,6 +276,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   const SizedBox(
                     height: 20,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Do you have a GST number? (If yes, please provide it below)',
+                      textAlign: TextAlign.left,
+                      style: AppTextStyle.f14OutfitGreyW500,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   // Text(data)
                   CustomTextField(
@@ -522,6 +534,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     const SizedBox(
                       height: 20,
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Do you have a GST number? (If yes, please provide it below)',
+                        textAlign: TextAlign.left,
+                        style: AppTextStyle.f14OutfitGreyW500,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
                     ),
                     CustomTextField(
                       hint: "Gst No.",

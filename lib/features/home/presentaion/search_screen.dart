@@ -112,14 +112,10 @@ class _SearchScreenState extends State<SearchScreen> {
                           shrinkWrap: true,
                           crossAxisCount:
                               ResponsiveWidget.getGridCount(context),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: MediaQuery.sizeOf(context).width < 600
-                                  ? 0
-                                  : 40),
                           childAspectRatio:
                               MediaQuery.sizeOf(context).width < 600
                                   ? 0.5
-                                  : 0.8,
+                                  : 0.65,
                           crossAxisSpacing:
                               MediaQuery.sizeOf(context).width < 600 ? 20 : 60,
                           mainAxisSpacing:

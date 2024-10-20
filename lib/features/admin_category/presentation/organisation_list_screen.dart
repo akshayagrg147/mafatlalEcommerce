@@ -1,15 +1,16 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
-import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
+import 'package:mafatlal_ecommerce/components/text_btn.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/bloc/admin_category_cubit.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/bloc/admin_category_state.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/model/admin_org-model.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/presentation/widgets/add_update_organisation.dart';
-import 'package:mafatlal_ecommerce/features/admin_category/presentation/widgets/organisation_grid_tile.dart';
+import 'package:mafatlal_ecommerce/features/admin_category/presentation/widgets/show_delete_confirmation_dialog.dart';
 
 class OrganisationListScreen extends StatefulWidget {
   const OrganisationListScreen({super.key});
@@ -97,19 +98,125 @@ class _OrganisationListScreenState extends State<OrganisationListScreen> {
                       ),
                     );
                   }
-                  return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisSpacing: 15,
-                      crossAxisSpacing: 15,
-                      childAspectRatio: 2,
-                      crossAxisCount:
-                          ResponsiveWidget.getOrganisationGridCount(context),
-                    ),
-                    itemCount: organisation.length,
-                    itemBuilder: (context, index) {
-                      return OrganisationGridTile(data: organisation[index]);
-                    },
-                  );
+                  return LayoutBuilder(builder: (context, constraints) {
+                    return Align(
+                      alignment: Alignment.topLeft,
+                      child: SizedBox(
+                        height: organisation.length * 60 > constraints.maxHeight
+                            ? constraints.maxHeight
+                            : organisation.length * 60,
+                        child: DataTable2(
+                            border: TableBorder(
+                              horizontalInside: BorderSide(
+                                  color: AppColors.kGrey200, width: 1),
+                              verticalInside: BorderSide(
+                                  color: AppColors.kGrey200, width: 1),
+                            ),
+                            headingRowColor:
+                                MaterialStateProperty.resolveWith<Color>(
+                                    (Set<MaterialState> states) {
+                              return AppColors.kGrey200;
+                            }),
+                            dataRowColor:
+                                MaterialStateProperty.resolveWith<Color>(
+                                    (Set<MaterialState> states) {
+                              return AppColors.kWhite;
+                            }),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(
+                                        0.2), // Light grey shadow with 20% opacity
+                                    spreadRadius: 2, // Extent of the shadow
+                                    blurRadius: 7, // Blurring effect
+                                    offset: Offset(0,
+                                        3), // Horizontal and Vertical displacement of the shadow
+                                  ),
+                                ]),
+                            columns: [
+                              DataColumn2(
+                                  size: ColumnSize.L,
+                                  label: Text(
+                                    "Organization Name",
+                                    style: AppTextStyle.f14OutfitBlackW500,
+                                  )),
+                              DataColumn2(
+                                  size: ColumnSize.M,
+                                  label: Text(
+                                    "State",
+                                    style: AppTextStyle.f14OutfitBlackW500,
+                                  )),
+                              DataColumn2(
+                                  size: ColumnSize.M,
+                                  label: Text(
+                                    "District",
+                                    style: AppTextStyle.f14OutfitBlackW500,
+                                  )),
+                              DataColumn2(
+                                  size: ColumnSize.M,
+                                  label: Text(
+                                    "Actions",
+                                    style: AppTextStyle.f14OutfitBlackW500,
+                                  )),
+                            ],
+                            rows: organisation
+                                .map((e) => DataRow2(cells: [
+                                      DataCell(Text(
+                                        e.name,
+                                        style: AppTextStyle.f14OutfitBlackW500,
+                                      )),
+                                      DataCell(Text(
+                                        e.stateName ?? "NA",
+                                        style: AppTextStyle.f14OutfitBlackW500,
+                                      )),
+                                      DataCell(Text(
+                                        e.districtName ?? "NA",
+                                        style: AppTextStyle.f14OutfitBlackW500,
+                                      )),
+                                      DataCell(Row(
+                                        children: [
+                                          TextBtn(
+                                              label: "Edit",
+                                              onTap: () {
+                                                final bloc = BlocProvider.of<
+                                                        AdminCategoryCubit>(
+                                                    context);
+
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (_) {
+                                                      return Center(
+                                                        child:
+                                                            AddUpdateorganisation(
+                                                          bloc: bloc,
+                                                          organisation: e,
+                                                        ),
+                                                      );
+                                                    });
+                                              }),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                          TextBtn(
+                                            label: "Delete",
+                                            onTap: () {
+                                              ShowDeleteOrgConfirmation.show(
+                                                  context,
+                                                  data: e, onDeleteTap: () {
+                                                context
+                                                    .read<AdminCategoryCubit>()
+                                                    .deleteOrganisation(e.id);
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ))
+                                    ]))
+                                .toList()),
+                      ),
+                    );
+                  });
                 },
               ),
             ),

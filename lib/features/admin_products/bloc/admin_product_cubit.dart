@@ -100,6 +100,7 @@ class AdminProductCubit extends Cubit<AdminProductState> {
     int? subCategoryId,
     int? orgId,
     required int price,
+    required double gstPercentage,
     List<AdminVariantOption>? sizes,
   }) async {
     try {
@@ -133,6 +134,7 @@ class AdminProductCubit extends Cubit<AdminProductState> {
           orgId: orgId,
           categoryId: categoryId,
           subCategoryId: subCategoryId,
+          gstPercentage: gstPercentage,
           size: size);
       emit(AddProductSuccessState());
     } on DioException catch (e) {
@@ -151,6 +153,7 @@ class AdminProductCubit extends Cubit<AdminProductState> {
     int? subCategoryId,
     int? orgId,
     required int price,
+    required double gstPercentage,
     List<AdminVariantOption>? sizes,
   }) async {
     try {
@@ -185,6 +188,7 @@ class AdminProductCubit extends Cubit<AdminProductState> {
           orgId: orgId,
           categoryId: categoryId,
           subCategoryId: subCategoryId,
+          gstPercentage: gstPercentage,
           size: size);
       emit(AddProductSuccessState());
     } on DioException catch (e) {

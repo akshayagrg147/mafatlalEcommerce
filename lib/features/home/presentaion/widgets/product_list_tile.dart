@@ -149,7 +149,7 @@ class ProductListTile extends StatelessWidget {
                     ),
                   const Spacer(),
                   Text(
-                    product.getPrice().toString(),
+                    product.getPriceWithTax().toStringAsFixed(2),
                     style: isSmallScreen
                         ? AppTextStyle.f24PoppinsBlackw600
                             .copyWith(fontSize: 18)
@@ -193,7 +193,7 @@ class ProductListTile extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    "₹ ${product.getAmount()}",
+                    "₹ ${product.getAmount().toStringAsFixed(2)}",
                     style: isSmallScreen
                         ? AppTextStyle.f28PoppinsBlackw600
                             .copyWith(fontSize: 18)

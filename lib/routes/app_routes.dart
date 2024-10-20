@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/presentation/admin_home.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/forgot_password_screen.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/sign_up_screen.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/splash_screen.dart';
+import 'package:mafatlal_ecommerce/features/checkout/bloc/checkout_cubit.dart';
+import 'package:mafatlal_ecommerce/features/checkout/presentation/checkout_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/presentation/subcategory_detail.dart';
 import 'package:mafatlal_ecommerce/features/home/model/searchmodel.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
@@ -77,6 +80,13 @@ class GenerateRoute {
       case CartScreen.route:
         return MaterialPageRoute(
             settings: settings, builder: (_) => const CartScreen());
+      case CheckoutScreen.route:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => BlocProvider<CheckoutCubit>(
+              create: (context) => CheckoutCubit(),
+              child: const CheckoutScreen()),
+        );
       // return TransparentRouteBuilder(
       //     settings: settings, builder: (_) => const CartScreen());
       case OrderSuccess.route:

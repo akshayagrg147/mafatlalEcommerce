@@ -71,7 +71,7 @@ class _SizeAvailableState extends State<SizeAvailable> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      "Price",
+                      "Price Excl (GST)",
                       style: AppTextStyle.f16OutfitGreyW500,
                     ),
                   ),

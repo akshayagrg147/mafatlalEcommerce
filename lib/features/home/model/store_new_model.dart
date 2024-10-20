@@ -70,6 +70,7 @@ class SubCategory_new {
   final bool isDistrict;
   final bool isState;
   final bool isOrganization;
+  final String? bannerImg;
 
   SubCategory_new({
     required this.id,
@@ -78,6 +79,7 @@ class SubCategory_new {
     required this.isDistrict,
     required this.isState,
     required this.isOrganization,
+    this.bannerImg,
   });
 
   factory SubCategory_new.fromJson(Map<String, dynamic> json) {
@@ -88,6 +90,10 @@ class SubCategory_new {
       isDistrict: json['is_district'] as bool? ?? false,
       isState: json['is_state'] as bool? ?? false,
       isOrganization: json['is_organization'] as bool? ?? false,
+      bannerImg: json['banner_image'] != null &&
+              (json['banner_image'] is List && json['banner_image'].isNotEmpty)
+          ? json['banner_image']?.first
+          : null,
     );
   }
 }
@@ -100,6 +106,7 @@ class Product_new {
   final String productCategory;
   final Variant? variant;
   final List<String> productImage;
+  final double gstPercentage;
   final num price; // Should be num
   int quantity;
 
@@ -113,6 +120,7 @@ class Product_new {
     required this.productImage,
     required this.price,
     required this.quantity,
+    required this.gstPercentage,
   });
 
   // Method to handle dynamic type conversion
@@ -141,26 +149,45 @@ class Product_new {
     return Product_new(
       productId: id,
       categoryId: categoryId,
-      productName: (json['product_name'] ?? json['name'])?.toString() ?? '',
+      productName: ((json['product_name'] ?? json['name'])?.toString() ?? '')
+          .replaceAll("\n", " "),
       productCategory: json['product_category']?.toString() ?? '',
       variant: _parseVariant(json['size_available']),
       productImage: _parseProductImage(json['product_image']),
       price: price,
+      gstPercentage: double.tryParse(json['gst_percentage'] ?? "0") ?? 0,
       productOrganisation: json['product_organization'] ?? '',
       quantity: CartHelper.getProductQuantity(id,
           variant: _parseVariant(json['size_available'])),
     );
   }
 
+  num getPriceWithTax() {
+    if (variant != null) {
+      return variant!.selectedVariant.price +
+          ((variant!.selectedVariant.price * gstPercentage) / 100);
+    }
+
+    return price + ((price * gstPercentage) / 100);
+  }
+
   num getPrice() {
     if (variant != null) {
       return variant!.selectedVariant.price;
     }
-    return price; // Price is always num now
+
+    return price;
+  }
+
+  num getTax() {
+    final taxableAmount =
+        variant != null ? variant!.selectedVariant.price : price;
+
+    return ((taxableAmount * gstPercentage) / 100);
   }
 
   num getAmount() {
-    return getPrice() * quantity;
+    return getPriceWithTax() * quantity;
   }
 
   static Variant? _parseVariant(dynamic sizeAvailable) {

@@ -159,39 +159,57 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   children: [
                                     Text(
                                       state.product.name,
-                                      style: AppTextStyle.f16BlackW400,
+                                      style: AppTextStyle.f14OutfitBlackW500,
                                     ),
                                     const SizedBox(height: 20),
-                                    const Row(
+                                    Row(
                                       children: [
-                                        Text('Availability: '),
+                                        Text('Organization: ',
+                                            style: AppTextStyle
+                                                .f14RobotoDarkgrayW500),
                                         SizedBox(width: 5),
                                         Text(
-                                          'In Stock',
-                                          style: AppTextStyle.f12GreenW500,
+                                          state.product.productOrganization,
+                                          style:
+                                              AppTextStyle.f14OutfitBlackW500,
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 20),
                                     Row(
                                       children: [
-                                        const Text('Product Type: '),
+                                        Text('Product Type: ',
+                                            style: AppTextStyle
+                                                .f14RobotoDarkgrayW500),
                                         const SizedBox(width: 5),
                                         Text(
                                           state.product.productCategory,
                                           style:
-                                              AppTextStyle.f12OutfitBlackW500,
+                                              AppTextStyle.f14OutfitBlackW500,
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 20),
                                     Row(
                                       children: [
-                                        const Text('Rs. '),
-                                        const SizedBox(width: 5),
-                                        Text(state.product.price,
+                                        Text('Rs. ',
                                             style: AppTextStyle
-                                                .f12OutfitBlackW500),
+                                                .f14OutfitBlackW500),
+                                        const SizedBox(width: 5),
+                                        BlocBuilder<HomeCubit, HomeState>(
+                                          buildWhen: (previous, current) {
+                                            return current
+                                                is UpdateProductVariantState;
+                                          },
+                                          builder: (context, st) {
+                                            return Text(
+                                                state.product
+                                                    .getPrice()
+                                                    .toStringAsFixed(2),
+                                                style: AppTextStyle
+                                                    .f14OutfitBlackW500);
+                                          },
+                                        ),
                                       ],
                                     ),
                                     const SizedBox(height: 20),

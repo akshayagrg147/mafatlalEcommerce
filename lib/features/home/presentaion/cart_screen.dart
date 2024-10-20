@@ -7,20 +7,13 @@ import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/features/auth/bloc/auth_cubit.dart';
-import 'package:mafatlal_ecommerce/features/auth/bloc/auth_state.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
+import 'package:mafatlal_ecommerce/features/checkout/presentation/checkout_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_address.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/checkout_bottom_widget.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/product_list_tile.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/same_as_shipping_address_widget.dart';
-import 'package:mafatlal_ecommerce/helper/toast_utils.dart';
-
-import 'widgets/order_success_widget.dart';
 
 class CartScreen extends StatefulWidget {
   static const String route = "/cartScreen";
@@ -76,7 +69,7 @@ class _CartScreenState extends State<CartScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 45),
                 child: Text(
-                  "Cart / Checkout",
+                  "Cart",
                   style: AppTextStyle.f24PoppinsBluew400,
                 ),
               ),
@@ -138,126 +131,35 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget buildCheckout() {
-    if (CubitsInjector.authCubit.currentUser == null) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: CustomElevatedButton(
-          width: 250,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-          onPressed: () {
-            Navigator.pushNamed(context, LoginScreen.route);
-          },
-          backgroundColor: AppColors.kBlack,
-          textColor: AppColors.kWhite,
-          textStyle: AppTextStyle.f18PoppinsWhitew600,
-          label: "Login To Proceed",
-        ),
-      );
+    if (CubitsInjector.homeCubit.cartProducts.isEmpty) {
+      return const SizedBox.shrink();
     }
+
     return Align(
       alignment: Alignment.centerRight,
-      child: SizedBox(
-        width: 600,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            BlocBuilder<AuthCubit, AuthState>(
-                buildWhen: (previous, current) =>
-                    current is FetchCurrentUserSuccessState,
-                builder: (context, state) {
-                  if (CubitsInjector.authCubit.currentUser?.shippingAddress !=
-                      null) {
-                    return addressWidget(context);
-                  }
-                  return CustomElevatedButton(
-                    label: 'Add Shipping Address',
-                    backgroundColor: AppColors.kRed,
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    onPressed: () {
-                      AddEditAddress.show(context, isShipping: true);
-                    },
-                  );
-                }),
-            const SizedBox(
-              height: 10,
+      child: CubitsInjector.authCubit.currentUser != null
+          ? CustomElevatedButton(
+              width: 200,
+              label: 'Check Out',
+              backgroundColor: AppColors.kblue,
+              textStyle: AppTextStyle.f16WhiteW600,
+              borderRadius: 24,
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              onPressed: () {
+                Navigator.pushNamed(context, CheckoutScreen.route);
+              },
+            )
+          : CustomElevatedButton(
+              width: 250,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+              onPressed: () {
+                Navigator.pushNamed(context, LoginScreen.route);
+              },
+              backgroundColor: AppColors.kBlack,
+              textColor: AppColors.kWhite,
+              textStyle: AppTextStyle.f18PoppinsWhitew600,
+              label: "Login To Proceed",
             ),
-            BlocBuilder<AuthCubit, AuthState>(
-                buildWhen: (previous, current) =>
-                    current is FetchCurrentUserSuccessState,
-                builder: (context, state) {
-                  if (CubitsInjector.authCubit.currentUser?.shippingAddress ==
-                      null) {
-                    return const SizedBox.shrink();
-                  }
-                  if (CubitsInjector.authCubit.currentUser?.billingAddress !=
-                      null) {
-                    return addressWidget(context, isShipping: false);
-                  }
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CustomElevatedButton(
-                        label: 'Add Billing Address',
-                        backgroundColor: AppColors.kRed,
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        onPressed: () {
-                          AddEditAddress.show(context, isShipping: false);
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Text(
-                          "Or",
-                          style: AppTextStyle.f18PoppinsBlackw400,
-                        ),
-                      ),
-                      const SameAsShippingAddressWidget()
-                    ],
-                  );
-                }),
-            const SizedBox(
-              height: 10,
-            ),
-            BlocConsumer<HomeCubit, HomeState>(
-                listener: (context, state) {
-                  if (state is PlaceOrderFailedState) {
-                    Navigator.pop(context);
-                    ToastUtils.showErrorToast(state.message);
-                  }
-                  if (state is PlaceOrderSuccessState) {
-                    Navigator.pop(context);
-                    Navigator.pushReplacementNamed(context, OrderSuccess.route);
-                  }
-                  if (state is PlaceOrderLoadingState) {
-                    LoadingAnimation.show(context);
-                  }
-                },
-                buildWhen: (previous, current) =>
-                    current is FetchCurrentUserSuccessState,
-                builder: (context, state) {
-                  if (CubitsInjector.authCubit.currentUser?.shippingAddress !=
-                          null &&
-                      CubitsInjector.authCubit.currentUser?.billingAddress !=
-                          null) {
-                    return CustomElevatedButton(
-                      width: 200,
-                      label: 'Check Out',
-                      backgroundColor: AppColors.kblue,
-                      textStyle: AppTextStyle.f16WhiteW600,
-                      borderRadius: 24,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 30),
-                      onPressed: () {
-                        CubitsInjector.homeCubit.placeOrder();
-                      },
-                    );
-                  }
-                  return const SizedBox.shrink();
-                }),
-          ],
-        ),
-      ),
     );
   }
 
@@ -294,7 +196,7 @@ class _CartScreenState extends State<CartScreen> {
                             .copyWith(fontSize: 14),
                       ),
                       Text(
-                        "₹ $amount",
+                        "₹ ${amount.toStringAsFixed(2)}",
                         style: AppTextStyle.f28PoppinsBlackw600
                             .copyWith(fontSize: 20),
                       ),
@@ -311,7 +213,7 @@ class _CartScreenState extends State<CartScreen> {
                         style: AppTextStyle.f18PoppinsBlackw400,
                       ),
                       Text(
-                        "₹ $amount",
+                        "₹ ${amount.toStringAsFixed(2)}",
                         style: AppTextStyle.f28PoppinsBlackw600,
                       ),
                     ],

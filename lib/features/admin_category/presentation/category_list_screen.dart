@@ -1,8 +1,9 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
-import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
+import 'package:mafatlal_ecommerce/components/text_btn.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/bloc/admin_category_cubit.dart';
@@ -10,7 +11,7 @@ import 'package:mafatlal_ecommerce/features/admin_category/bloc/admin_category_s
 import 'package:mafatlal_ecommerce/features/admin_category/model/admin_cat_model.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/presentation/admin_category_details.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/presentation/widgets/add_update_cat.dart';
-import 'package:mafatlal_ecommerce/features/admin_category/presentation/widgets/category_grid_tile.dart';
+import 'package:mafatlal_ecommerce/features/admin_category/presentation/widgets/show_delete_confirmation_dialog.dart';
 
 class AdminCategoryListScreen extends StatefulWidget {
   const AdminCategoryListScreen({super.key});
@@ -98,29 +99,126 @@ class _AdminCategoryListScreenState extends State<AdminCategoryListScreen> {
                       ),
                     );
                   }
-                  return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: 0.9,
-                      crossAxisCount:
-                          ResponsiveWidget.getCategoryGridCount(context),
-                    ),
-                    itemCount: categories.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => AdminCategoryDetailPage(
-                                          category: categories[index],
-                                        )));
-                          },
-                          child: CategoryGridTile.category(
-                              data: categories[index]));
-                    },
-                  );
+                  return LayoutBuilder(builder: (context, constraints) {
+                    return Align(
+                      alignment: Alignment.topLeft,
+                      child: SizedBox(
+                        width: constraints.maxWidth > 800
+                            ? 800
+                            : constraints.maxWidth,
+                        height: categories.length * 60 > constraints.maxHeight
+                            ? constraints.maxHeight
+                            : categories.length * 60,
+                        child: DataTable2(
+                            border: TableBorder(
+                              horizontalInside: BorderSide(
+                                  color: AppColors.kGrey200, width: 1),
+                              verticalInside: BorderSide(
+                                  color: AppColors.kGrey200, width: 1),
+                            ),
+                            headingRowColor:
+                                MaterialStateProperty.resolveWith<Color>(
+                                    (Set<MaterialState> states) {
+                              return AppColors.kGrey200;
+                            }),
+                            dataRowColor:
+                                MaterialStateProperty.resolveWith<Color>(
+                                    (Set<MaterialState> states) {
+                              return AppColors.kWhite;
+                            }),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(
+                                        0.2), // Light grey shadow with 20% opacity
+                                    spreadRadius: 2, // Extent of the shadow
+                                    blurRadius: 7, // Blurring effect
+                                    offset: Offset(0,
+                                        3), // Horizontal and Vertical displacement of the shadow
+                                  ),
+                                ]),
+                            columns: [
+                              DataColumn2(
+                                  size: ColumnSize.L,
+                                  label: Text(
+                                    "Category Name",
+                                    style: AppTextStyle.f14OutfitBlackW500,
+                                  )),
+                              DataColumn2(
+                                  size: ColumnSize.S,
+                                  label: Text(
+                                    "SubCategories",
+                                    style: AppTextStyle.f14OutfitBlackW500,
+                                  )),
+                              DataColumn2(
+                                  size: ColumnSize.M,
+                                  label: Text(
+                                    "Actions",
+                                    style: AppTextStyle.f14OutfitBlackW500,
+                                  )),
+                            ],
+                            rows: categories
+                                .map((e) => DataRow2(cells: [
+                                      DataCell(Text(
+                                        e.name,
+                                        style: AppTextStyle.f14OutfitBlackW500,
+                                      )),
+                                      DataCell(
+                                          TextBtn(
+                                            label: "View >",
+                                          ), onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    AdminCategoryDetailPage(
+                                                      category: e,
+                                                    )));
+                                      }),
+                                      DataCell(Row(
+                                        children: [
+                                          TextBtn(
+                                              label: "Edit",
+                                              onTap: () {
+                                                final bloc = BlocProvider.of<
+                                                        AdminCategoryCubit>(
+                                                    context);
+
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (_) {
+                                                      return Center(
+                                                        child: AddUpdateCat
+                                                            .category(
+                                                          bloc: bloc,
+                                                          category: e,
+                                                        ),
+                                                      );
+                                                    });
+                                              }),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                          TextBtn(
+                                            label: "Delete",
+                                            onTap: () {
+                                              ShowDeleteCatConfirmation.show(
+                                                  context,
+                                                  data: e, onDeleteTap: () {
+                                                context
+                                                    .read<AdminCategoryCubit>()
+                                                    .deleteCategory(e.id);
+                                              }, isCategory: true);
+                                            },
+                                          ),
+                                        ],
+                                      ))
+                                    ]))
+                                .toList()),
+                      ),
+                    );
+                  });
                 },
               ),
             ),

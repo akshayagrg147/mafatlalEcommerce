@@ -29,6 +29,7 @@ class ProductAddUpdateScreen extends StatefulWidget {
 class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+  final TextEditingController gstController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -44,6 +45,13 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
   DataObject? selectedSubCategory;
   DataObject? selectedCategory;
 
+  DataObject nullOrganisation =
+      DataObject(id: -1, name: 'Select Organisation', image: '');
+  DataObject nullCategory =
+      DataObject(id: -1, name: 'Select Category', image: '');
+  DataObject nullSubCategory =
+      DataObject(id: -1, name: 'Select SubCategory', image: '');
+
   bool isSubCatChanged = false;
 
   final List<AdminVariantOption> sizes = [];
@@ -55,6 +63,7 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
       nameController.text = widget.productDetails!.productName;
       priceController.text = widget.productDetails!.price.toString();
       descriptionController.text = widget.productDetails!.description;
+      gstController.text = widget.productDetails!.gstPercentage.toString();
       images.addAll(widget.productDetails?.productImage ?? []);
       sizes.addAll(widget.productDetails?.variant?.variantOptions ?? []);
       isUpdate = true;
@@ -70,6 +79,7 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
       listener: (context, state) {
         if (state is FetchOrganisationsSuccessState) {
           organizations.clear();
+          organizations.add(nullOrganisation);
           organizations.addAll(state.organisations);
           if (widget.productDetails?.organisationId != null) {
             final org = DataObject(
@@ -83,6 +93,7 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
         }
         if (state is FetchSubCategoriesSuccessState) {
           subCategories.clear();
+          subCategories.add(nullSubCategory);
           subCategories.addAll(state.subCategories);
           if (widget.productDetails?.subCategoryId != null &&
               isSubCatChanged == false) {
@@ -101,6 +112,7 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
         }
         if (state is FetchCategorySuccessState) {
           categories.clear();
+          categories.add(nullCategory);
           categories.addAll(state.categories);
           if (widget.productDetails?.categoryId != null) {
             final cat = DataObject(
@@ -364,25 +376,67 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
             const SizedBox(
               height: 20,
             ),
-            Text(
-              "Price",
-              style: AppTextStyle.f16OutfitGreyW500,
-            ),
-            const SizedBox(
-              height: 7,
-            ),
-            CustomTextField(
-              width: 300,
-              hint: "Enter Price",
-              textEditingController: priceController,
-              textInputType: TextInputType.number,
-              formatters: [FilteringTextInputFormatter.digitsOnly],
-              validation: (value) {
-                if (value?.trim().isEmpty == true) {
-                  return "Price is Required";
-                }
-                return null;
-              },
+            Row(
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Price Excluding (GST)",
+                      style: AppTextStyle.f16OutfitGreyW500,
+                    ),
+                    const SizedBox(
+                      height: 7,
+                    ),
+                    CustomTextField(
+                      width: 300,
+                      hint: "Enter Price ",
+                      textEditingController: priceController,
+                      textInputType: TextInputType.number,
+                      formatters: [FilteringTextInputFormatter.digitsOnly],
+                      validation: (value) {
+                        if (value?.trim().isEmpty == true) {
+                          return "Price is Required";
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  width: 15,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Gst %",
+                      style: AppTextStyle.f16OutfitGreyW500,
+                    ),
+                    const SizedBox(
+                      height: 7,
+                    ),
+                    CustomTextField(
+                      width: 300,
+                      hint: "Enter Product's Gst % ",
+                      textEditingController: gstController,
+                      textInputType: TextInputType.number,
+                      formatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d*\.?\d*')),
+                      ],
+                      validation: (value) {
+                        if (value?.trim().isEmpty == true) {
+                          return "Gst % is Required";
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ),
             const SizedBox(
               height: 20,
@@ -435,6 +489,9 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
                                 name: nameController.text,
                                 description: descriptionController.text,
                                 images: images,
+                                gstPercentage: priceController.text.isEmpty
+                                    ? 0
+                                    : double.parse(gstController.text),
                                 price: priceController.text.isEmpty
                                     ? 0
                                     : int.parse(priceController.text),
@@ -446,6 +503,9 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
                             context.read<AdminProductCubit>().addProduct(
                                 name: nameController.text,
                                 description: descriptionController.text,
+                                gstPercentage: priceController.text.isEmpty
+                                    ? 0
+                                    : double.parse(gstController.text),
                                 images: images,
                                 price: priceController.text.isEmpty
                                     ? 0

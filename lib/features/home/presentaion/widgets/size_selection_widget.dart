@@ -45,19 +45,17 @@ class _SizeSelectionState extends State<SizeSelection> {
       },
       child: Container(
         height: 30,
-        width: 30,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             color: isSelected ? AppColors.kRed : null,
             border: Border.all(
                 color: !isSelected ? AppColors.kGrey : AppColors.kRed)),
-        child: Center(
-          child: Text(
-            option.name,
-            style: !isSelected
-                ? AppTextStyle.f12OutfitBlackW500
-                : AppTextStyle.f12outfitWhiteW600,
-          ),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: Text(
+          option.name,
+          style: !isSelected
+              ? AppTextStyle.f12OutfitBlackW500
+              : AppTextStyle.f12outfitWhiteW600,
         ),
       ),
     );

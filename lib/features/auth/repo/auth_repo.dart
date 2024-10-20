@@ -19,9 +19,12 @@ class AuthRepo {
       "password": pwd,
       "state": state,
       "district": district,
-      "gst": gstNo,
       "pincode": pinCode
     };
+
+    if (gstNo.trim().isNotEmpty) {
+      data["gst"] = gstNo;
+    }
 
     final response =
         await DioUtil().getInstance()!.post(ApiRoutes.registerUser, data: data);

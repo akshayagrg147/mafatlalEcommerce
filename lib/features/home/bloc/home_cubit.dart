@@ -245,6 +245,7 @@ class HomeCubit extends Cubit<HomeState> {
               productImage: product.productImage,
               price: product.price,
               quantity: cartItem['quantity'] ?? 0,
+              gstPercentage: product.gstPercentage,
               variant: selectedVariant != null
                   ? product.variant!.copyWith(selectedVariant)
                   : product.variant,
@@ -332,7 +333,7 @@ class HomeCubit extends Cubit<HomeState> {
     final num cartAmount = cartProducts.fold(
         0,
         (previousValue, element) =>
-            previousValue + (element.getPrice() * element.quantity));
+            previousValue + (element.getPriceWithTax() * element.quantity));
     log("${cartProductsCount}  ${cartAmount}");
     emit(UpdateCartBillingState(
         itemCount: cartProductsCount, amount: cartAmount));

@@ -42,12 +42,16 @@ class AdminCatRepo {
             data.map((e) => AdminOrganisation.fromJson(e))));
   }
 
-  static Future<void> addCategory(int userId,
-      {required String categoryName, required String imageUrl}) async {
+  static Future<void> addCategory(
+    int userId, {
+    required String categoryName,
+  }) async {
     final data = {
       "user_id": userId,
       "categories": [
-        {"name": categoryName, "image": imageUrl}
+        {
+          "name": categoryName,
+        }
       ]
     };
     final response = await DioUtil()
@@ -58,15 +62,15 @@ class AdminCatRepo {
     }
   }
 
-  static Future<void> updateCategory(int userId,
-      {required int categoryId,
-      required String categoryName,
-      required String imageUrl}) async {
+  static Future<void> updateCategory(
+    int userId, {
+    required int categoryId,
+    required String categoryName,
+  }) async {
     final data = {
       "id": categoryId,
       "user_id": userId,
       "name": categoryName,
-      "image": imageUrl
     };
     final response = await DioUtil()
         .getInstance()
@@ -79,13 +83,21 @@ class AdminCatRepo {
   static Future<void> addSubCategory(int userId,
       {required int categoryId,
       required String subCategoryName,
-      required String imageUrl}) async {
+      required String imageUrl,
+      String? bannerImageUrl}) async {
+    final subcat = {
+      "name": subCategoryName,
+      "image": imageUrl,
+      "category": categoryId
+    };
+    if (bannerImageUrl != null) {
+      subcat['banner_images'] = [bannerImageUrl];
+    }
     final data = {
       "user_id": userId,
-      "sub_category": [
-        {"name": subCategoryName, "image": imageUrl, "category": categoryId}
-      ]
+      "sub_category": [subcat]
     };
+
     final response = await DioUtil()
         .getInstance()
         ?.post(ApiRoutes.crudSubCategoryList, data: data);
@@ -97,13 +109,17 @@ class AdminCatRepo {
   static Future<void> updateSubCategory(int userId,
       {required int subCategoryId,
       required String subCategoryName,
-      required String imageUrl}) async {
+      required String imageUrl,
+      String? bannerImgUrl}) async {
     final data = {
       "id": subCategoryId,
       "user_id": userId,
       "name": subCategoryName,
-      "image": imageUrl
+      "image": imageUrl,
     };
+    if (bannerImgUrl != null) {
+      data['banner_images'] = [bannerImgUrl];
+    }
     final response = await DioUtil()
         .getInstance()
         ?.patch(ApiRoutes.crudSubCategoryList, data: data);
@@ -113,13 +129,9 @@ class AdminCatRepo {
   }
 
   static Future<void> addOrganisation(int userId,
-      {required String organisationName,
-      required String imageUrl,
-      int? stateId,
-      int? districtId}) async {
+      {required String organisationName, int? stateId, int? districtId}) async {
     final Map<String, dynamic> org = {
       "name": organisationName,
-      "image": imageUrl,
     };
 
     if (stateId != null) {
@@ -144,14 +156,12 @@ class AdminCatRepo {
   static Future<void> updateOrganisation(int userId,
       {required String organisationName,
       required int organisationId,
-      required String imageUrl,
       int? stateId,
       int? districtId}) async {
     final Map<String, dynamic> data = {
       "id": organisationId,
       "user_id": userId,
       "name": organisationName,
-      "image": imageUrl,
     };
 
     if (stateId != null) {

@@ -1,4 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,7 +19,6 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/drawer.dart
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_appbar.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_banner.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/product_grid_tile.dart';
 
 class SubCategoryDetail extends StatefulWidget {
@@ -76,17 +75,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
             body: ListView(
               children: [
                 const SizedBox(height: 10),
-                CarouselSlider(
-                  items: bannerImages
-                      .map((imagePath) => HomeBanner(imagePath: imagePath))
-                      .toList(),
-                  options: CarouselOptions(
-                    viewportFraction: 1,
-                    height:
-                        ResponsiveWidget.isSmallScreen(context) ? 200 : 400.0,
-                    autoPlay: true,
-                  ),
-                ),
+                buildBanner(),
                 _buildDropdownSelectors(),
                 _buildProductGrid(),
                 const Footer()
@@ -109,16 +98,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
         child: Column(
           children: [
             const SizedBox(height: 10),
-            CarouselSlider(
-              items: bannerImages
-                  .map((imagePath) => HomeBanner(imagePath: imagePath))
-                  .toList(),
-              options: CarouselOptions(
-                viewportFraction: 1,
-                height: ResponsiveWidget.isSmallScreen(context) ? 200 : 444.0,
-                autoPlay: true,
-              ),
-            ),
+            buildBanner(),
             _buildDropdownSelectors(),
             _buildProductGrid(),
             const Footer(),
@@ -126,6 +106,28 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
         ),
       ),
     );
+  }
+
+  Widget buildBanner() {
+    return BlocBuilder<SubcategoryCubit, SubCategoryDetailState>(
+        buildWhen: (previous, current) =>
+            current is GetSubCategoryDetailScreenSuccessState,
+        builder: (context, state) {
+          return CachedNetworkImage(
+              imageUrl: subcategoryCubit.bannerImgUrl ?? "",
+              errorWidget: (context, url, error) => const SizedBox.shrink(),
+              imageBuilder: (context, imageProvider) => Container(
+                    height:
+                        ResponsiveWidget.isSmallScreen(context) ? 200 : 444.0,
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ));
+        });
   }
 
   Widget _buildProductGrid() {
@@ -236,13 +238,13 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
           icon: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              VerticalDivider(
+              const VerticalDivider(
                 color: Colors.grey,
                 thickness: 1,
                 width: 1,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: SvgPicture.asset(
                   AssetPath.arrDown,
                   height: 20,

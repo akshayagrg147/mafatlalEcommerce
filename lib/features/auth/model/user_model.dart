@@ -10,19 +10,20 @@ class User {
   final String fullName;
   final String state;
   final String district;
+  final String gstNumber;
   final Address? billingAddress;
   final Address? shippingAddress;
 
-  User({
-    required this.id,
-    required this.userType,
-    required this.email,
-    required this.fullName,
-    required this.state,
-    required this.district,
-    this.billingAddress,
-    this.shippingAddress,
-  });
+  User(
+      {required this.id,
+      required this.userType,
+      required this.email,
+      required this.fullName,
+      required this.state,
+      required this.district,
+      this.billingAddress,
+      this.shippingAddress,
+      required this.gstNumber});
 
   factory User.fromJsonString(String data) {
     return User.fromJson(jsonDecode(data));
@@ -36,6 +37,7 @@ class User {
         fullName: json['full_name'],
         state: json['state'],
         district: json['district'],
+        gstNumber: json['gst_number'] ?? '',
         billingAddress:
             json['billing'] != null ? Address.fromJson(json['billing']) : null,
         shippingAddress: json['shipping'] != null
@@ -53,6 +55,7 @@ class User {
       'district': district,
       'billing': billingAddress?.toJson(),
       'shipping': shippingAddress?.toJson(),
+      'gst_number': gstNumber
     };
   }
 

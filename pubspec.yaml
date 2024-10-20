@@ -64,6 +64,7 @@ dependencies:
   fl_chart: ^0.69.0
   razorpay_web: ^1.4.2
   shimmer: ^3.0.0
+  auto_route: ^8.1.1
 
 dev_dependencies:
   flutter_test:

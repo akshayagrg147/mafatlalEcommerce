@@ -34,6 +34,7 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
   bool isEdit = false;
   final nameController = TextEditingController();
   MediaInfo? selectedFile;
+  MediaInfo? selectedBannerFile;
   String? errMsg;
   final _formKey = GlobalKey<FormState>();
   @override
@@ -101,65 +102,118 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
                           icon: const Icon(Icons.close))
                     ],
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "Image",
-                    style: AppTextStyle.f16OutfitGreyW500,
-                  ),
-                  const SizedBox(
-                    height: 7,
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      final img = await ImagePickerWeb.getImageInfo();
-
-                      if (img != null) {
-                        setState(() {
-                          selectedFile = img;
-                        });
-                      }
-                    },
-                    child: Container(
-                      height: 150,
-                      width: double.maxFinite,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          color: AppColors.kGrey100,
-                          borderRadius: BorderRadius.circular(12)),
-                      alignment: Alignment.center,
-                      child: selectedFile != null
-                          ? Image.memory(selectedFile!.data!)
-                          : widget.isCategory && widget.category?.image != null
-                              ? CachedNetworkImage(
-                                  imageUrl: widget.category!.image)
-                              : !widget.isCategory &&
-                                      widget.subCategory?.image != null
-                                  ? CachedNetworkImage(
-                                      imageUrl: widget.subCategory!.image)
-                                  : CustomElevatedButton(
-                                      width: 180,
-                                      onPressed: () async {
-                                        final img =
-                                            await ImagePickerWeb.getImageInfo();
-
-                                        if (img != null) {
-                                          setState(() {
-                                            selectedFile = img;
-                                          });
-                                        }
-                                      },
-                                      backgroundColor: AppColors.kWhite,
-                                      textColor: AppColors.kBlack,
-                                      label: "+ Add Image"),
+                  if (widget.isCategory == false) ...[
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  if (errMsg != null)
                     Text(
-                      errMsg!,
-                      style: AppTextStyle.f12RedAccentW500,
+                      "Image",
+                      style: AppTextStyle.f16OutfitGreyW500,
                     ),
+                    const SizedBox(
+                      height: 7,
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        final img = await ImagePickerWeb.getImageInfo();
+
+                        if (img != null) {
+                          setState(() {
+                            selectedFile = img;
+                          });
+                        }
+                      },
+                      child: Container(
+                        height: 150,
+                        width: double.maxFinite,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            color: AppColors.kGrey100,
+                            borderRadius: BorderRadius.circular(12)),
+                        alignment: Alignment.center,
+                        child: selectedFile != null
+                            ? Image.memory(selectedFile!.data!)
+                            : widget.isCategory &&
+                                    widget.category?.image != null
+                                ? CachedNetworkImage(
+                                    imageUrl: widget.category!.image)
+                                : !widget.isCategory &&
+                                        widget.subCategory?.image != null
+                                    ? CachedNetworkImage(
+                                        imageUrl: widget.subCategory!.image)
+                                    : CustomElevatedButton(
+                                        width: 180,
+                                        onPressed: () async {
+                                          final img = await ImagePickerWeb
+                                              .getImageInfo();
+
+                                          if (img != null) {
+                                            setState(() {
+                                              selectedFile = img;
+                                            });
+                                          }
+                                        },
+                                        backgroundColor: AppColors.kWhite,
+                                        textColor: AppColors.kBlack,
+                                        label: "+ Add Image"),
+                      ),
+                    ),
+                    if (errMsg != null)
+                      Text(
+                        errMsg!,
+                        style: AppTextStyle.f12RedAccentW500,
+                      ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Banner Image",
+                      style: AppTextStyle.f16OutfitGreyW500,
+                    ),
+                    const SizedBox(
+                      height: 7,
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        final img = await ImagePickerWeb.getImageInfo();
+
+                        if (img != null) {
+                          setState(() {
+                            selectedBannerFile = img;
+                          });
+                        }
+                      },
+                      child: Container(
+                        height: 150,
+                        width: double.maxFinite,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            color: AppColors.kGrey100,
+                            borderRadius: BorderRadius.circular(12)),
+                        alignment: Alignment.center,
+                        child: selectedBannerFile != null
+                            ? Image.memory(selectedBannerFile!.data!)
+                            : widget.subCategory?.bannerImg != null
+                                ? CachedNetworkImage(
+                                    imageUrl: widget.subCategory!.bannerImg!)
+                                : CustomElevatedButton(
+                                    width: 180,
+                                    onPressed: () async {
+                                      final img =
+                                          await ImagePickerWeb.getImageInfo();
+
+                                      if (img != null) {
+                                        setState(() {
+                                          selectedBannerFile = img;
+                                        });
+                                      }
+                                    },
+                                    backgroundColor: AppColors.kWhite,
+                                    textColor: AppColors.kBlack,
+                                    label: "+ Add Banner Image"),
+                      ),
+                    ),
+                  ],
                   const SizedBox(
                     height: 10,
                   ),
@@ -188,24 +242,17 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
                           onPressed: () async {
                             errMsg = null;
                             if (widget.isCategory) {
-                              if ((widget.category?.image != null ||
-                                  selectedFile != null)) {
-                                if (_formKey.currentState!.validate()) {
-                                  if (isEdit) {
-                                    widget.bloc.updateCategory(
-                                        nameController.text,
-                                        categoryId: widget.category!.id,
-                                        img: widget.category!.image,
-                                        image: selectedFile);
-                                  } else {
-                                    widget.bloc.addCategory(nameController.text,
-                                        image: selectedFile!);
-                                  }
+                              if (_formKey.currentState!.validate()) {
+                                if (isEdit) {
+                                  widget.bloc.updateCategory(
+                                    nameController.text,
+                                    categoryId: widget.category!.id,
+                                  );
+                                } else {
+                                  widget.bloc.addCategory(
+                                    nameController.text,
+                                  );
                                 }
-                              } else {
-                                errMsg = "Please add image";
-                                setState(() {});
-                                return;
                               }
                             } else {
                               if ((widget.subCategory?.image != null ||
@@ -216,12 +263,16 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
                                         nameController.text,
                                         subCategoryId: widget.subCategory!.id,
                                         image: selectedFile,
-                                        img: widget.subCategory!.image);
+                                        img: widget.subCategory!.image,
+                                        bannerImage: selectedBannerFile,
+                                        bannerImg:
+                                            widget.subCategory!.bannerImg);
                                   } else {
                                     widget.bloc.addSubCategory(
                                         widget.category!.id,
                                         name: nameController.text,
-                                        image: selectedFile!);
+                                        image: selectedFile!,
+                                        bannerImage: selectedBannerFile);
                                   }
                                 }
                               } else {

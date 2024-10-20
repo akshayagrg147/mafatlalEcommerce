@@ -20,6 +20,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "auto_route",
+      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/auto_route-8.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "bloc",
       "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/bloc-8.1.4",
       "packageUri": "lib/",
@@ -183,7 +189,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///Users/soumya/Documents/flutter/packages/flutter",
+      "rootUri": "file:///Users/soumya/fvm/versions/3.16.2/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -225,13 +231,13 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///Users/soumya/Documents/flutter/packages/flutter_test",
+      "rootUri": "file:///Users/soumya/fvm/versions/3.16.2/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///Users/soumya/Documents/flutter/packages/flutter_web_plugins",
+      "rootUri": "file:///Users/soumya/fvm/versions/3.16.2/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -579,7 +585,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///Users/soumya/Documents/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/soumya/fvm/versions/3.16.2/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -764,7 +770,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-10-19T09:41:45.512101Z",
+  "generated": "2024-10-19T18:53:50.352717Z",
   "generator": "pub",
-  "generatorVersion": "3.2.6"
+  "generatorVersion": "3.2.2"
 }

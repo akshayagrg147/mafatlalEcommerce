@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker_web/image_picker_web.dart';
@@ -36,6 +35,10 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
   StateModel? selectedState;
   final List<StateModel> _states = [];
   final List<DistrictModel> _districts = [];
+
+  StateModel nullState = StateModel(id: -1, name: "Select State");
+  DistrictModel nullDistrict = DistrictModel(
+      id: -1, name: "Select District", stateId: -1, stateName: "Select State");
 
   DistrictModel? selectedDistrict;
 
@@ -77,6 +80,7 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
         }
         if (state is FetchStatesSuccessState) {
           _states.clear();
+          _states.add(nullState);
           _states.addAll(state.states);
           if (selectedState != null && isEdit) {
             if (_states.contains(selectedState)) {
@@ -89,6 +93,7 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
         }
         if (state is FetchDistrictsSuccessState) {
           _districts.clear();
+          _districts.add(nullDistrict);
           _districts.addAll(state.districts);
           if (selectedDistrict != null && isEdit) {
             if (!_districts.contains(selectedDistrict)) {
@@ -141,59 +146,6 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
                           icon: const Icon(Icons.close))
                     ],
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "Image",
-                    style: AppTextStyle.f16OutfitGreyW500,
-                  ),
-                  const SizedBox(
-                    height: 7,
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      final img = await ImagePickerWeb.getImageInfo();
-                      if (img != null) {
-                        setState(() {
-                          selectedFile = img;
-                        });
-                      }
-                    },
-                    child: Container(
-                      height: 150,
-                      width: double.maxFinite,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          color: AppColors.kGrey100,
-                          borderRadius: BorderRadius.circular(12)),
-                      alignment: Alignment.center,
-                      child: selectedFile != null
-                          ? Image.memory(selectedFile!.data!)
-                          : widget.organisation?.image != null
-                              ? CachedNetworkImage(
-                                  imageUrl: widget.organisation!.image!)
-                              : CustomElevatedButton(
-                                  width: 180,
-                                  onPressed: () async {
-                                    final img =
-                                        await ImagePickerWeb.getImageInfo();
-                                    if (img != null) {
-                                      setState(() {
-                                        selectedFile = img;
-                                      });
-                                    }
-                                  },
-                                  backgroundColor: AppColors.kWhite,
-                                  textColor: AppColors.kBlack,
-                                  label: "+ Add Image"),
-                    ),
-                  ),
-                  if (errMsg != null)
-                    Text(
-                      errMsg!,
-                      style: AppTextStyle.f12RedAccentW500,
-                    ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -287,25 +239,22 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
                           onPressed: () async {
                             errMsg = null;
 
-                            if (widget.organisation?.image == null &&
-                                selectedFile == null) {
-                              errMsg = "Please add image";
-                              widget.bloc.showErrorMessage(
-                                  AddOrganisationFailedState(errMsg!));
-                              return;
-                            }
+                            // if (widget.organisation?.image == null &&
+                            //     selectedFile == null) {
+                            //   errMsg = "Please add image";
+                            //   widget.bloc.showErrorMessage(
+                            //       AddOrganisationFailedState(errMsg!));
+                            //   return;
+                            // }
                             if (_formKey.currentState!.validate()) {
                               if (isEdit) {
                                 widget.bloc.updateOrganisation(
                                     nameController.text,
                                     organisationId: widget.organisation!.id,
-                                    image: selectedFile,
-                                    img: widget.organisation?.image,
                                     state: selectedState,
                                     district: selectedDistrict);
                               } else {
                                 widget.bloc.addOrganisation(nameController.text,
-                                    image: selectedFile!,
                                     state: selectedState,
                                     district: selectedDistrict);
                               }

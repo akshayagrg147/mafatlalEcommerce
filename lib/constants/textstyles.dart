@@ -25,6 +25,8 @@ class AppTextStyle {
       color: AppColors.kGrey, fontSize: 16, fontWeight: FontWeight.w500);
   static TextStyle f14OutfitBlackW500 = GoogleFonts.outfit(
       color: AppColors.kBlack, fontSize: 14, fontWeight: FontWeight.w500);
+  static TextStyle f14OutfitBlackW600 = GoogleFonts.outfit(
+      color: AppColors.kBlack, fontSize: 14, fontWeight: FontWeight.w600);
   static TextStyle f33darkblue = GoogleFonts.outfit(
       color: const Color(0XFF004392),
       fontSize: 20,
@@ -108,4 +110,8 @@ class AppTextStyle {
       color: AppColors.darkGray, fontSize: 14, fontWeight: FontWeight.w500);
   static TextStyle f18RobotoDarkgrayW500 = GoogleFonts.roboto(
       color: AppColors.darkGray, fontSize: 18, fontWeight: FontWeight.w500);
+  static TextStyle f16RobotoBlackW500 = GoogleFonts.roboto(
+      color: AppColors.kBlack, fontSize: 16, fontWeight: FontWeight.w500);
+  static TextStyle f16RobotoBlackW600 = GoogleFonts.roboto(
+      color: AppColors.kBlack, fontSize: 16, fontWeight: FontWeight.w600);
 }
