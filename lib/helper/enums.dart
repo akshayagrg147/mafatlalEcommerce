@@ -32,3 +32,12 @@ extension FirstWhereOrNullExtension<E> on List<E> {
     return null;
   }
 }
+
+enum OrderStatus {
+  all,
+  placed,
+  dispatched,
+  delivered;
+
+  String get value => name[0].toUpperCase() + name.substring(1);
+}

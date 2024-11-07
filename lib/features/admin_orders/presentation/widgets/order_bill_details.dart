@@ -38,14 +38,15 @@ class OrderBillDetails extends StatelessWidget {
             children: [
               rowTile(
                   title: "Subtotal",
-                  value: "₹${orderDetails.price}",
+                  value:
+                      "₹${orderDetails.products.fold(0.0, (p, c) => p + (c.price * c.quantity)).toStringAsFixed(2)}",
                   substring: "${orderDetails.quantity} Items"),
               const SizedBox(
                 height: 16,
               ),
               rowTile(
-                title: "Shipping",
-                value: "₹0.00",
+                title: "Taxes",
+                value: "₹${orderDetails.taxedPrice.toStringAsFixed(2)} ",
               ),
               Divider(
                 height: 32,

@@ -152,10 +152,29 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                 child: Container(
                   margin: const EdgeInsets.all(30),
                   alignment: Alignment.topLeft,
-                  child: Text(
-                    '${state.organization?.subCategoryName} / ${state.organization?.stateName} / ${state.organization?.districtName} / ${state.orgname} ',
-                    style: AppTextStyle.f33darkblue,
-                  ),
+                  child: Builder(builder: (context) {
+                    final subCat = subcategoryCubit.selectedSubCategory?.name;
+                    final state = subcategoryCubit.SelectedStatename;
+                    final district = subcategoryCubit.SelectedSDistrictname;
+                    final org = subcategoryCubit.SelectedOrganizationname;
+                    String heading = "";
+                    if (subCat != null) {
+                      heading += subCat;
+                    }
+                    if (state != null) {
+                      heading += '\t/\t$state';
+                    }
+                    if (district != null) {
+                      heading += '\t/\t$district';
+                    }
+                    if (org != null) {
+                      heading += '\t/\t$org';
+                    }
+                    return Text(
+                      heading,
+                      style: AppTextStyle.f33darkblue,
+                    );
+                  }),
                 ),
               ),
               GridView.count(
@@ -392,7 +411,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                       child: Text(stateItem.name),
                     ),
                     onChanged: (newValue) {
-                      if (newValue != null) {
+                      if (newValue != null && newValue.id != 0) {
                         subcategoryCubit.selectState(newValue.name);
                       }
                     },
@@ -426,7 +445,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                     child: Text(stateItem.name),
                   ),
                   onChanged: (newValue) {
-                    if (newValue != null) {
+                    if (newValue != null && newValue.id != 0) {
                       subcategoryCubit.selectState(newValue.name);
                     }
                   },
@@ -466,7 +485,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                       child: Text(stateItem.name),
                     ),
                     onChanged: (newValue) {
-                      if (newValue != null) {
+                      if (newValue != null && newValue.id != 0) {
                         subcategoryCubit.selectdistrict(newValue.name);
                       }
                     },
@@ -501,7 +520,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                     child: Text(stateItem.name),
                   ),
                   onChanged: (newValue) {
-                    if (newValue != null) {
+                    if (newValue != null && newValue.id != 0) {
                       subcategoryCubit.selectdistrict(newValue.name);
                     }
                   },
@@ -542,7 +561,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                       child: Text(stateItem.name),
                     ),
                     onChanged: (newValue) {
-                      if (newValue != null) {
+                      if (newValue != null && newValue.id != 0) {
                         subcategoryCubit.selectOrganization(newValue.name);
                       }
                     },

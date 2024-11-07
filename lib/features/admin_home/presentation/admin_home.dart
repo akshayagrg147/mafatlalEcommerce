@@ -34,35 +34,30 @@ class AdminHome extends StatelessWidget {
       },
       child: Scaffold(
         backgroundColor: AppColors.kGrey100,
-        body: SizedBox.expand(
-          child: Column(
-            children: [
-              AdminHeader(),
-              Expanded(
-                  child: Row(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(150),
+          child: AdminHeader(),
+        ),
+        body: Row(
+          children: [
+            SizedBox(width: 250, child: AdminHomeDrawer()),
+            Expanded(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: PageView(
+                scrollDirection: Axis.vertical,
+                controller: CubitsInjector.adminHomeCubit.homePageController,
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  SizedBox(width: 250, child: AdminHomeDrawer()),
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: PageView(
-                      scrollDirection: Axis.vertical,
-                      controller:
-                          CubitsInjector.adminHomeCubit.homePageController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        AdminHomeScreen(),
-                        OrderHistoryScreen(),
-                        ProductHomeScreen(),
-                        AdminCategoryScreen(),
-                        AdminOrganisationScreen()
-                      ],
-                    ),
-                  ))
+                  AdminHomeScreen(),
+                  OrderHistoryScreen(),
+                  ProductHomeScreen(),
+                  AdminCategoryScreen(),
+                  AdminOrganisationScreen()
                 ],
-              ))
-            ],
-          ),
+              ),
+            ))
+          ],
         ),
       ),
     );

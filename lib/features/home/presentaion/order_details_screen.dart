@@ -79,10 +79,12 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         height: 20,
                       ),
                       CustomerDetailis(
-                          shippingAddress: order!.shipping,
-                          billingAddress: order!.billing,
-                          customerName: order!.customerName,
-                          customerEmail: order!.customerEmail),
+                        shippingAddress: order!.shipping,
+                        billingAddress: order!.billing,
+                        customerName: order!.customerName,
+                        customerEmail: order!.customerEmail,
+                        gstNumber: order!.gstNumber,
+                      ),
                       SizedBox(
                         height: 20,
                       ),

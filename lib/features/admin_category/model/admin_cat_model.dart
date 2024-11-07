@@ -15,7 +15,7 @@ class AdminCategory {
     return AdminCategory(
       id: json['id'],
       name: json['name'],
-      image: json['image'],
+      image: json['image'] ?? '',
       bannerImg: json['banner_image'] != null &&
               (json['banner_image'] is List && json['banner_image'].isNotEmpty)
           ? json['banner_image']?.first

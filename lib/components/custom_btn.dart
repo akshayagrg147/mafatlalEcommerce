@@ -14,7 +14,7 @@ class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
     required this.onPressed,
     required this.label,
-    this.backgroundColor = AppColors.kOrange,
+    this.backgroundColor = AppColors.kblue,
     this.textColor = AppColors.kWhite,
     this.borderRadius = 8.0,
     this.padding = const EdgeInsets.all(12.0),

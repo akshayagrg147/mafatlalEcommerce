@@ -15,6 +15,8 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
   String? SelectedSDistrictname;
   String? bannerImgUrl;
 
+  SubCategory_new? selectedSubCategory;
+
   List<StateModel> states = [];
   List<DistrictModel> districts = [];
   List<Organization> organizations = [];
@@ -22,17 +24,33 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
 
   Future<void> getsubcategorydetails(
       List<SubCategory_new> subcategories, String selectedname) async {
-    emit(GetSubCategoryDetailScreenLoadingState());
     subcategorieslist = subcategories;
     SelectedSubcategoryname = selectedname;
+    SelectedOrganizationname = null;
+    SelectedStatename = null;
+    SelectedSDistrictname = null;
+    bannerImgUrl = null;
+    states.clear();
+    districts.clear();
+    organizations.clear();
+    emit(SubCategoryDetailInitialState());
+    emit(GetSubCategoryDetailScreenLoadingState());
 
-    var selectedSubCategory = subcategorieslist!.firstWhere(
+    emit(GetAllStateSuccessState(states: states, name: ''));
+    emit(GetAllDistrictSuccessState(district: districts, name: ''));
+    emit(GetAllOrganizationSuccessState(organization: organizations, name: ''));
+
+    selectedSubCategory = subcategorieslist!.firstWhere(
       (id) => id.name == SelectedSubcategoryname,
     );
-    bannerImgUrl = selectedSubCategory.bannerImg;
-    UpdateproductAccordingtoCategory(selectedSubCategory.id);
+    bannerImgUrl = selectedSubCategory!.bannerImg;
+    UpdateproductAccordingtoCategory(selectedSubCategory!.id);
 
-    await getallstate();
+    if (selectedSubCategory!.isState) {
+      await getallstate();
+    } else if (selectedSubCategory!.isOrganization) {
+      await getorganization();
+    }
 
     emit(GetSubCategoryDetailScreenSuccessState(
         subcategories: subcategories, selectedname: selectedname));
@@ -81,10 +99,14 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
     }
   }
 
-  Future<void> UpdateProductAccordingtoState(int stateid, int subid) async {
+  Future<void> UpdateProductAccordingtoState(int subid,
+      {int? stateid, int? districtId, int? organisationId}) async {
     emit(UpdateProductUsingSubCategoryLoadingState());
     try {
-      final response = await SubCategoryRepo.getProductsByState(stateid, subid);
+      final response = await SubCategoryRepo.getProductsByState(subid,
+          stateId: stateid,
+          districtId: districtId,
+          organizationId: organisationId);
 
       if (response.data == null || response.data!.isEmpty) {
         products = [];
@@ -122,23 +144,26 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
     districts.clear();
     states.clear();
     organizations.clear();
+    SelectedSDistrictname = null;
+    SelectedStatename = null;
+    SelectedOrganizationname = null;
 
     emit(GetAllDistrictSuccessState(district: districts, name: ''));
     emit(GetAllStateSuccessState(states: states, name: ''));
     emit(GetAllOrganizationSuccessState(organization: organizations, name: ''));
 
     // Using firstWhere to search for the subcategory
-    var selectedSubCategory = subcategorieslist!.firstWhere(
+    selectedSubCategory = subcategorieslist!.firstWhere(
       (id) => id.name == SelectedSubcategoryname,
     );
 
-    bannerImgUrl = selectedSubCategory.bannerImg;
+    bannerImgUrl = selectedSubCategory!.bannerImg;
+    UpdateproductAccordingtoCategory(selectedSubCategory!.id);
 
-    if (!selectedSubCategory.isState) {
-      UpdateproductAccordingtoCategory(selectedSubCategory.id);
-    } else {
-      UpdateproductAccordingtoCategory(selectedSubCategory.id);
+    if (selectedSubCategory!.isState) {
       getallstate();
+    } else if (selectedSubCategory!.isOrganization) {
+      getorganization();
     }
 
     emit(GetSubCategoryDetailScreenSuccessState(
@@ -150,20 +175,7 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
     emit(GetAllStateLoadingState());
 
     try {
-      // Using firstWhere to find the subcategory
-      final subcategory = subcategorieslist?.firstWhere(
-        (item) => item.name == SelectedSubcategoryname,
-        orElse: () => SubCategory_new(
-          id: 0,
-          name: '',
-          img: '',
-          isDistrict: false,
-          isState: false,
-          isOrganization: false,
-        ),
-      );
-
-      if (subcategory != null && subcategory.isState == true) {
+      if (selectedSubCategory != null && selectedSubCategory!.isState) {
         final stateResponse = await SubCategoryRepo.getallstate();
         states = stateResponse;
         states.insert(0, StateModel(id: 0, name: 'Select State'));
@@ -171,12 +183,12 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
         if (states.isNotEmpty) {
           emit(GetAllStateSuccessState(states: states, name: ''));
         } else {
-          UpdateproductAccordingtoCategory(subcategory.id);
+          UpdateproductAccordingtoCategory(selectedSubCategory!.id);
           emit(GetAllOrganizationSuccessState(
               organization: organizations, name: SelectedSubcategoryname!));
         }
       } else {
-        UpdateproductAccordingtoCategory(subcategory?.id ?? 0);
+        UpdateproductAccordingtoCategory(selectedSubCategory?.id ?? 0);
       }
     } catch (e) {
       emit(GetAllStateFailedState(message: 'Failed to fetch states'));
@@ -185,6 +197,8 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
 
   void selectState(String name) {
     SelectedStatename = name;
+    SelectedSDistrictname = null;
+    SelectedOrganizationname = null;
     //
     // districts.clear();
     // // states.clear();
@@ -201,25 +215,20 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
     final subcategory = subcategorieslist?.firstWhere(
       (item) => item.name == SelectedSubcategoryname,
     );
-    UpdateProductAccordingtoState(state.id, subcategory!.id);
+    UpdateProductAccordingtoState(
+      subcategory!.id,
+      stateid: state.id,
+    );
     getdistrict();
+    if (selectedSubCategory!.isOrganization) {
+      getorganization(stateId: state.id);
+    }
   }
 
   Future<void> getdistrict() async {
     emit(GetAllDistrictLoadingState());
     try {
-      // Get the subcategory based on the selected district name
-      final subcategory = subcategorieslist?.firstWhere(
-          (item) => item.name == SelectedSDistrictname,
-          orElse: () => SubCategory_new(
-              id: 0,
-              name: '',
-              img: '',
-              isDistrict: false,
-              isState: false,
-              isOrganization: false));
-
-      if (subcategory != null && subcategory.isDistrict == true) {
+      if (selectedSubCategory != null && selectedSubCategory!.isDistrict) {
         final state = states.firstWhere((s) => s.name == SelectedStatename);
         final districtresponse = await SubCategoryRepo.getalldistrict(state.id);
         districts = districtresponse;
@@ -245,7 +254,10 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
         final subcategory = subcategorieslist?.firstWhere(
           (item) => item.name == SelectedSubcategoryname,
         );
-        UpdateProductAccordingtoState(state.id, subcategory!.id);
+        UpdateProductAccordingtoState(
+          subcategory!.id,
+          stateid: state.id,
+        );
       }
     } catch (e) {
       emit(GetAllDistrictFailedState(message: 'Failed to fetch districts'));
@@ -255,50 +267,45 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
   void selectdistrict(String name) {
     SelectedSDistrictname = name;
     organizations.clear();
+    SelectedOrganizationname = null;
     emit(GetAllOrganizationSuccessState(organization: organizations, name: ''));
     final state = states.firstWhere(
       (item) => item.name == SelectedStatename,
     );
+    final district = districts.firstWhere(
+      (item) => item.name == SelectedSDistrictname,
+    );
     final subcategory = subcategorieslist?.firstWhere(
       (item) => item.name == SelectedSubcategoryname,
     );
-    UpdateProductAccordingtoState(state.id, subcategory!.id);
-    getorganization();
+    UpdateProductAccordingtoState(
+      subcategory!.id,
+      stateid: state.id,
+      districtId: district.id,
+    );
+
+    if (selectedSubCategory!.isOrganization) {
+      getorganization(stateId: state.id, districtId: district.id);
+    }
     emit(GetAllDistrictSuccessState(
         district: districts, name: SelectedSDistrictname!));
   }
 
-  Future<void> getorganization() async {
+  Future<void> getorganization({int? stateId, int? districtId}) async {
     emit(GetAllOrganizationLoadingState());
     try {
-      final subcategory = subcategorieslist?.firstWhere(
-          (item) => item.name == SelectedSubcategoryname,
-          orElse: () => SubCategory_new(
-              id: 0,
-              name: '',
-              img: '',
-              isDistrict: false,
-              isState: false,
-              isOrganization: false));
-
-      if (subcategory != null && subcategory.isOrganization == true) {
-        final district =
-            districts.firstWhere((d) => d.name == SelectedSDistrictname);
-        final organizationresponse =
-            await SubCategoryRepo.getorganization(district.id);
+      if (selectedSubCategory != null && selectedSubCategory!.isOrganization) {
+        final organizationresponse = await SubCategoryRepo.getorganization(
+            selectedSubCategory!.id,
+            districtId: districtId,
+            stateId: stateId);
         organizations = organizationresponse;
         organizations.insert(
             0,
             Organization(
-                districtId: 0,
-                districtName: SelectedSDistrictname ?? 'Select District',
-                subCategoryId: 0,
-                subCategoryName:
-                    SelectedSubcategoryname ?? 'Select Subcategory',
-                id: 0,
-                name: SelectedOrganizationname ?? 'Select Organization',
-                stateId: 0,
-                stateName: SelectedStatename ?? 'Select State'));
+              id: 0,
+              name: SelectedOrganizationname ?? 'Select Organization',
+            ));
         if (organizations.isNotEmpty) {
           emit(GetAllOrganizationSuccessState(
               organization: organizations, name: ''));
@@ -323,7 +330,26 @@ class SubcategoryCubit extends Cubit<SubCategoryDetailState> {
     // emit(GetAllOrganizationSuccessState(organization: organizations, name: ''));
     final organization =
         organizations.firstWhere((org) => org.name == SelectedOrganizationname);
-    UpdateproductAccordingtoCategory(organization.id);
+    StateModel? state;
+    DistrictModel? district;
+    if (SelectedStatename != null) {
+      state = states.firstWhere(
+        (item) => item.name == SelectedStatename,
+      );
+    }
+    if (SelectedSDistrictname != null) {
+      district = districts.firstWhere(
+        (item) => item.name == SelectedSDistrictname,
+      );
+    }
+
+    UpdateProductAccordingtoState(
+      selectedSubCategory!.id,
+      stateid: state?.id,
+      districtId: district?.id,
+      organisationId: organization.id,
+    );
+
     emit(GetAllOrganizationSuccessState(
         organization: organizations, name: SelectedOrganizationname!));
   }

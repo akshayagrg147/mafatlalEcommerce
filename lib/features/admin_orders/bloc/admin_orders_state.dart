@@ -32,6 +32,8 @@ class FetchOrderDetailsFailedState extends AdminOrderState {}
 
 class UpdateSelectedDate extends AdminOrderState {}
 
+class UpdateSelectedOrderStatus extends AdminOrderState {}
+
 class ShowDispatchFormState extends AdminOrderState {}
 
 class HideDispatchFormState extends AdminOrderState {}

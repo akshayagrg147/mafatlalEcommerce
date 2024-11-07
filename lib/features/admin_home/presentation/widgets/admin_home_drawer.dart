@@ -17,6 +17,9 @@ class AdminHomeDrawer extends StatelessWidget {
       },
       builder: (context, state) {
         return Drawer(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
           backgroundColor: AppColors.kGrey200,
           surfaceTintColor: AppColors.kWhite,
           child: ListView(

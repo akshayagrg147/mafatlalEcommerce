@@ -1,6 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mafatlal_ecommerce/components/custom_dropdown.dart';
 import 'package:mafatlal_ecommerce/components/date_filter_btn.dart';
 import 'package:mafatlal_ecommerce/components/elevated_btn_with_icon.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
@@ -10,6 +11,7 @@ import 'package:mafatlal_ecommerce/features/admin_orders/bloc/admin_orders_cubit
 import 'package:mafatlal_ecommerce/features/admin_orders/bloc/admin_orders_state.dart';
 import 'package:mafatlal_ecommerce/features/admin_orders/model/order_model.dart';
 import 'package:mafatlal_ecommerce/features/admin_orders/presentation/order_details_screen.dart';
+import 'package:mafatlal_ecommerce/helper/enums.dart';
 import 'package:mafatlal_ecommerce/helper/utils.dart';
 
 class AdminOrdersScreen extends StatefulWidget {
@@ -26,21 +28,21 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
   DateTime? selectedFromDate;
   DateTime? selectedToDate;
 
+  OrderStatus orderStatus = OrderStatus.all;
+
   @override
   void initState() {
-    context.read<AdminOrderCubit>().fetchOrders(
-          page,
-          fromDate: Utils.getTodayDate(),
-        );
+    context
+        .read<AdminOrderCubit>()
+        .fetchOrders(page, fromDate: Utils.getTodayDate(), status: orderStatus);
     super.initState();
   }
 
   void fetchOrders({int? fetchPage}) {
-    context.read<AdminOrderCubit>().fetchOrders(
-          fetchPage ?? page,
-          fromDate: selectedFromDate ?? Utils.getTodayDate(),
-          toDate: selectedToDate?.add(const Duration(days: 1)),
-        );
+    context.read<AdminOrderCubit>().fetchOrders(fetchPage ?? page,
+        fromDate: selectedFromDate ?? Utils.getTodayDate(),
+        toDate: selectedToDate?.add(const Duration(days: 1)),
+        status: orderStatus);
   }
 
   @override
@@ -99,20 +101,43 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
                       },
                       label: "To Date"),
                   const Spacer(),
+                  CustomDropDown<OrderStatus>(
+                      width: 150,
+                      label: "Order Status",
+                      selectedValue: orderStatus,
+                      items: OrderStatus.values,
+                      labelFormat: (e) => e.value,
+                      onChanged: (value) {
+                        orderStatus = value!;
+                        context
+                            .read<AdminOrderCubit>()
+                            .updateDropDownOrderStatus();
+                        page = 1;
+                        fetchOrders();
+                      }),
                   if (selectedFromDate != null || selectedToDate != null)
-                    TextButton(
-                        onPressed: () {
-                          selectedFromDate = null;
-                          selectedToDate = null;
-                          page = 1;
-                          context.read<AdminOrderCubit>().updateSelectedDate();
-                          fetchOrders();
-                        },
-                        child: Text(
-                          "Reset",
-                          style: AppTextStyle.f18PoppinsBlackw400
-                              .copyWith(decoration: TextDecoration.underline),
-                        ))
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: TextButton(
+                          onPressed: () {
+                            selectedFromDate = null;
+                            selectedToDate = null;
+                            orderStatus = OrderStatus.all;
+                            page = 1;
+                            context
+                                .read<AdminOrderCubit>()
+                                .updateSelectedDate();
+                            context
+                                .read<AdminOrderCubit>()
+                                .updateDropDownOrderStatus();
+                            fetchOrders();
+                          },
+                          child: Text(
+                            "Reset",
+                            style: AppTextStyle.f18PoppinsBlackw400
+                                .copyWith(decoration: TextDecoration.underline),
+                          )),
+                    )
                 ],
               );
             },
@@ -216,11 +241,11 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
             size: ColumnSize.S,
           ),
           const DataColumn2(
-            label: Text('Customer'),
+            label: Text('Customer Name'),
             size: ColumnSize.S,
           ),
           const DataColumn2(
-            label: Text('Channel'),
+            label: Text('Contact'),
             size: ColumnSize.S,
           ),
           const DataColumn2(
@@ -269,7 +294,9 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
                         Text(orders[index].customerName),
                       ),
                       DataCell(
-                        Text(orders[index].channel),
+                        SelectableText(orders[index].shipping?.mobile ??
+                            orders[index].billing?.mobile ??
+                            ''),
                       ),
                       DataCell(
                         Text("₹${orders[index].price}"),

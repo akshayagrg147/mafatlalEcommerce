@@ -14,6 +14,7 @@ import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/checkout/bloc/checkout_cubit.dart';
 import 'package:mafatlal_ecommerce/features/checkout/bloc/checkout_state.dart';
 import 'package:mafatlal_ecommerce/features/checkout/presentation/widgets/biiling_address_section.dart';
+import 'package:mafatlal_ecommerce/features/checkout/presentation/widgets/billing_expansion.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
@@ -32,6 +33,7 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  String isGstRequired = 'Yes';
   final TextEditingController _gstController = TextEditingController();
 
   final TextEditingController _addressController = TextEditingController();
@@ -93,6 +95,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       billingSelectedDistrict = address.district;
     }
     super.initState();
+  }
+
+  num getTotalAmount() {
+    final subTotal = CubitsInjector.homeCubit.cartProducts.fold<num>(
+        0,
+        (previousValue, element) =>
+            previousValue + (element.getPrice() * element.quantity));
+    final tax = CubitsInjector.homeCubit.cartProducts.fold<num>(
+        0,
+        (previousValue, element) =>
+            previousValue + (element.getTax() * element.quantity));
+    return subTotal + tax;
   }
 
   @override
@@ -185,15 +199,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Widget smallScreen() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
-      child: SingleChildScrollView(
-          child: Column(
-        children: [
-          checkoutForm(),
-        ],
-      )),
-    );
+    return SingleChildScrollView(
+        child: Column(
+      children: [
+        BillingExpansion(
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
+            child: billingInfo(),
+          ),
+          amount: getTotalAmount(),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
+          child: checkoutForm(),
+        ),
+      ],
+    ));
   }
 
   Widget largsScreen() {
@@ -401,6 +422,48 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             labelStyle: AppTextStyle.f18RobotoDarkgrayW500,
             valueStyle: AppTextStyle.f18RobotoDarkgrayW500,
             value: "₹ ${(subTotal + tax).toStringAsFixed(2)}"),
+        gapH(),
+        CustomElevatedButton(
+          width: double.maxFinite,
+          onPressed: () {
+            FocusScope.of(context).unfocus();
+            if (_formKey.currentState?.validate() == true) {
+              final shippingAddress = Address(
+                address: _addressController.text,
+                address2: _addressController2.text,
+                city: _cityController.text,
+                state: selectedState!,
+                district: selectedDistrict!,
+                landmark: _landmarkController.text,
+                pincode: _pinCodeController.text,
+                mobile: _mobileNumberController.text,
+              );
+              final billingAddress =
+                  selectedBillingEnum == BillingEnum.sameAsShipping
+                      ? shippingAddress
+                      : Address(
+                          address: _billingAddressController.text,
+                          address2: _billingAddressController2.text,
+                          city: _billingCityController.text,
+                          state: billingSelectedState!,
+                          district: billingSelectedDistrict!,
+                          landmark: _billingLandmarkController.text,
+                          pincode: _billingPinCodeController.text,
+                          mobile: _billingMobileNumberController.text,
+                        );
+
+              context.read<CheckoutCubit>().placeOrder(
+                  cartProducts: CubitsInjector.homeCubit.cartProducts,
+                  gstNumber:
+                      isGstRequired == "Yes" ? _gstController.text : null,
+                  shippingAddress: shippingAddress,
+                  billingAddress: billingAddress);
+            }
+          },
+          label: "Pay Now",
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          textStyle: AppTextStyle.f18PoppinsWhitew600,
+        )
       ],
     );
   }
@@ -425,12 +488,32 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "GST (Optional",
+          "GST",
           style: AppTextStyle.f24PoppinsBlackw600,
         ),
         gapH(),
+        BlocBuilder<CheckoutCubit, CheckoutState>(
+            buildWhen: (previous, current) =>
+                current is UpdateGstRequirementState,
+            builder: (context, state) {
+              return Row(
+                children: [
+                  Text(
+                    'Do you have a GST number?',
+                    textAlign: TextAlign.left,
+                    style: AppTextStyle.f14OutfitGreyW500,
+                  ),
+                  const Spacer(),
+                  buildRadiotile('Yes'),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  buildRadiotile('No')
+                ],
+              );
+            }),
         CustomTextField(
-          hint: "Gst No.",
+          hint: "GST No.",
           suffixWidget: const Icon(Icons.numbers),
           formatters: [
             LengthLimitingTextInputFormatter(
@@ -440,7 +523,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           validation: (String? value) {
             // GST number must be 15 characters long and alphanumeric
             if (value == null || value.isEmpty) {
-              return null;
+              return isGstRequired == 'Yes' ? 'GST number is required' : null;
             } else if (value.length != 15) {
               return 'GST number must be 15 characters long';
             } else if (!RegExp(
@@ -636,48 +719,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             );
           },
         ),
-        gapH(),
-        CustomElevatedButton(
-          width: double.maxFinite,
-          backgroundColor: AppColors.kBlack,
-          onPressed: () {
-            FocusScope.of(context).unfocus();
-            if (_formKey.currentState?.validate() == true) {
-              final shippingAddress = Address(
-                address: _addressController.text,
-                address2: _addressController2.text,
-                city: _cityController.text,
-                state: selectedState!,
-                district: selectedDistrict!,
-                landmark: _landmarkController.text,
-                pincode: _pinCodeController.text,
-                mobile: _mobileNumberController.text,
-              );
-              final billingAddress =
-                  selectedBillingEnum == BillingEnum.sameAsShipping
-                      ? shippingAddress
-                      : Address(
-                          address: _billingAddressController.text,
-                          address2: _billingAddressController2.text,
-                          city: _billingCityController.text,
-                          state: billingSelectedState!,
-                          district: billingSelectedDistrict!,
-                          landmark: _billingLandmarkController.text,
-                          pincode: _billingPinCodeController.text,
-                          mobile: _billingMobileNumberController.text,
-                        );
-
-              context.read<CheckoutCubit>().placeOrder(
-                  cartProducts: CubitsInjector.homeCubit.cartProducts,
-                  gstNumber: _gstController.text,
-                  shippingAddress: shippingAddress,
-                  billingAddress: billingAddress);
-            }
-          },
-          label: "Pay Now",
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          textStyle: AppTextStyle.f18PoppinsWhitew600,
-        )
       ],
     );
   }
@@ -828,6 +869,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             return null;
           },
         ),
+      ],
+    );
+  }
+
+  Widget buildRadiotile(String value) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Radio<String>(
+            value: value,
+            groupValue: isGstRequired,
+            onChanged: (value) {
+              if (value != null) {
+                isGstRequired = value;
+                if (value == "No") {
+                  _gstController.clear();
+                }
+                context.read<CheckoutCubit>().updateGstRequirement(value);
+              }
+            }),
+        Text(
+          value,
+          style: AppTextStyle.f18PoppinsDarkGreyw400,
+        )
       ],
     );
   }

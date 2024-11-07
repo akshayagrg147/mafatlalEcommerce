@@ -46,3 +46,5 @@ class SaveAddressErrorState extends CheckoutState {
 }
 
 class SaveAddressSuccessState extends CheckoutState {}
+
+class UpdateGstRequirementState extends CheckoutState {}

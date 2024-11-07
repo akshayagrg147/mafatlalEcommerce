@@ -5,7 +5,10 @@ import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
 
 class AdminOrderRepo {
   static Future<ApiResponse<List<OrderModel>>> fetchOrder(int userId,
-      {required int page, DateTime? fromDate, DateTime? toDate}) async {
+      {required int page,
+      DateTime? fromDate,
+      DateTime? toDate,
+      String? status}) async {
     final Map<String, dynamic> query = {
       'user_id': userId,
       'page': page,
@@ -15,6 +18,9 @@ class AdminOrderRepo {
     }
     if (toDate != null) {
       query['to'] = toDate.toIso8601String();
+    }
+    if (status != null) {
+      query['status'] = status;
     }
     final response = await DioUtil()
         .getInstance()

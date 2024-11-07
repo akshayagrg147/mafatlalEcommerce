@@ -91,7 +91,7 @@ class CustomTextField extends StatelessWidget {
             counterText: "",
             counterStyle: const TextStyle(fontSize: 0),
             contentPadding: contentPadding ??
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             floatingLabelBehavior: FloatingLabelBehavior.always,
             border: OutlineInputBorder(
                 borderSide: BorderSide(

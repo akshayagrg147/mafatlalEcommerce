@@ -47,9 +47,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   String? gstNumberValidator(String? value) {
+    final isGstRequired = CubitsInjector.authCubit.isGstRequired == 'Yes';
     // GST number must be 15 characters long and alphanumeric
     if (value == null || value.isEmpty) {
-      return null;
+      return isGstRequired ? 'GST number is required' : null;
     } else if (value.length != 15) {
       return 'GST number must be 15 characters long';
     } else if (!RegExp(
@@ -75,62 +76,95 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       backgroundColor: AppColors.kGrey200,
       body: Center(
         child: Container(
-          width: 600,
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 22),
+          width: 900,
+          height: 900,
           decoration: BoxDecoration(
               color: AppColors.kWhite,
-              borderRadius: BorderRadius.circular(20),
+              // borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.kBlack.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 10,
+                  color: AppColors.kBlack.withOpacity(0.1),
+                  spreadRadius: 5,
+                  blurRadius: 5,
                   offset: const Offset(1, 1), // changes position of shadow
                 ),
               ]),
           child: Form(
             key: _formKey,
-            child: SizedBox(
-              width: double.maxFinite,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Icon(
-                            Icons.arrow_circle_left_outlined,
-                            size: 30,
-                          )),
-                      Image.asset(
-                        AssetPath.logo,
-                        width: 150,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                    flex: 3,
+                    child: Container(
+                      color: AppColors.kblue,
+                      child: Column(
+                        children: [
+                          Container(
+                              height: 280,
+                              width: 259,
+                              decoration: const BoxDecoration(
+                                  color: AppColors.kWhite,
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(200),
+                                    bottomRight: Radius.circular(200),
+                                  )),
+                              alignment: Alignment.center,
+                              child: Image.asset(
+                                AssetPath.logo,
+                              )),
+                          const Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 15, 20, 10),
+                            child: Text(
+                              'Embrace A Look That Reflects Pride & Elegance',
+                              style: AppTextStyle.f18PoppinsWhitew600,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 15, 20, 30),
+                            child: Text(
+                              'Elevate Your Professional Experience With In Our Stylish, Durable Uniforms Designed For Comfort And Confidence.',
+                              style: AppTextStyle.f18PoppinsWhitew600,
+                            ),
+                          )
+                        ],
                       ),
-                      SizedBox(
-                        width: 30,
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    AppStrings.registerAccount,
-                    style: AppTextStyle.f22BlackW600,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomTextField(
+                    )),
+                Expanded(
+                  flex: 4,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 35, vertical: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Icon(
+                                  Icons.arrow_circle_left_outlined,
+                                  size: 30,
+                                )),
+                            const Text(
+                              AppStrings.registerAccount,
+                              style: AppTextStyle.f22BlackW600,
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CustomTextField(
                           hint: "Name",
                           suffixWidget: const Icon(Icons.person_2_outlined),
                           textEditingController: _nameController,
@@ -143,12 +177,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 : "Please Enter a valid Name";
                           },
                         ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Expanded(
-                        child: CustomTextField(
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        CustomTextField(
                           hint: "Email",
                           suffixWidget: const Icon(Icons.mail_outline),
                           textEditingController: _emailController,
@@ -164,16 +196,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 : "Invalid Email";
                           },
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomTextField(
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        CustomTextField(
                           hint: "Password",
                           suffixWidget: const Icon(Icons.lock_outline),
                           formatters: [
@@ -189,12 +215,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           },
                           textEditingController: _pwdController,
                         ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Expanded(
-                        child: CustomTextField(
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        CustomTextField(
                           hint: "Confirm Password",
                           suffixWidget: const Icon(Icons.lock_outline),
                           formatters: [
@@ -210,21 +234,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           },
                           textEditingController: _rePwdController,
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: BlocBuilder<AuthCubit, AuthState>(
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        BlocBuilder<AuthCubit, AuthState>(
                           buildWhen: (previous, current) =>
                               current is GetDistrictListState,
                           builder: (context, state) {
                             return CustomDropDown<String>(
-                                width: 250,
                                 label: "Select State",
                                 selectedValue: selectedState,
                                 items: StateDistricts.stateList,
@@ -243,12 +260,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 });
                           },
                         ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Expanded(
-                        child: BlocBuilder<AuthCubit, AuthState>(
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        BlocBuilder<AuthCubit, AuthState>(
                           buildWhen: (previous, current) =>
                               current is GetDistrictListState ||
                               current is UpdateDistrictState,
@@ -271,105 +286,142 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 labelFormat: (value) => value);
                           },
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Do you have a GST number? (If yes, please provide it below)',
-                      textAlign: TextAlign.left,
-                      style: AppTextStyle.f14OutfitGreyW500,
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        gstNumber(),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        CustomTextField(
+                          hint: "Pincode",
+                          suffixWidget: const Icon(Icons.pin_drop_outlined),
+                          formatters: [
+                            LengthLimitingTextInputFormatter(
+                                6), // Limit input to 6 characters
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          validation: pincodeValidator,
+                          textEditingController: _pincodeController,
+                        ),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        const Spacer(),
+                        BlocConsumer<AuthCubit, AuthState>(
+                          listener: (context, state) {
+                            if (state is RegisterUserFailedState) {
+                              ToastUtils.showErrorToast(state.message);
+                            }
+                            if (state is RegisterUserSuccessState) {
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, HomeScreen.route, (route) => false);
+                            }
+                          },
+                          buildWhen: (previous, current) =>
+                              current is RegisterUserLoadingState ||
+                              current is RegisterUserSuccessState ||
+                              current is RegisterUserFailedState,
+                          builder: (context, state) {
+                            if (state is RegisterUserLoadingState) {
+                              return const LoadingAnimation();
+                            }
+                            return CustomElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState?.validate() == true) {
+                                  CubitsInjector.authCubit.registerUser(
+                                      email: _emailController.text,
+                                      pwd: _pwdController.text,
+                                      name: _nameController.text,
+                                      state: selectedState!,
+                                      district: selectedDistrict!,
+                                      gstNo: _gstController.text,
+                                      pincode: _pincodeController.text);
+                                }
+                              },
+                              label: AppStrings.signUp,
+                              padding: const EdgeInsets.symmetric(vertical: 20),
+                              textStyle: AppTextStyle.f16WhiteW600,
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        const Text(
+                          AppStrings.agreetotermsAndConditions,
+                          textAlign: TextAlign.left,
+                          style: AppTextStyle.f16GreyW500,
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  // Text(data)
-                  CustomTextField(
-                    hint: "Gst No.",
-                    suffixWidget: const Icon(Icons.numbers),
-                    formatters: [
-                      LengthLimitingTextInputFormatter(
-                          15), // Limit input to 15 characters
-                      FilteringTextInputFormatter.allow(RegExp(r'[A-Z0-9]')),
-                    ],
-                    validation: gstNumberValidator,
-                    textEditingController: _gstController,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  CustomTextField(
-                    hint: "Pincode",
-                    suffixWidget: const Icon(Icons.pin_drop_outlined),
-                    formatters: [
-                      LengthLimitingTextInputFormatter(
-                          6), // Limit input to 15 characters
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    validation: pincodeValidator,
-                    textEditingController: _pincodeController,
-                  ),
-                  const SizedBox(
-                    height: 26,
-                  ),
-                  BlocConsumer<AuthCubit, AuthState>(
-                    listener: (context, state) {
-                      if (state is RegisterUserFailedState) {
-                        ToastUtils.showErrorToast(state.message);
-                      }
-                      if (state is RegisterUserSuccessState) {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, HomeScreen.route, (route) => false);
-                      }
-                    },
-                    buildWhen: (previous, current) =>
-                        current is RegisterUserLoadingState ||
-                        current is RegisterUserSuccessState ||
-                        current is RegisterUserFailedState,
-                    builder: (context, state) {
-                      if (state is RegisterUserLoadingState) {
-                        return const LoadingAnimation();
-                      }
-                      return CustomElevatedButton(
-                        width: 400,
-                        backgroundColor: AppColors.kRed,
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() == true) {
-                            CubitsInjector.authCubit.registerUser(
-                                email: _emailController.text,
-                                pwd: _pwdController.text,
-                                name: _nameController.text,
-                                state: selectedState!,
-                                district: selectedDistrict!,
-                                gstNo: _gstController.text,
-                                pincode: _pincodeController.text);
-                          }
-                        },
-                        label: AppStrings.signUp,
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        textStyle: AppTextStyle.f16WhiteW600,
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 18,
-                  ),
-                  const Text(
-                    AppStrings.agreetotermsAndConditions,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyle.f16GreyW500,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildRadiotile(String value) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Radio<String>(
+            value: value,
+            groupValue: CubitsInjector.authCubit.isGstRequired,
+            onChanged: CubitsInjector.authCubit.updateGstRequirement),
+        Text(
+          value,
+          style: AppTextStyle.f18PoppinsDarkGreyw400,
+        )
+      ],
+    );
+  }
+
+  Widget gstNumber() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        BlocBuilder<AuthCubit, AuthState>(
+            buildWhen: (previous, current) =>
+                current is UpdateGstRequirementState,
+            builder: (context, state) {
+              return Row(
+                children: [
+                  Text(
+                    'Do you have a GST number?',
+                    textAlign: TextAlign.left,
+                    style: AppTextStyle.f14OutfitGreyW500,
+                  ),
+                  const Spacer(),
+                  buildRadiotile('Yes'),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  buildRadiotile('No')
+                ],
+              );
+            }),
+        const SizedBox(
+          height: 10,
+        ),
+        // Text(data)
+        CustomTextField(
+          hint: "GST No.",
+          suffixWidget: const Icon(Icons.numbers),
+          formatters: [
+            LengthLimitingTextInputFormatter(
+                15), // Limit input to 15 characters
+            FilteringTextInputFormatter.allow(RegExp(r'[A-Z0-9]')),
+          ],
+          validation: gstNumberValidator,
+          textEditingController: _gstController,
+        ),
+      ],
     );
   }
 
@@ -535,28 +587,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Do you have a GST number? (If yes, please provide it below)',
-                        textAlign: TextAlign.left,
-                        style: AppTextStyle.f14OutfitGreyW500,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    CustomTextField(
-                      hint: "Gst No.",
-                      suffixWidget: const Icon(Icons.numbers),
-                      formatters: [
-                        LengthLimitingTextInputFormatter(
-                            15), // Limit input to 15 characters
-                        FilteringTextInputFormatter.allow(RegExp(r'[A-Z0-9]')),
-                      ],
-                      validation: gstNumberValidator,
-                      textEditingController: _gstController,
-                    ),
+                    gstNumber(),
                     const SizedBox(
                       height: 20,
                     ),
@@ -593,7 +624,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           return const LoadingAnimation();
                         }
                         return CustomElevatedButton(
-                          backgroundColor: AppColors.kRed,
                           onPressed: () {
                             if (_formKey.currentState?.validate() == true) {
                               CubitsInjector.authCubit.registerUser(

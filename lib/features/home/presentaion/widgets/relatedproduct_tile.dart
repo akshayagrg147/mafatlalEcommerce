@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
@@ -9,7 +8,6 @@ import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/productdetial_model.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_to_cart_btn.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/size_selection_widget.dart';
 import 'package:mafatlal_ecommerce/features/product_details/presentaion/product_details.dart';
 
@@ -116,23 +114,24 @@ class RelatedProductTile extends StatelessWidget {
                                   "₹${product.getPrice().toStringAsFixed(2)}",
                                   style: AppTextStyle.f17OutfitBlackW500,
                                 ),
-                                StreamBuilder<BoxEvent>(
-                                    stream: CartHelper.watchCart(
-                                        int.parse(product.id), product.variant),
-                                    builder: (context, eventSnapshot) {
-                                      if (eventSnapshot.hasData) {
-                                        final data =
-                                            eventSnapshot.data?.value ?? {};
-                                        product.quantity =
-                                            data['quantity'] ?? 0;
-                                        // product.selectedSize = data['size'];
-                                      }
-                                      return AddToCartWidget(
-                                          quantity: product.quantity,
-                                          productId: int.parse(product.id),
-                                          variant: product.variant,
-                                          isGridTile: true);
-                                    })
+                                const SizedBox.shrink(),
+                                // StreamBuilder<BoxEvent>(
+                                //     stream: CartHelper.watchCart(
+                                //         int.parse(product.id), product.variant),
+                                //     builder: (context, eventSnapshot) {
+                                //       if (eventSnapshot.hasData) {
+                                //         final data =
+                                //             eventSnapshot.data?.value ?? {};
+                                //         product.quantity =
+                                //             data['quantity'] ?? 0;
+                                //         // product.selectedSize = data['size'];
+                                //       }
+                                //       return AddToCartWidget(
+                                //           quantity: product.quantity,
+                                //           productId: int.parse(product.id),
+                                //           variant: product.variant,
+                                //           isGridTile: true);
+                                //     })
                               ],
                             );
                           },

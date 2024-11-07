@@ -412,7 +412,7 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Gst %",
+                      "GST %",
                       style: AppTextStyle.f16OutfitGreyW500,
                     ),
                     const SizedBox(
@@ -420,7 +420,7 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
                     ),
                     CustomTextField(
                       width: 300,
-                      hint: "Enter Product's Gst % ",
+                      hint: "Enter Product's GST % ",
                       textEditingController: gstController,
                       textInputType: TextInputType.number,
                       formatters: [
@@ -429,7 +429,7 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
                       ],
                       validation: (value) {
                         if (value?.trim().isEmpty == true) {
-                          return "Gst % is Required";
+                          return "GST % is Required";
                         }
                         return null;
                       },
@@ -472,7 +472,6 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
                     return const LoadingAnimation();
                   }
                   return CustomElevatedButton(
-                      backgroundColor: AppColors.kBlack,
                       textStyle: AppTextStyle.f14WhiteW500,
                       width: 160,
                       onPressed: () {

@@ -128,4 +128,8 @@ class CheckoutCubit extends Cubit<CheckoutState> {
       emit(CheckoutOrderErrorState(AppStrings.somethingWentWrong));
     }
   }
+
+  void updateGstRequirement(String value) {
+    emit(UpdateGstRequirementState());
+  }
 }

@@ -45,7 +45,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 style: AppTextStyle.f18OutfitBlackW500,
               ),
               CustomElevatedButton(
-                  backgroundColor: AppColors.kBlack,
                   textStyle: AppTextStyle.f14WhiteW500,
                   width: 160,
                   onPressed: () {
@@ -164,7 +163,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       ),
                       DataCell(
                         Text(
-                          products[index].categoryName ?? "--",
+                          products[index].organisationName ?? "--",
                           style: AppTextStyle.f14OutfitGreyW500,
                         ),
                       ),

@@ -73,7 +73,6 @@ class _OrganisationListScreenState extends State<OrganisationListScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 15),
                     label: "Add +",
-                    backgroundColor: AppColors.kBlack,
                     textColor: AppColors.kWhite),
               ],
             ),
@@ -102,9 +101,10 @@ class _OrganisationListScreenState extends State<OrganisationListScreen> {
                     return Align(
                       alignment: Alignment.topLeft,
                       child: SizedBox(
-                        height: organisation.length * 60 > constraints.maxHeight
+                        height: (organisation.length + 1) * 60 >
+                                constraints.maxHeight
                             ? constraints.maxHeight
-                            : organisation.length * 60,
+                            : (organisation.length + 1) * 60,
                         child: DataTable2(
                             border: TableBorder(
                               horizontalInside: BorderSide(

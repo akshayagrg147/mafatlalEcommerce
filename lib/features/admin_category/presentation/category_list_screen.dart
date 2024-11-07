@@ -74,7 +74,6 @@ class _AdminCategoryListScreenState extends State<AdminCategoryListScreen> {
                     width: 120,
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     label: "Add +",
-                    backgroundColor: AppColors.kBlack,
                     textColor: AppColors.kWhite),
               ],
             ),
@@ -106,9 +105,10 @@ class _AdminCategoryListScreenState extends State<AdminCategoryListScreen> {
                         width: constraints.maxWidth > 800
                             ? 800
                             : constraints.maxWidth,
-                        height: categories.length * 60 > constraints.maxHeight
-                            ? constraints.maxHeight
-                            : categories.length * 60,
+                        height:
+                            (categories.length + 1) * 60 > constraints.maxHeight
+                                ? constraints.maxHeight
+                                : (categories.length + 1) * 60,
                         child: DataTable2(
                             border: TableBorder(
                               horizontalInside: BorderSide(

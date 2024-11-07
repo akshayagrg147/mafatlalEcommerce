@@ -51,3 +51,5 @@ class TogglePwdObsecureState extends AuthState {
 
   TogglePwdObsecureState({required this.isObsecure});
 }
+
+class UpdateGstRequirementState extends AuthState {}

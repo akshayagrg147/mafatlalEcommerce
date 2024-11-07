@@ -203,7 +203,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
                 return CustomElevatedButton(
                   width: width ?? double.maxFinite,
-                  backgroundColor: AppColors.kRed,
                   onPressed: () {
                     FocusScope.of(context).unfocus();
                     if (_formKey.currentState?.validate() == true) {

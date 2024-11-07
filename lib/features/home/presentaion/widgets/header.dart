@@ -109,17 +109,20 @@ class _HeaderState extends State<Header> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // Logo and Search
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, HomeScreen.route, (route) => false);
-                },
-                child: Container(
-                  padding: const EdgeInsets.only(left: 10, top: 10),
-                  child: Image.asset(
-                    AssetPath.logo1,
-                    fit: BoxFit.fitHeight,
-                    height: 70,
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, HomeScreen.route, (route) => false);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 10, top: 10),
+                    child: Image.asset(
+                      AssetPath.logo1,
+                      fit: BoxFit.fitHeight,
+                      height: 70,
+                    ),
                   ),
                 ),
               ),
@@ -134,6 +137,25 @@ class _HeaderState extends State<Header> {
                 ),
               ),
               const Spacer(),
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, HomeScreen.route, (route) => false);
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 5),
+                    child: const Text(
+                      "Home",
+                      style: AppTextStyle.f16BlackW400,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
               _textWithDownArrow(),
               const SizedBox(width: 20),
               if (CubitsInjector.authCubit.currentUser == null)
@@ -144,7 +166,6 @@ class _HeaderState extends State<Header> {
                   onPressed: () {
                     Navigator.pushNamed(context, LoginScreen.route);
                   },
-                  backgroundColor: AppColors.kBlack,
                   textColor: AppColors.kWhite,
                   label: "Login",
                 )

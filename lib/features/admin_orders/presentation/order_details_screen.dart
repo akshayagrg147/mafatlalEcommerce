@@ -122,6 +122,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               child: CustomerDetailis(
                                   shippingAddress: orderDetails!.shipping,
                                   billingAddress: orderDetails!.billing,
+                                  gstNumber: orderDetails!.gstNumber,
                                   customerName: orderDetails!.customerName,
                                   customerEmail: orderDetails!.customerEmail),
                             ),
