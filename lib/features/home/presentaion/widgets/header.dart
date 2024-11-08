@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
@@ -7,7 +8,6 @@ import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
@@ -16,6 +16,7 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/order_history.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/search_field.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 import 'package:mafatlal_ecommerce/services/navigation_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -164,7 +165,8 @@ class _HeaderState extends State<Header> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
                   onPressed: () {
-                    Navigator.pushNamed(context, LoginScreen.route);
+                    context.router.push(const LoginRoute());
+                    // Navigator.pushNamed(context, LoginScreen.route);
                   },
                   textColor: AppColors.kWhite,
                   label: "Login",

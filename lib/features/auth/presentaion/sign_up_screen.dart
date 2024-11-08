@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +18,9 @@ import 'package:mafatlal_ecommerce/features/auth/bloc/auth_state.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/helper/toast_utils.dart';
 import 'package:mafatlal_ecommerce/helper/validators.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
+@RoutePage()
 class RegistrationScreen extends StatefulWidget {
   static const String route = "/registrationScreen";
 
@@ -146,7 +149,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           children: [
                             InkWell(
                                 onTap: () {
-                                  Navigator.pop(context);
+                                  context.router.maybePop();
+                                  // Navigator.pop(context);
                                 },
                                 child: const Icon(
                                   Icons.arrow_circle_left_outlined,
@@ -314,8 +318,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               ToastUtils.showErrorToast(state.message);
                             }
                             if (state is RegisterUserSuccessState) {
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context, HomeScreen.route, (route) => false);
+                              context.router.pushAndPopUntil(const HomeRoute(),
+                                  predicate: (_) => false);
+                              // Navigator.pushNamedAndRemoveUntil(
+                              //     context, HomeScreen.route, (route) => false);
                             }
                           },
                           buildWhen: (previous, current) =>

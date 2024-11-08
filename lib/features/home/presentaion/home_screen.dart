@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
@@ -11,6 +12,7 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_appbar.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_body.dart';
 
+@RoutePage()
 class HomeScreen extends StatefulWidget {
   static const String route = "/homeScreen";
 

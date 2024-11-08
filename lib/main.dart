@@ -11,6 +11,7 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/helper/enums.dart';
 import 'package:mafatlal_ecommerce/helper/shared_preference_helper.dart';
 import 'package:mafatlal_ecommerce/routes/app_routes.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.dart';
 import 'package:mafatlal_ecommerce/services/navigation_service.dart';
 
 void main() async {
@@ -22,21 +23,21 @@ void main() async {
     await CartHelper.init();
     CubitsInjector.authCubit.getCurrentUser();
   }
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
+  final _appRouter = MfRouter();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: CubitsInjector.blocProviders,
-        child: MaterialApp(
+        child: MaterialApp.router(
+          routerConfig: _appRouter.config(),
           title: 'Mafatlal Store',
-          navigatorKey: CubitsInjector.homeCubit.homeNavigatorKey,
-          navigatorObservers: [AppNavObserver()],
           theme: ThemeData(
             textTheme: GoogleFonts.robotoTextTheme(
               Theme.of(context).textTheme,
@@ -45,13 +46,27 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          debugShowCheckedModeBanner: false,
-          initialRoute: kIsWeb
-              ? CubitsInjector.authCubit.currentUser?.userType == UserType.admin
-                  ? AdminHome.route
-                  : HomeScreen.route
-              : SplashScreen.route,
-          onGenerateRoute: GenerateRoute.onGenerateRoute,
         ));
+
+    MaterialApp(
+      title: 'Mafatlal Store',
+      navigatorKey: CubitsInjector.homeCubit.homeNavigatorKey,
+      navigatorObservers: [AppNavObserver()],
+      theme: ThemeData(
+        textTheme: GoogleFonts.robotoTextTheme(
+          Theme.of(context).textTheme,
+        ),
+        scaffoldBackgroundColor: AppColors.kGrey50,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      debugShowCheckedModeBanner: false,
+      initialRoute: kIsWeb
+          ? CubitsInjector.authCubit.currentUser?.userType == UserType.admin
+              ? AdminHome.route
+              : HomeScreen.route
+          : SplashScreen.route,
+      onGenerateRoute: GenerateRoute.onGenerateRoute,
+    );
   }
 }
