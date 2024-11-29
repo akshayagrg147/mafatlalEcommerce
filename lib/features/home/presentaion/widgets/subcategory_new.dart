@@ -13,28 +13,31 @@ class SubCategoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      scrollDirection: Axis.horizontal,
-      itemCount: subcategoriesss.length,
-      separatorBuilder: (context, index) =>
-          SizedBox(width: ResponsiveWidget.isSmallScreen(context) ? 20 : 60),
-      itemBuilder: (context, index) {
-        final subcategory = subcategoriesss[index];
-        final widget = SubCategoryItem(
-          imagePath: subcategory.img,
-          name: subcategory.name,
-          itemlength: subcategoriesss.length,
-          subcategories: subcategoriesss,
-        );
-        if (index == 0) {
-          return Padding(
-            padding: EdgeInsets.only(
-                left: ResponsiveWidget.isSmallScreen(context) ? 20 : 60),
-            child: widget,
+    return Center(
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: subcategoriesss.length,
+        shrinkWrap: true,
+        separatorBuilder: (context, index) =>
+            SizedBox(width: ResponsiveWidget.isSmallScreen(context) ? 20 : 60),
+        itemBuilder: (context, index) {
+          final subcategory = subcategoriesss[index];
+          final widget = SubCategoryItem(
+            imagePath: subcategory.img,
+            name: subcategory.name,
+            itemlength: subcategoriesss.length,
+            subcategories: subcategoriesss,
           );
-        }
-        return widget;
-      },
+          if (index == 0) {
+            return Padding(
+              padding: EdgeInsets.only(
+                  left: ResponsiveWidget.isSmallScreen(context) ? 20 : 60),
+              child: widget,
+            );
+          }
+          return widget;
+        },
+      ),
     );
   }
 }
