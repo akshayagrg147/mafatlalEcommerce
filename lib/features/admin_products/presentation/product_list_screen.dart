@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +13,9 @@ import 'package:mafatlal_ecommerce/features/admin_products/presentation/product_
 import 'package:mafatlal_ecommerce/features/admin_products/presentation/widgets/product_table_tile.dart';
 import 'package:mafatlal_ecommerce/features/admin_products/presentation/widgets/show_product_delete_confirmation.dart';
 
+@RoutePage()
 class ProductListScreen extends StatefulWidget {
+  static const String route = "";
   const ProductListScreen({super.key});
 
   @override
@@ -45,7 +48,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 style: AppTextStyle.f18OutfitBlackW500,
               ),
               CustomElevatedButton(
-                  backgroundColor: AppColors.kBlack,
                   textStyle: AppTextStyle.f14WhiteW500,
                   width: 160,
                   onPressed: () {
@@ -164,7 +166,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       ),
                       DataCell(
                         Text(
-                          products[index].categoryName ?? "--",
+                          products[index].organisationName ?? "--",
                           style: AppTextStyle.f14OutfitGreyW500,
                         ),
                       ),

@@ -16,6 +16,13 @@ class AuthCubit extends Cubit<AuthState> {
 
   User? get currentUser => _currentUser;
 
+  String isGstRequired = 'Yes';
+
+  void updateGstRequirement(String? value) {
+    isGstRequired = value ?? 'Yes';
+    emit(UpdateGstRequirementState());
+  }
+
   void getCurrentUser() {
     try {
       _currentUser = SharedPreferencesHelper.instance.getCurrentUser();

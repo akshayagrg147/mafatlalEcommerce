@@ -1,6 +1,6 @@
 class GraphModel {
-  int totalSale;
-  int totalProfit;
+  num totalSale;
+  num totalProfit;
   Map<String, List<Statistic>> statistics;
 
   GraphModel({

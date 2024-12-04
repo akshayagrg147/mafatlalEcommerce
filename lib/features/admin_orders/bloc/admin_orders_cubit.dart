@@ -3,19 +3,24 @@ import 'package:mafatlal_ecommerce/constants/app_strings.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/admin_orders/bloc/admin_orders_state.dart';
 import 'package:mafatlal_ecommerce/features/admin_orders/repo/admin_orders_repo.dart';
+import 'package:mafatlal_ecommerce/helper/enums.dart';
 import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
 
 class AdminOrderCubit extends Cubit<AdminOrderState> {
   AdminOrderCubit() : super(AdminOrderInitialState());
 
-  void fetchOrders(int page, {DateTime? fromDate, DateTime? toDate}) async {
+  void fetchOrders(int page,
+      {DateTime? fromDate,
+      DateTime? toDate,
+      OrderStatus status = OrderStatus.all}) async {
     try {
       emit(FetchOrdersLoadingState());
       final response = await AdminOrderRepo.fetchOrder(
           CubitsInjector.authCubit.currentUser!.id,
           fromDate: fromDate,
           toDate: toDate,
-          page: page);
+          page: page,
+          status: status == OrderStatus.all ? null : status.value);
       emit(FetchOrdersSuccessState(
           orderList: response.data ?? [],
           totalPage: response.totalPages,
@@ -41,6 +46,10 @@ class AdminOrderCubit extends Cubit<AdminOrderState> {
 
   void updateSelectedDate() {
     emit(UpdateSelectedDate());
+  }
+
+  void updateDropDownOrderStatus() {
+    emit(UpdateSelectedOrderStatus());
   }
 
   void showDispatchForm() {

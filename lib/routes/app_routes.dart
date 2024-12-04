@@ -1,32 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/presentation/admin_home.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/forgot_password_screen.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/sign_up_screen.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/splash_screen.dart';
+import 'package:mafatlal_ecommerce/features/checkout/bloc/checkout_cubit.dart';
+import 'package:mafatlal_ecommerce/features/checkout/presentation/checkout_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/presentation/subcategory_detail.dart';
-import 'package:mafatlal_ecommerce/features/home/model/searchmodel.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/category_product_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/order_details_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/order_history.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/search_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/order_success_widget.dart';
-import 'package:mafatlal_ecommerce/features/product_details/presentaion/product_details.dart';
+import 'package:mafatlal_ecommerce/features/product_details/presentaion/product_detail_screen.dart';
 
 class GenerateRoute {
   static Route<dynamic>? Function(RouteSettings)? onGenerateRoute =
       (RouteSettings settings) {
-    if (settings.name?.startsWith(ProductDetailsScreen.route) ?? false) {
-      return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => ProductDetailsScreen(
-                productId: settings.arguments as int,
-              ));
-    }
-
     switch (settings.name) {
       //Before Login
       case SplashScreen.route:
@@ -50,12 +43,12 @@ class GenerateRoute {
             builder: (_) => ProductDetailsScreen(
                   productId: (settings.arguments as int?) ?? 104,
                 ));
-      case SearchScreen.route:
-        return MaterialPageRoute(
-            settings: settings,
-            builder: (_) => SearchScreen(
-                  products: settings.arguments as List<ProductSearch>?,
-                ));
+      // case SearchWidget.route:
+      //   return MaterialPageRoute(
+      //       settings: settings,
+      //       builder: (_) => SearchWidget(
+      //             products: settings.arguments as List<ProductSearch>?,
+      //           ));
       case CategoryProductScreen.route:
         return MaterialPageRoute(
             settings: settings,
@@ -71,12 +64,19 @@ class GenerateRoute {
               return SubCategoryDetail(
                 subcategories:
                     arguments['subcategories'] as List<SubCategory_new>,
-                selectedname: arguments['name'] as String,
+                selectedName: arguments['name'] as String,
               );
             });
       case CartScreen.route:
         return MaterialPageRoute(
             settings: settings, builder: (_) => const CartScreen());
+      case CheckoutScreen.route:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => BlocProvider<CheckoutCubit>(
+              create: (context) => CheckoutCubit(),
+              child: const CheckoutScreen()),
+        );
       // return TransparentRouteBuilder(
       //     settings: settings, builder: (_) => const CartScreen());
       case OrderSuccess.route:

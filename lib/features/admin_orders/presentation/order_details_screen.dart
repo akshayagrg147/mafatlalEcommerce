@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
@@ -11,16 +12,19 @@ import 'package:mafatlal_ecommerce/features/admin_orders/presentation/widgets/or
 import 'package:mafatlal_ecommerce/features/admin_orders/presentation/widgets/ordered_productlist.dart';
 import 'package:mafatlal_ecommerce/helper/utils.dart';
 
-class OrderDetailsScreen extends StatefulWidget {
+@RoutePage()
+class AdminOrderDetailsScreen extends StatefulWidget {
+  static const String route = "orderDetails";
+  const AdminOrderDetailsScreen(
+      {super.key, @PathParam() required this.orderId});
   final int orderId;
 
-  const OrderDetailsScreen({super.key, required this.orderId});
-
   @override
-  State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
+  State<AdminOrderDetailsScreen> createState() =>
+      _AdminOrderDetailsScreenState();
 }
 
-class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
+class _AdminOrderDetailsScreenState extends State<AdminOrderDetailsScreen> {
   OrderDetailModel? orderDetails;
 
   @override
@@ -56,7 +60,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               children: [
                 IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      context.router.maybePop();
                     },
                     icon: const Icon(Icons.arrow_back)),
                 const SizedBox(
@@ -122,6 +126,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               child: CustomerDetailis(
                                   shippingAddress: orderDetails!.shipping,
                                   billingAddress: orderDetails!.billing,
+                                  gstNumber: orderDetails!.gstNumber,
                                   customerName: orderDetails!.customerName,
                                   customerEmail: orderDetails!.customerEmail),
                             ),

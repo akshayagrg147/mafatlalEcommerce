@@ -6,10 +6,12 @@ class ProductDetail {
   final String name;
   final String productCategory;
   final String productSubCategory;
+  final String productOrganization;
   final Variant? variant;
   final List<String> productImage;
 
   final String price;
+  final double gstPercentage;
   final String? description;
   final List<RelatedProduct> relatedProducts;
   int quantity;
@@ -25,6 +27,8 @@ class ProductDetail {
     this.description,
     required this.relatedProducts,
     required this.quantity,
+    required this.gstPercentage,
+    required this.productOrganization,
   });
 
   static Variant? _parseVariant(dynamic sizeAvailable) {
@@ -58,9 +62,20 @@ class ProductDetail {
       productImage: _parseProductImage(json['product_image']),
       price: json['price'],
       description: json['description'],
+      gstPercentage: double.tryParse(json['gst_percentage'] ?? "0") ?? 0,
+      productOrganization: json['product_organization'] ?? '',
       relatedProducts: relatedProductsList,
       quantity: CartHelper.getProductQuantity(int.parse(id), variant: variant),
     );
+  }
+
+  num getPrice() {
+    if (variant != null) {
+      return variant!.selectedVariant.price +
+          ((variant!.selectedVariant.price * gstPercentage) / 100);
+    }
+    final parsedPrice = double.tryParse(price ?? '0.0') ?? 0.0;
+    return parsedPrice + ((parsedPrice * gstPercentage) / 100);
   }
 }
 
@@ -84,20 +99,21 @@ class RelatedProduct {
   final ProductImage productImage;
   final String price;
   final String? description;
+  final double gstPercentage;
   int quantity;
 
-  RelatedProduct({
-    required this.id,
-    required this.name,
-    required this.productCategory,
-    required this.productSubCategory,
-    required this.variant,
-    required this.productImage,
-    required this.price,
-    this.description,
-    required this.productOrganization,
-    required this.quantity,
-  });
+  RelatedProduct(
+      {required this.id,
+      required this.name,
+      required this.productCategory,
+      required this.productSubCategory,
+      required this.variant,
+      required this.productImage,
+      required this.price,
+      this.description,
+      required this.productOrganization,
+      required this.quantity,
+      required this.gstPercentage});
 
   static Variant? _parseVariant(dynamic sizeAvailable) {
     if (sizeAvailable is Map && sizeAvailable.isNotEmpty) {
@@ -105,6 +121,15 @@ class RelatedProduct {
           sizeAvailable.entries.first); // Adjust based on your Variant model
     }
     return null; // Return null if size_available is empty or not a Map
+  }
+
+  num getPrice() {
+    if (variant != null) {
+      return variant!.selectedVariant.price +
+          ((variant!.selectedVariant.price * gstPercentage) / 100);
+    }
+    final parsedPrice = double.tryParse(price ?? '0.0') ?? 0.0;
+    return parsedPrice + ((parsedPrice * gstPercentage) / 100);
   }
 
   factory RelatedProduct.fromJson(Map<String, dynamic> json) {
@@ -119,6 +144,7 @@ class RelatedProduct {
       productImage: ProductImage.fromJson(json['product_image']),
       price: json['price'],
       description: json['description'],
+      gstPercentage: double.tryParse(json['gst_percentage'] ?? "0") ?? 0,
       quantity: CartHelper.getProductQuantity(int.parse(id)),
     );
   }

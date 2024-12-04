@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:auto_route/auto_route.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,14 +9,15 @@ import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/bloc/admin_home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/bloc/admin_home_state.dart';
 
-class AdminHomeScreen extends StatefulWidget {
-  const AdminHomeScreen({Key? key}) : super(key: key);
+@RoutePage()
+class AdminDashboard extends StatefulWidget {
+  const AdminDashboard({Key? key}) : super(key: key);
 
   @override
-  State<AdminHomeScreen> createState() => _AdminHomeScreenState();
+  State<AdminDashboard> createState() => _AdminDashboardState();
 }
 
-class _AdminHomeScreenState extends State<AdminHomeScreen> {
+class _AdminDashboardState extends State<AdminDashboard> {
   late AdminHomeCubit cubit;
 
   @override

@@ -1,9 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
-import 'package:mafatlal_ecommerce/features/home/SubCategory/presentation/subcategory_detail.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SubCategoryList extends StatelessWidget {
@@ -13,28 +14,31 @@ class SubCategoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      scrollDirection: Axis.horizontal,
-      itemCount: subcategoriesss.length,
-      separatorBuilder: (context, index) =>
-          SizedBox(width: ResponsiveWidget.isSmallScreen(context) ? 20 : 60),
-      itemBuilder: (context, index) {
-        final subcategory = subcategoriesss[index];
-        final widget = SubCategoryItem(
-          imagePath: subcategory.img,
-          name: subcategory.name,
-          itemlength: subcategoriesss.length,
-          subcategories: subcategoriesss,
-        );
-        if (index == 0) {
-          return Padding(
-            padding: EdgeInsets.only(
-                left: ResponsiveWidget.isSmallScreen(context) ? 20 : 60),
-            child: widget,
+    return Center(
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: subcategoriesss.length,
+        shrinkWrap: true,
+        separatorBuilder: (context, index) =>
+            SizedBox(width: ResponsiveWidget.isSmallScreen(context) ? 20 : 60),
+        itemBuilder: (context, index) {
+          final subcategory = subcategoriesss[index];
+          final widget = SubCategoryItem(
+            imagePath: subcategory.img,
+            name: subcategory.name,
+            itemlength: subcategoriesss.length,
+            subcategories: subcategoriesss,
           );
-        }
-        return widget;
-      },
+          if (index == 0) {
+            return Padding(
+              padding: EdgeInsets.only(
+                  left: ResponsiveWidget.isSmallScreen(context) ? 20 : 60),
+              child: widget,
+            );
+          }
+          return widget;
+        },
+      ),
     );
   }
 }
@@ -67,10 +71,8 @@ class _SubCategoryItemState extends State<SubCategoryItem> {
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, SubCategoryDetail.route, arguments: {
-            "subcategories": widget.subcategories,
-            "name": widget.name
-          });
+          context.router.push(SubCategoryDetailRoute(
+              subcategories: widget.subcategories, selectedName: widget.name));
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 18),

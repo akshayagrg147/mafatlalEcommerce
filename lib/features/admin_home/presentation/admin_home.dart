@@ -1,21 +1,17 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
-import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/features/admin_category/presentation/admin_category_screen.dart';
-import 'package:mafatlal_ecommerce/features/admin_category/presentation/admin_organisation_screen.dart';
-import 'package:mafatlal_ecommerce/features/admin_home/presentation/admin_home_screen.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/presentation/widgets/admin_header.dart';
 import 'package:mafatlal_ecommerce/features/admin_home/presentation/widgets/admin_home_drawer.dart';
-import 'package:mafatlal_ecommerce/features/admin_orders/presentation/order_history_screen.dart';
-import 'package:mafatlal_ecommerce/features/admin_products/presentation/products_home.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_cubit.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_state.dart';
-import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
+@RoutePage()
 class AdminHome extends StatelessWidget {
-  static const String route = "/adminHomeScreen";
+  static const String route = "/dashboard";
 
   const AdminHome({super.key});
 
@@ -28,43 +24,53 @@ class AdminHome extends StatelessWidget {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is LogoutState) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, LoginScreen.route, (route) => false);
+          context.router.pushAndPopUntil(const LoginScreenRoute(),
+              predicate: (route) => false);
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.kGrey100,
-        body: SizedBox.expand(
-          child: Column(
-            children: [
-              AdminHeader(),
-              Expanded(
-                  child: Row(
-                children: [
-                  SizedBox(width: 250, child: AdminHomeDrawer()),
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: PageView(
-                      scrollDirection: Axis.vertical,
-                      controller:
-                          CubitsInjector.adminHomeCubit.homePageController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        AdminHomeScreen(),
-                        OrderHistoryScreen(),
-                        ProductHomeScreen(),
-                        AdminCategoryScreen(),
-                        AdminOrganisationScreen()
-                      ],
-                    ),
-                  ))
-                ],
-              ))
-            ],
+          backgroundColor: AppColors.kGrey100,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(150),
+            child: AdminHeader(),
           ),
-        ),
-      ),
+          body: AutoTabsRouter(
+            routes: [
+              AdminDashboardRoute(),
+              OrdersPageRoute(),
+              AdminProductsPageRoute(),
+              AdminCategoryPageRoute(),
+              AdminOrganisationScreenRoute()
+            ],
+            builder: (context, child) {
+              return Row(
+                children: [
+                  SizedBox(
+                      width: 250,
+                      child: AdminHomeDrawer(
+                        activePageIndex: AutoTabsRouter.of(context).activeIndex,
+                      )),
+                  Expanded(child: child)
+                  // Expanded(
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.symmetric(horizontal: 12),
+                  //       child: PageView(
+                  //         scrollDirection: Axis.vertical,
+                  //         controller: CubitsInjector.adminHomeCubit.homePageController,
+                  //         physics: const NeverScrollableScrollPhysics(),
+                  //         children: [
+                  //           AdminDashboard(),
+                  //           OrderHistoryScreen(),
+                  //           ProductHomeScreen(),
+                  //           AdminCategoryScreen(),
+                  //           AdminOrganisationScreen()
+                  //         ],
+                  //       ),
+                  //     ))
+                ],
+              );
+            },
+          )),
     );
   }
 }

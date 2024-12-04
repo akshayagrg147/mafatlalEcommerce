@@ -32,9 +32,10 @@ class Order {
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
-    final shippingAddress =
-        json['shipping'] != null ? Address.fromJson(json['shipping']) : null;
-    final billingAdress = json['billing'] != null
+    final shippingAddress = json['shipping'] != null && json['shipping'] is Map
+        ? Address.fromJson(json['shipping'])
+        : null;
+    final billingAdress = json['billing'] != null && json['billing'] is Map
         ? Address.fromJson(json['billing'])
         : shippingAddress;
     return Order(

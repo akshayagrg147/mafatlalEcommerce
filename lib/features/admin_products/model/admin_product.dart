@@ -13,6 +13,7 @@ class AdminProduct {
   final String description;
   final List<String>? productImage;
   final num price;
+  final double gstPercentage;
 
   AdminProduct({
     required this.productId,
@@ -26,6 +27,7 @@ class AdminProduct {
     this.categoryId,
     this.subCategoryId,
     this.subCategoryName,
+    required this.gstPercentage,
     required this.description,
   });
 
@@ -34,6 +36,7 @@ class AdminProduct {
       productName: "",
       categoryName: "",
       price: 0,
+      gstPercentage: 0,
       description: "");
 
   factory AdminProduct.fromJson(
@@ -75,6 +78,7 @@ class AdminProduct {
       variant: variant,
       productImage: images,
       price: num.tryParse(json['price'] ?? "0") ?? 0,
+      gstPercentage: double.tryParse(json['gst_percentage'] ?? "0") ?? 0,
       description: json['description'] ?? "",
     );
   }

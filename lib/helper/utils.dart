@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 class Utils {
   static String formatDateTime(DateTime dateTime) {
-    return DateFormat("EEEE, dd MMM yy, hh:mm a").format(dateTime);
+    return DateFormat("EEEE, dd MMM yy, hh:mm").format(dateTime);
   }
 
   static String formatDateTimeToDateString(DateTime dateTime) {

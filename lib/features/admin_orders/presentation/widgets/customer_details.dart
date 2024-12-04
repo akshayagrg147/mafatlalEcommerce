@@ -8,11 +8,13 @@ class CustomerDetailis extends StatelessWidget {
   final Address? billingAddress;
   final String customerName;
   final String customerEmail;
+  final String gstNumber;
 
   const CustomerDetailis(
       {super.key,
       this.shippingAddress,
       this.billingAddress,
+      required this.gstNumber,
       required this.customerName,
       required this.customerEmail});
 
@@ -61,6 +63,20 @@ class CustomerDetailis extends StatelessWidget {
           ),
           Text(
             customerEmail,
+            style: AppTextStyle.f14OutfitBlackW500.copyWith(color: Colors.blue),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Text(
+            "GST Information",
+            style: AppTextStyle.f16OutfitBlackW500,
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            gstNumber,
             style: AppTextStyle.f14OutfitBlackW500.copyWith(color: Colors.blue),
           ),
           SizedBox(

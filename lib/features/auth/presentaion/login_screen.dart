@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,15 +12,14 @@ import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/features/admin_home/presentation/admin_home.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_cubit.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_state.dart';
-import 'package:mafatlal_ecommerce/features/auth/presentaion/sign_up_screen.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/helper/enums.dart';
 import 'package:mafatlal_ecommerce/helper/toast_utils.dart';
 import 'package:mafatlal_ecommerce/helper/validators.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
+@RoutePage()
 class LoginScreen extends StatefulWidget {
   static const String route = "/loginScreen";
 
@@ -70,8 +70,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 right: 0,
                 child: InkWell(
                     onTap: () {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          HomeScreen.route, (route) => false);
+                      context.router.pushAndPopUntil(const HomeScreenRoute(),
+                          predicate: (_) => false);
                     },
                     child: const Icon(Icons.close)),
               )
@@ -182,12 +182,14 @@ class _LoginScreenState extends State<LoginScreen> {
             BlocConsumer<AuthCubit, AuthState>(
               listener: (context, state) {
                 if (state is LoginSuccessState) {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      CubitsInjector.authCubit.currentUser?.userType ==
-                              UserType.admin
-                          ? AdminHome.route
-                          : HomeScreen.route,
-                      (route) => false);
+                  if (CubitsInjector.authCubit.currentUser?.userType ==
+                      UserType.admin) {
+                    context.router.pushAndPopUntil(const AdminHomeRoute(),
+                        predicate: (_) => false);
+                  } else {
+                    context.router.pushAndPopUntil(const HomeScreenRoute(),
+                        predicate: (_) => false);
+                  }
                 }
                 if (state is LoginFailedState) {
                   ToastUtils.showErrorToast(state.message);
@@ -203,7 +205,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
                 return CustomElevatedButton(
                   width: width ?? double.maxFinite,
-                  backgroundColor: AppColors.kRed,
                   onPressed: () {
                     FocusScope.of(context).unfocus();
                     if (_formKey.currentState?.validate() == true) {
@@ -229,7 +230,8 @@ class _LoginScreenState extends State<LoginScreen> {
               TextSpan(
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      Navigator.pushNamed(context, RegistrationScreen.route);
+                      context.router.push(const RegistrationScreenRoute());
+                      // Navigator.pushNamed(context, RegistrationScreen.route);
                     },
                   text: "\t${AppStrings.signUp}",
                   style: AppTextStyle.f16RedW600)

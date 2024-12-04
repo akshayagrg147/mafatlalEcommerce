@@ -10,8 +10,15 @@ class AdminHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.kGrey900,
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      decoration: BoxDecoration(color: AppColors.kWhite, boxShadow: [
+        BoxShadow(
+          color: AppColors.kBlack.withOpacity(0.1),
+          spreadRadius: 1,
+          blurRadius: 2,
+          offset: const Offset(0, 1), // changes position of shadow
+        ),
+      ]),
       child: Row(
         children: [
           Image.asset(
@@ -25,7 +32,7 @@ class AdminHeader extends StatelessWidget {
               },
               child: Text(
                 'Logout',
-                style: AppTextStyle.f14WhiteW500,
+                style: AppTextStyle.f14BlackW500,
               ))
         ],
       ),

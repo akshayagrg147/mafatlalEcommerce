@@ -1,4 +1,5 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,16 +20,19 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/drawer.dart
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_appbar.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_banner.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/product_grid_tile.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
+@RoutePage()
 class SubCategoryDetail extends StatefulWidget {
   static const String route = "/SubCategoryDetail";
   final List<SubCategory_new> subcategories;
-  final String selectedname;
+  final String selectedName;
 
   const SubCategoryDetail(
-      {super.key, required this.subcategories, required this.selectedname});
+      {super.key,
+      required this.subcategories,
+      @PathParam() required this.selectedName});
 
   @override
   State<SubCategoryDetail> createState() => _SubCategoryDetailState();
@@ -43,7 +47,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
     super.initState();
     subcategoryCubit = BlocProvider.of<SubcategoryCubit>(context);
     subcategoryCubit.getsubcategorydetails(
-        widget.subcategories, widget.selectedname);
+        widget.subcategories, widget.selectedName);
   }
 
   @override
@@ -76,17 +80,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
             body: ListView(
               children: [
                 const SizedBox(height: 10),
-                CarouselSlider(
-                  items: bannerImages
-                      .map((imagePath) => HomeBanner(imagePath: imagePath))
-                      .toList(),
-                  options: CarouselOptions(
-                    viewportFraction: 1,
-                    height:
-                        ResponsiveWidget.isSmallScreen(context) ? 200 : 400.0,
-                    autoPlay: true,
-                  ),
-                ),
+                buildBanner(),
                 _buildDropdownSelectors(),
                 _buildProductGrid(),
                 const Footer()
@@ -101,24 +95,19 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
       AssetPath.banner3,
     ];
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(150),
-        child: Header(),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(150),
+        child: Header(
+          onSearchSubmitted: (value) {
+            context.router.push(SearchScreenRoute(searchText: value));
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 10),
-            CarouselSlider(
-              items: bannerImages
-                  .map((imagePath) => HomeBanner(imagePath: imagePath))
-                  .toList(),
-              options: CarouselOptions(
-                viewportFraction: 1,
-                height: ResponsiveWidget.isSmallScreen(context) ? 200 : 444.0,
-                autoPlay: true,
-              ),
-            ),
+            buildBanner(),
             _buildDropdownSelectors(),
             _buildProductGrid(),
             const Footer(),
@@ -126,6 +115,28 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
         ),
       ),
     );
+  }
+
+  Widget buildBanner() {
+    return BlocBuilder<SubcategoryCubit, SubCategoryDetailState>(
+        buildWhen: (previous, current) =>
+            current is GetSubCategoryDetailScreenSuccessState,
+        builder: (context, state) {
+          return CachedNetworkImage(
+              imageUrl: subcategoryCubit.bannerImgUrl ?? "",
+              errorWidget: (context, url, error) => const SizedBox.shrink(),
+              imageBuilder: (context, imageProvider) => Container(
+                    height:
+                        ResponsiveWidget.isSmallScreen(context) ? 200 : 444.0,
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ));
+        });
   }
 
   Widget _buildProductGrid() {
@@ -150,10 +161,29 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                 child: Container(
                   margin: const EdgeInsets.all(30),
                   alignment: Alignment.topLeft,
-                  child: Text(
-                    '${state.organization?.subCategoryName} / ${state.organization?.stateName} / ${state.organization?.districtName} / ${state.orgname} ',
-                    style: AppTextStyle.f33darkblue,
-                  ),
+                  child: Builder(builder: (context) {
+                    final subCat = subcategoryCubit.selectedSubCategory?.name;
+                    final state = subcategoryCubit.SelectedStatename;
+                    final district = subcategoryCubit.SelectedSDistrictname;
+                    final org = subcategoryCubit.SelectedOrganizationname;
+                    String heading = "";
+                    if (subCat != null) {
+                      heading += subCat;
+                    }
+                    if (state != null) {
+                      heading += '\t/\t$state';
+                    }
+                    if (district != null) {
+                      heading += '\t/\t$district';
+                    }
+                    if (org != null) {
+                      heading += '\t/\t$org';
+                    }
+                    return Text(
+                      heading,
+                      style: AppTextStyle.f33darkblue,
+                    );
+                  }),
                 ),
               ),
               GridView.count(
@@ -236,13 +266,13 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
           icon: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              VerticalDivider(
+              const VerticalDivider(
                 color: Colors.grey,
                 thickness: 1,
                 width: 1,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: SvgPicture.asset(
                   AssetPath.arrDown,
                   height: 20,
@@ -390,7 +420,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                       child: Text(stateItem.name),
                     ),
                     onChanged: (newValue) {
-                      if (newValue != null) {
+                      if (newValue != null && newValue.id != 0) {
                         subcategoryCubit.selectState(newValue.name);
                       }
                     },
@@ -424,7 +454,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                     child: Text(stateItem.name),
                   ),
                   onChanged: (newValue) {
-                    if (newValue != null) {
+                    if (newValue != null && newValue.id != 0) {
                       subcategoryCubit.selectState(newValue.name);
                     }
                   },
@@ -464,7 +494,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                       child: Text(stateItem.name),
                     ),
                     onChanged: (newValue) {
-                      if (newValue != null) {
+                      if (newValue != null && newValue.id != 0) {
                         subcategoryCubit.selectdistrict(newValue.name);
                       }
                     },
@@ -499,7 +529,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                     child: Text(stateItem.name),
                   ),
                   onChanged: (newValue) {
-                    if (newValue != null) {
+                    if (newValue != null && newValue.id != 0) {
                       subcategoryCubit.selectdistrict(newValue.name);
                     }
                   },
@@ -540,7 +570,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
                       child: Text(stateItem.name),
                     ),
                     onChanged: (newValue) {
-                      if (newValue != null) {
+                      if (newValue != null && newValue.id != 0) {
                         subcategoryCubit.selectOrganization(newValue.name);
                       }
                     },

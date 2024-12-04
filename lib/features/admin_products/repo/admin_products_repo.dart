@@ -57,6 +57,7 @@ class AdminProductRepo {
     int? subCategoryId,
     int? orgId,
     required int price,
+    required double gstPercentage,
     required Map<String, int> size,
   }) async {
     final data = {
@@ -67,6 +68,7 @@ class AdminProductRepo {
           "description": description,
           "price": price.toString(),
           "image": imageUrl,
+          "gst_percentage": gstPercentage.toStringAsFixed(2),
         }
       ]
     };
@@ -99,6 +101,7 @@ class AdminProductRepo {
     int? subCategoryId,
     int? orgId,
     required int price,
+    required double gstPercentage,
     required Map<String, int> size,
   }) async {
     final data = {
@@ -108,6 +111,7 @@ class AdminProductRepo {
       "description": description,
       "price": price.toString(),
       "image": imageUrl,
+      "gst_percentage": gstPercentage.toStringAsFixed(2),
     };
 
     if (categoryId != null) {

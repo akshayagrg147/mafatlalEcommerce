@@ -1,26 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
-import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+//
+// (value) {
+// CubitsInjector.homeCubit.searchOrganisation(value);
+// }
+//
+// (value) {
+// CubitsInjector.homeCubit.searchOrganisation(value);
+//
+// //Do something wi
+// }
 
 class SearchInput extends StatelessWidget {
-  final TextEditingController textController;
+  final TextEditingController? textController;
   final String hintText;
+  final Function(String)? onSubmitted;
+  final Function(String)? onChanged;
   const SearchInput(
-      {required this.textController, required this.hintText, Key? key})
+      {this.textController,
+      required this.hintText,
+      this.onChanged,
+      this.onSubmitted,
+      Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      onSubmitted: (value) {
-        CubitsInjector.homeCubit.searchOrganisation(value);
-      },
+      onSubmitted: onSubmitted,
       controller: textController,
-      onChanged: (value) {
-        CubitsInjector.homeCubit.searchOrganisation(value);
-
-        //Do something wi
-      },
+      onChanged: onChanged,
       decoration: InputDecoration(
         suffixIcon: Icon(
           Icons.search,

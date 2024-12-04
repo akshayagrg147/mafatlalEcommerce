@@ -31,24 +31,27 @@ class OrderModel {
     this.trackingUrl,
   });
 
-  factory OrderModel.fromMap(Map<String, dynamic> json) => OrderModel(
-        orderId: json["order_id"],
-        createdOn: DateTime.parse(json["created_on"]).toLocal(),
-        customerName: json["customer_name"],
-        productQuantity: json["product_quantity"],
-        userId: json["user_id"],
-        channel: json["channel"],
-        price: json["price"],
-        delieveryMethod: json["delievery_method"],
-        orderStatus: json["order_status"],
-        paymentStatus: json['payment_status'] ?? '',
-        shipping: json["shipping"] == null
-            ? null
-            : Address.fromJson(json["shipping"]),
-        billing:
-            json["billing"] == null ? null : Address.fromJson(json["billing"]),
-        trackingUrl: json["tracking_url"],
-      );
+  factory OrderModel.fromMap(Map<String, dynamic> json) {
+    return OrderModel(
+      orderId: json["order_id"],
+      createdOn: DateTime.parse(json["created_on"]).toLocal(),
+      customerName: json["customer_name"],
+      productQuantity: json["product_quantity"],
+      userId: json["user_id"],
+      channel: json["channel"],
+      price: json["price"],
+      delieveryMethod: json["delievery_method"],
+      orderStatus: json["order_status"],
+      paymentStatus: json['payment_status'] ?? '',
+      shipping: json["shipping"] == null || !(json["shipping"] is Map)
+          ? null
+          : Address.fromJson(json["shipping"]),
+      billing: json["billing"] == null || !(json["billing"] is Map)
+          ? null
+          : Address.fromJson(json["billing"]),
+      trackingUrl: json["tracking_url"],
+    );
+  }
 
   Map<String, dynamic> toMap() => {
         "order_id": orderId,

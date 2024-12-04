@@ -1,11 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/constants/app_strings.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
-import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/core/size_config.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/search_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/cart_btn.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Function()? onMenuTap;
@@ -34,13 +34,10 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return const SearchScreen();
-          }));
+          context.router.push(SearchScreenRoute());
         },
         child: TextField(
           enabled: false,
-          controller: CubitsInjector.homeCubit.searchController,
           decoration: InputDecoration(
             filled: true,
             contentPadding: EdgeInsets.symmetric(

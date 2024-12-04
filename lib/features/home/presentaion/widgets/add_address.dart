@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -111,7 +112,7 @@ class _AddEditAddressState extends State<AddEditAddress> {
                 ),
                 IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      context.router.maybePop();
                     },
                     icon: const Icon(
                       Icons.close_sharp,
@@ -280,7 +281,7 @@ class _AddEditAddressState extends State<AddEditAddress> {
             BlocConsumer<HomeCubit, HomeState>(
               listener: (context, state) {
                 if (state is UpdateAddressState) {
-                  Navigator.pop(context);
+                  context.router.maybePop();
                 }
               },
               buildWhen: (previous, current) =>

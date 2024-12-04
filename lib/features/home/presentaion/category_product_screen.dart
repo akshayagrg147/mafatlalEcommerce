@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/components/vertical_tabbar.dart';
@@ -7,6 +8,7 @@ import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/subcat_products_view.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/subcategory_grid_tile.dart';
 
+@RoutePage()
 class CategoryProductScreen extends StatelessWidget {
   static const String route = "/categoryProductScreen";
   final Category_new category;
@@ -33,7 +35,7 @@ class CategoryProductScreen extends StatelessWidget {
           children: [
             IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  context.router.maybePop();
                 },
                 icon: Icon(Icons.arrow_back)),
             SizedBox(

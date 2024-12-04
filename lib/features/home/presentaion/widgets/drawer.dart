@@ -1,9 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/order_history.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key});
@@ -46,8 +46,8 @@ class HomeDrawer extends StatelessWidget {
               style: AppTextStyle.f14BlackW500,
             ),
             onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, OrdersHistory.route);
+              context.router.maybePop();
+              context.router.push(const OrdersHistoryRoute());
             },
           ),
           ListTile(
@@ -95,8 +95,6 @@ void _showLogoutConfirmationDialog(BuildContext context) {
             onPressed: () {
               // Handle the logout action
               CubitsInjector.authCubit.logOut();
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil(LoginScreen.route, (route) => false);
 
               // To close the drawer as well
             },

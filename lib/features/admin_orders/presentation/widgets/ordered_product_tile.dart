@@ -64,9 +64,22 @@ class OrderedProductTile extends StatelessWidget {
           ),
           Expanded(
             flex: 2,
-            child: Text(
-              "₹${product.price} x ${product.quantity}",
-              style: AppTextStyle.f12OutfitBlackW500,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "₹${product.price} x ${product.quantity}",
+                  style: AppTextStyle.f12OutfitBlackW500,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "GST :- ${product.gstPercentage}%",
+                  style: AppTextStyle.f12OutfitBlackW500,
+                ),
+              ],
             ),
           ),
           const Expanded(
@@ -74,10 +87,23 @@ class OrderedProductTile extends StatelessWidget {
             child: SizedBox(),
           ),
           Expanded(
-            flex: 1,
-            child: Text(
-              "₹${product.price * product.quantity}",
-              style: AppTextStyle.f12OutfitBlackW500,
+            flex: 2,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  "₹${(product.price * product.quantity).toStringAsFixed(2)}",
+                  style: AppTextStyle.f12OutfitBlackW500,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "₹${product.getGstAmount().toStringAsFixed(2)}",
+                  style: AppTextStyle.f12OutfitBlackW500,
+                ),
+              ],
             ),
           ),
         ],

@@ -14,6 +14,7 @@ class ProductSearch {
   final String? productSubcategoryName;
   final String? productOrganizationId;
   final String? productOrganizationName;
+  final double gstPercentage;
   int quantity;
 
   ProductSearch({
@@ -29,6 +30,7 @@ class ProductSearch {
     this.productSubcategoryName,
     this.productOrganizationId,
     this.productOrganizationName,
+    required this.gstPercentage,
     required this.quantity,
   });
 
@@ -47,13 +49,22 @@ class ProductSearch {
     return null;
   }
 
+  num getPrice() {
+    if (variant != null) {
+      return variant!.selectedVariant.price +
+          ((variant!.selectedVariant.price * gstPercentage) / 100);
+    }
+    final parsedPrice = double.tryParse(price ?? '0.0') ?? 0.0;
+    return parsedPrice + ((parsedPrice * gstPercentage) / 100);
+  }
+
   factory ProductSearch.fromJson(Map<String, dynamic> json) {
     final idStr = json['id']?.toString() ?? '0';
     final id = int.tryParse(idStr);
     final variant = _parseVariant(json['size_available']);
     return ProductSearch(
       id: id,
-      name: json['name'] ?? '',
+      name: (json['name'] ?? '').replaceAll("\n", ' '),
       productImage: _parseProductImage(json['img']),
       variant: variant,
       price: json['price'] ?? '0.0',
@@ -68,6 +79,7 @@ class ProductSearch {
       productSubcategoryName: json['product_subcategory_name'] ?? '',
       productOrganizationId: json['product_organization_id']?.toString() ?? '',
       productOrganizationName: json['product_organization_name'] ?? '',
+      gstPercentage: double.tryParse(json['gst_percentage'] ?? "0") ?? 0,
       quantity: CartHelper.getProductQuantity(id ?? 0, variant: variant),
     );
   }

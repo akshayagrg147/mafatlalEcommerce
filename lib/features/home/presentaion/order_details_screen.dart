@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
@@ -10,10 +11,11 @@ import 'package:mafatlal_ecommerce/features/admin_orders/presentation/widgets/or
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 
+@RoutePage()
 class OrderDetailsScreen extends StatefulWidget {
   static const route = '/order_details_screen';
   final int orderId;
-  const OrderDetailsScreen({super.key, required this.orderId});
+  const OrderDetailsScreen({super.key, @PathParam() required this.orderId});
 
   @override
   State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
@@ -79,10 +81,12 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         height: 20,
                       ),
                       CustomerDetailis(
-                          shippingAddress: order!.shipping,
-                          billingAddress: order!.billing,
-                          customerName: order!.customerName,
-                          customerEmail: order!.customerEmail),
+                        shippingAddress: order!.shipping,
+                        billingAddress: order!.billing,
+                        customerName: order!.customerName,
+                        customerEmail: order!.customerEmail,
+                        gstNumber: order!.gstNumber,
+                      ),
                       SizedBox(
                         height: 20,
                       ),

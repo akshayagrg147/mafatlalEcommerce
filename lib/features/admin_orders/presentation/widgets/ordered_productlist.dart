@@ -83,7 +83,7 @@ class _OrderedProductListState extends State<OrderedProductList> {
           const SizedBox(
             height: 22,
           ),
-          if (widget.orderDetails.orderStatus == 'Pending' &&
+          if (widget.orderDetails.orderStatus == OrderStatus.placed.value &&
               CubitsInjector.authCubit.currentUser?.userType == UserType.admin)
             BlocBuilder<AdminOrderCubit, AdminOrderState>(
               buildWhen: (previous, current) =>

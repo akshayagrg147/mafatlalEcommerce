@@ -56,13 +56,14 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
     }
   }
 
-  void addCategory(String name, {required MediaInfo image}) async {
+  void addCategory(String name) async {
     try {
       emit(AddCategoryLoadingState());
-      final imgUrl = (await AuthRepo.uploadImage(image)).data;
 
-      await AdminCatRepo.addCategory(CubitsInjector.authCubit.currentUser!.id,
-          categoryName: name, imageUrl: imgUrl!);
+      await AdminCatRepo.addCategory(
+        CubitsInjector.authCubit.currentUser!.id,
+        categoryName: name,
+      );
       emit(AddCategorySuccessState());
     } on DioException catch (e) {
       emit(AddCategoryFailedState(
@@ -73,15 +74,21 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
   }
 
   void addSubCategory(int categoryId,
-      {required String name, required MediaInfo image}) async {
+      {required String name,
+      required MediaInfo image,
+      MediaInfo? bannerImage}) async {
     try {
       emit(AddSubCategoryLoadingState());
       final imgUrl = (await AuthRepo.uploadImage(image)).data;
-
+      String? bannerImgurl;
+      if (bannerImage != null) {
+        bannerImgurl = (await AuthRepo.uploadImage(bannerImage)).data;
+      }
       await AdminCatRepo.addSubCategory(
           CubitsInjector.authCubit.currentUser!.id,
           categoryId: categoryId,
           subCategoryName: name,
+          bannerImageUrl: bannerImgurl,
           imageUrl: imgUrl!);
       emit(AddSubCategorySuccessState());
     } on DioException catch (e) {
@@ -92,26 +99,28 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
     }
   }
 
-  void updateCategory(String name,
-      {required int categoryId, MediaInfo? image, String? img}) async {
+  void updateCategory(
+    String name, {
+    required int categoryId,
+  }) async {
     try {
       emit(AddCategoryLoadingState());
-      String? imgUrl;
-      if (image != null) {
-        imgUrl = (await AuthRepo.uploadImage(image)).data;
-      } else {
-        imgUrl = img;
-      }
-
-      if (imgUrl == null) {
-        throw Exception();
-      }
+      // String? imgUrl;
+      // if (image != null) {
+      //   imgUrl = (await AuthRepo.uploadImage(image)).data;
+      // } else {
+      //   imgUrl = img;
+      // }
+      //
+      // if (imgUrl == null) {
+      //   throw Exception();
+      // }
 
       await AdminCatRepo.updateCategory(
-          CubitsInjector.authCubit.currentUser!.id,
-          categoryId: categoryId,
-          categoryName: name,
-          imageUrl: imgUrl);
+        CubitsInjector.authCubit.currentUser!.id,
+        categoryId: categoryId,
+        categoryName: name,
+      );
       emit(AddCategorySuccessState());
     } on DioException catch (e) {
       emit(AddCategoryFailedState(
@@ -122,10 +131,15 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
   }
 
   void updateSubCategory(String name,
-      {required int subCategoryId, MediaInfo? image, String? img}) async {
+      {required int subCategoryId,
+      MediaInfo? image,
+      String? img,
+      MediaInfo? bannerImage,
+      String? bannerImg}) async {
     try {
       emit(AddSubCategoryLoadingState());
       String? imgUrl;
+      String? bannerImgUrl;
       if (image != null) {
         imgUrl = (await AuthRepo.uploadImage(image)).data;
       } else {
@@ -135,12 +149,17 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
       if (imgUrl == null) {
         throw Exception();
       }
-
+      if (bannerImage != null) {
+        bannerImgUrl = (await AuthRepo.uploadImage(bannerImage)).data;
+      } else {
+        bannerImgUrl = bannerImg;
+      }
       await AdminCatRepo.updateSubCategory(
           CubitsInjector.authCubit.currentUser!.id,
           subCategoryId: subCategoryId,
           subCategoryName: name,
-          imageUrl: imgUrl);
+          imageUrl: imgUrl,
+          bannerImgUrl: bannerImgUrl);
       emit(AddSubCategorySuccessState());
     } on DioException catch (e) {
       emit(AddSubCategoryFailedState(
@@ -177,19 +196,13 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
   }
 
   void addOrganisation(String name,
-      {required MediaInfo image,
-      StateModel? state,
-      DistrictModel? district}) async {
+      {StateModel? state, DistrictModel? district}) async {
     try {
       emit(AddOrganisationLoadingState());
-      final imgUrl = (await AuthRepo.uploadImage(image)).data;
-      if (imgUrl == null) {
-        throw Exception();
-      }
+
       await AdminCatRepo.addOrganisation(
           CubitsInjector.authCubit.currentUser!.id,
           organisationName: name,
-          imageUrl: imgUrl,
           stateId: state?.id,
           districtId: district?.id);
       emit(AddOrganisationSuccessState());
@@ -203,27 +216,15 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
 
   void updateOrganisation(String name,
       {required int organisationId,
-      MediaInfo? image,
-      String? img,
       StateModel? state,
       DistrictModel? district}) async {
     try {
       emit(AddOrganisationLoadingState());
-      String? imgUrl;
-      if (image != null) {
-        imgUrl = (await AuthRepo.uploadImage(image)).data;
-      } else {
-        imgUrl = img;
-      }
 
-      if (imgUrl == null) {
-        throw Exception();
-      }
       await AdminCatRepo.updateOrganisation(
           CubitsInjector.authCubit.currentUser!.id,
           organisationId: organisationId,
           organisationName: name,
-          imageUrl: imgUrl,
           stateId: state?.id,
           districtId: district?.id);
       emit(AddOrganisationSuccessState());
