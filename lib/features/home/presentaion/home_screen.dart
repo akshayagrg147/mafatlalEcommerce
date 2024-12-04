@@ -5,12 +5,12 @@ import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_cubit.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_state.dart';
-import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/drawer.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_appbar.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_body.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
 @RoutePage()
 class HomeScreen extends StatefulWidget {
@@ -38,8 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is LogoutState) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, LoginScreen.route, (route) => false);
+          context.router.pushAndPopUntil(const LoginScreenRoute(),
+              predicate: (route) => false);
         }
       },
       child: ResponsiveWidget(
@@ -50,12 +50,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget largeScreen() {
-    return const Scaffold(
+    return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(150),
-        child: Header(),
+        preferredSize: const Size.fromHeight(150),
+        child: Header(
+          onSearchSubmitted: (value) {
+            context.router.push(SearchScreenRoute(searchText: value));
+          },
+        ),
       ),
-      body: Align(alignment: Alignment.topCenter, child: HomeBody(isWeb: true)
+      body: const Align(
+          alignment: Alignment.topCenter, child: HomeBody(isWeb: true)
 
           // Navigator(
           //   key: CubitsInjector.homeCubit.homeNavigatorKey,
@@ -85,7 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
           if (CubitsInjector.authCubit.currentUser != null) {
             _homeKey.currentState?.openDrawer();
           } else {
-            Navigator.pushNamed(context, LoginScreen.route);
+            context.router.pushAndPopUntil(const LoginScreenRoute(),
+                predicate: (route) => false);
           }
         },
       ),

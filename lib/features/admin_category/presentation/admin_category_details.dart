@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
@@ -10,7 +11,9 @@ import 'package:mafatlal_ecommerce/features/admin_category/model/admin_cat_model
 import 'package:mafatlal_ecommerce/features/admin_category/presentation/widgets/add_update_cat.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/presentation/widgets/category_grid_tile.dart';
 
+@RoutePage()
 class AdminCategoryDetailPage extends StatefulWidget {
+  static const String route = "categoryDetails";
   final AdminCategory category;
 
   const AdminCategoryDetailPage({super.key, required this.category});
@@ -63,7 +66,7 @@ class _AdminCategoryDetailPageState extends State<AdminCategoryDetailPage> {
               children: [
                 IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      context.router.maybePop();
                     },
                     icon: const Icon(Icons.arrow_back)),
                 const SizedBox(

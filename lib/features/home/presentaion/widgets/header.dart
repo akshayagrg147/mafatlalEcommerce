@@ -12,17 +12,21 @@ import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/order_history.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/search_field.dart';
 import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
-import 'package:mafatlal_ecommerce/services/navigation_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Header extends StatefulWidget {
-  const Header({Key? key}) : super(key: key);
-
+  const Header(
+      {Key? key,
+      this.onSearchSubmitted,
+      this.onSearchChanged,
+      this.showCartIcon = true})
+      : super(key: key);
+  final Function(String)? onSearchSubmitted;
+  final Function(String)? onSearchChanged;
+  final bool showCartIcon;
   @override
   State<Header> createState() => _HeaderState();
 }
@@ -114,8 +118,8 @@ class _HeaderState extends State<Header> {
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, HomeScreen.route, (route) => false);
+                    context.router.pushAndPopUntil(const HomeScreenRoute(),
+                        predicate: (route) => false);
                   },
                   child: Container(
                     padding: const EdgeInsets.only(left: 10, top: 10),
@@ -133,8 +137,9 @@ class _HeaderState extends State<Header> {
                 padding: const EdgeInsets.all(5),
                 alignment: Alignment.center,
                 child: SearchInput(
-                  textController: CubitsInjector.homeCubit.searchController,
                   hintText: "Search here",
+                  onChanged: widget.onSearchChanged,
+                  onSubmitted: widget.onSearchSubmitted,
                 ),
               ),
               const Spacer(),
@@ -142,8 +147,8 @@ class _HeaderState extends State<Header> {
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, HomeScreen.route, (route) => false);
+                    context.router.pushAndPopUntil(const HomeScreenRoute(),
+                        predicate: (route) => false);
                   },
                   child: Container(
                     margin: const EdgeInsets.only(top: 5),
@@ -165,8 +170,7 @@ class _HeaderState extends State<Header> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
                   onPressed: () {
-                    context.router.push(const LoginRoute());
-                    // Navigator.pushNamed(context, LoginScreen.route);
+                    context.router.push(const LoginScreenRoute());
                   },
                   textColor: AppColors.kWhite,
                   label: "Login",
@@ -189,14 +193,16 @@ class _HeaderState extends State<Header> {
   }
 
   Widget CartIcons() {
-    if (NavigationService.getCurrentRouteName() == CartScreen.route) {
+    if (!widget.showCartIcon) {
       return const SizedBox.shrink();
     }
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, CartScreen.route);
+          context.router.push(
+            const CartScreenRoute(),
+          );
         },
         child: Container(
           height: 35,
@@ -330,7 +336,13 @@ class _HeaderState extends State<Header> {
       offset: const Offset(25, 10),
       onSelected: (value) {
         if (value == 'Your Orders') {
-          Navigator.pushNamed(context, OrdersHistory.route);
+          showDialog(
+              context: context,
+              builder: (context) {
+                return const OrdersHistory();
+              });
+          // context.router.push(const OrdersHistoryRoute());
+          // Navigator.pushNamed(context, OrdersHistory.route);
         } else if (value == 'Logout') {
           CubitsInjector.authCubit.logOut();
         }

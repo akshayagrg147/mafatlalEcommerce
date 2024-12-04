@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +14,9 @@ import 'package:mafatlal_ecommerce/features/admin_category/presentation/admin_ca
 import 'package:mafatlal_ecommerce/features/admin_category/presentation/widgets/add_update_cat.dart';
 import 'package:mafatlal_ecommerce/features/admin_category/presentation/widgets/show_delete_confirmation_dialog.dart';
 
+@RoutePage()
 class AdminCategoryListScreen extends StatefulWidget {
+  static const String route = "";
   const AdminCategoryListScreen({super.key});
 
   @override

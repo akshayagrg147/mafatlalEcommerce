@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (authCubit.currentUser?.userType == UserType.admin) {
         // context.router.replace(AdminHom)
       } else {
-        context.router.replace(const HomeRoute());
+        context.router.replace(const HomeScreenRoute());
       }
     }
   }

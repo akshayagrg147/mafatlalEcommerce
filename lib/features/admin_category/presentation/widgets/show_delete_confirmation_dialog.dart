@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
@@ -56,7 +57,7 @@ class ShowDeleteCatConfirmation extends StatelessWidget {
             children: [
               CustomElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.router.maybePop();
                   },
                   width: 100,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -69,7 +70,7 @@ class ShowDeleteCatConfirmation extends StatelessWidget {
               CustomElevatedButton(
                   onPressed: () {
                     onDeleteTap.call();
-                    Navigator.pop(context);
+                    context.router.maybePop();
                   },
                   width: 100,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -128,7 +129,7 @@ class ShowDeleteOrgConfirmation extends StatelessWidget {
             children: [
               CustomElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.router.maybePop();
                   },
                   width: 100,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -141,7 +142,7 @@ class ShowDeleteOrgConfirmation extends StatelessWidget {
               CustomElevatedButton(
                   onPressed: () {
                     onDeleteTap.call();
-                    Navigator.pop(context);
+                    context.router.maybePop();
                   },
                   width: 100,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),

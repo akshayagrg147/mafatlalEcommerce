@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,19 +21,31 @@ import 'package:mafatlal_ecommerce/features/checkout/presentation/widgets/billin
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/order_success_widget.dart';
 import 'package:mafatlal_ecommerce/helper/toast_utils.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
-class CheckoutScreen extends StatefulWidget {
+@RoutePage()
+class CheckoutScreen extends StatelessWidget {
   static const String route = "/checkout";
-
   const CheckoutScreen({super.key});
 
   @override
-  State<CheckoutScreen> createState() => _CheckoutScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider<CheckoutCubit>(
+      create: (context) => CheckoutCubit(),
+      child: const CheckoutForm(),
+    );
+  }
 }
 
-class _CheckoutScreenState extends State<CheckoutScreen> {
+class CheckoutForm extends StatefulWidget {
+  const CheckoutForm({super.key});
+
+  @override
+  State<CheckoutForm> createState() => _CheckoutFormState();
+}
+
+class _CheckoutFormState extends State<CheckoutForm> {
   final _formKey = GlobalKey<FormState>();
 
   String isGstRequired = 'Yes';
@@ -132,7 +147,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           LoadingAnimation.show(context);
         }
         if (state is CheckoutOrderSuccessState) {
-          Navigator.pop(context);
+          context.router.maybePop();
           final shippingAddress = context.read<CheckoutCubit>().shippingAddress;
           final billingAddress = context.read<CheckoutCubit>().billingAddress;
           if (saveAddress) {
@@ -145,11 +160,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           }
 
           CubitsInjector.homeCubit.resetCart();
-          Navigator.pushReplacementNamed(context, OrderSuccess.route);
+          context.router.replace(const OrderSuccessRoute());
         }
 
         if (state is CheckoutOrderErrorState) {
-          Navigator.pop(context);
+          context.router.maybePop();
           ToastUtils.showErrorToast(state.message);
         }
       },
@@ -168,7 +183,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           actions: [
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                context.router.maybePop();
               },
               child: const Icon(
                 Icons.shopping_cart,
@@ -451,7 +466,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           pincode: _billingPinCodeController.text,
                           mobile: _billingMobileNumberController.text,
                         );
-
+              log("message");
               context.read<CheckoutCubit>().placeOrder(
                   cartProducts: CubitsInjector.homeCubit.cartProducts,
                   gstNumber:

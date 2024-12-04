@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,7 +61,7 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
         }
         if (state is AddCategorySuccessState ||
             state is AddSubCategorySuccessState) {
-          Navigator.pop(context);
+          context.router.maybePop();
           ToastUtils.showSuccessToast(
               "${widget.isCategory ? "Category" : "Sub Category"} ${!isEdit ? 'Added' : 'Updated'} Successfully");
         }
@@ -97,7 +98,7 @@ class _AddUpdateCatState extends State<AddUpdateCat> {
                       ),
                       IconButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            context.router.maybePop();
                           },
                           icon: const Icon(Icons.close))
                     ],

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,7 @@ import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/searchmodel.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/size_selection_widget.dart';
-import 'package:mafatlal_ecommerce/features/product_details/presentaion/product_details.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
 class ProductSearchTile extends StatelessWidget {
   final ProductSearch product;
@@ -30,11 +31,7 @@ class ProductSearchTile extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            ProductDetailsScreen.route,
-            arguments: product.id,
-          );
+          context.router.push(ProductDetailsRoute(productId: product.id!));
         },
         child: Container(
           decoration: const BoxDecoration(

@@ -12,13 +12,10 @@ import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/address.dart';
 import 'package:mafatlal_ecommerce/features/home/model/category_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/product.dart';
-import 'package:mafatlal_ecommerce/features/home/model/productdetial_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/search_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/repo/home_repo.dart';
 import 'package:mafatlal_ecommerce/helper/enums.dart';
 import 'package:mafatlal_ecommerce/services/dio_utils_service.dart';
-import 'package:mafatlal_ecommerce/services/navigation_service.dart';
 import 'package:razorpay_web/razorpay_web.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -31,97 +28,12 @@ class HomeCubit extends Cubit<HomeState> {
 
   bool isCategoryScreenShown = false;
   final List<Product_new> cartProducts = [];
-  final searchController = TextEditingController();
-  ProductDetail? productDetail;
 
   // Timer? _timer;
 
   bool isSearchScreenShown = false;
 
   final homeNavigatorKey = GlobalKey<NavigatorState>();
-
-  void disposeSearch() {
-    searchController.clear();
-    // searchController.removeListener(searchDebouncer);
-    isSearchScreenShown = false;
-    // _timer = null;
-  }
-
-  // void initializeSearch() {
-  //   if (_timer == null) {
-  //
-  //     searchController.addListener(searchDebouncer);
-  //     emit(SearchInitialState());
-  //   }
-  // }
-
-  // void searchDebouncer() {
-  //   if (_timer != null) {
-  //     _timer!.cancel();
-  //   }
-  //   _timer = Timer(
-  //     const Duration(milliseconds: 500),
-  //     () {
-  //       searchOrganisation(searchController.text);
-  //     },
-  //   );
-  // }
-  void searchOrganisation(String searchText) async {
-    try {
-      emit(SearchLoadingState());
-
-      await Future.delayed(const Duration(milliseconds: 200));
-      final response = await HomeRepo.search(searchText);
-      if (isSearchScreenShown == false) {
-        homeNavigatorKey.currentState!
-            .pushNamed(SearchScreen.route, arguments: response.data ?? []);
-        isSearchScreenShown = true;
-      } else {
-        final route = NavigationService.getCurrentRouteName();
-        if (route != SearchScreen.route) {
-          homeNavigatorKey.currentState!
-              .pushNamed(SearchScreen.route, arguments: response.data ?? []);
-          isSearchScreenShown = true;
-        }
-      }
-      print(response.data);
-      emit(SearchSuccessState(
-        organisations: response.data ?? [],
-      ));
-    } on DioException catch (e) {
-      print(e);
-      emit(SearchFailedState(
-          message: e.response?.statusMessage ?? AppStrings.somethingWentWrong));
-    } catch (e) {
-      print(e);
-      emit(SearchFailedState(message: AppStrings.somethingWentWrong));
-    }
-  }
-
-  void searchOrganisationsmall(String searchText) async {
-    try {
-      emit(SearchLoadingState());
-
-      await Future.delayed(const Duration(milliseconds: 200));
-      final response = await HomeRepo.search(searchText);
-      // homeNavigatorKey.currentState!.push(MaterialPageRoute(
-      //     builder: (_) => SearchScreen(
-      //           products: response.data ?? [],
-      //         )));
-      // isSearchScreenShown = true;
-      print(response.data);
-      emit(SearchSuccessState(
-        organisations: response.data ?? [],
-      ));
-    } on DioException catch (e) {
-      print(e);
-      emit(SearchFailedState(
-          message: e.response?.statusMessage ?? AppStrings.somethingWentWrong));
-    } catch (e) {
-      print(e);
-      emit(SearchFailedState(message: AppStrings.somethingWentWrong));
-    }
-  }
 
   void getsubcategory() {
     emit(GetSubCategoryLoadingState());
@@ -280,25 +192,6 @@ class HomeCubit extends Cubit<HomeState> {
     }
     emit(FetchCartSuccessState());
     updateCartBilling();
-  }
-
-  void fetchProductDetails(int productId) async {
-    try {
-      emit(FetchProductDetailsLoadingState());
-      final response = await HomeRepo.fetchProductDetails(productId);
-      productDetail = response.data;
-      print("e---${response.data!.price}");
-
-      emit(FetchProductDetailsSuccessState(product: response.data!));
-    } on DioException catch (e) {
-      print(e);
-      emit(FetchProductDetailsFailedState(
-          message: e.message ?? AppStrings.somethingWentWrong));
-    } catch (e) {
-      print(e);
-      emit(FetchProductDetailsFailedState(
-          message: AppStrings.somethingWentWrong));
-    }
   }
 
   void fetchOrderhistory() async {

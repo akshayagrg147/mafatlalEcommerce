@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,10 +18,11 @@ import 'package:mafatlal_ecommerce/features/admin_products/presentation/widgets/
 import 'package:mafatlal_ecommerce/features/admin_products/presentation/widgets/size_available.dart';
 import 'package:mafatlal_ecommerce/helper/toast_utils.dart';
 
+@RoutePage()
 class ProductAddUpdateScreen extends StatefulWidget {
-  final AdminProduct? productDetails;
-
+  static const String route = "product";
   const ProductAddUpdateScreen({super.key, this.productDetails});
+  final AdminProduct? productDetails;
 
   @override
   State<ProductAddUpdateScreen> createState() => _ProductAddUpdateScreenState();
@@ -164,7 +166,7 @@ class _ProductAddUpdateScreenState extends State<ProductAddUpdateScreen> {
               children: [
                 IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      context.router.maybePop();
                     },
                     icon: const Icon(Icons.arrow_back)),
                 const SizedBox(

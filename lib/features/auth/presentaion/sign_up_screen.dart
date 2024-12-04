@@ -150,7 +150,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             InkWell(
                                 onTap: () {
                                   context.router.maybePop();
-                                  // Navigator.pop(context);
+                                  //context.router.maybePop();
                                 },
                                 child: const Icon(
                                   Icons.arrow_circle_left_outlined,
@@ -318,7 +318,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               ToastUtils.showErrorToast(state.message);
                             }
                             if (state is RegisterUserSuccessState) {
-                              context.router.pushAndPopUntil(const HomeRoute(),
+                              context.router.pushAndPopUntil(
+                                  const HomeScreenRoute(),
                                   predicate: (_) => false);
                               // Navigator.pushNamedAndRemoveUntil(
                               //     context, HomeScreen.route, (route) => false);

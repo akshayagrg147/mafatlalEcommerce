@@ -1,10 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
+@RoutePage()
 class OrderSuccess extends StatefulWidget {
   static const String route = "/orderSuccessScreen";
   const OrderSuccess({super.key});
@@ -16,8 +18,8 @@ class OrderSuccess extends StatefulWidget {
 class _OrderSuccessState extends State<OrderSuccess> {
   void returnToHome() {
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushNamedAndRemoveUntil(
-          context, HomeScreen.route, (route) => false);
+      context.router.pushAndPopUntil(const HomeScreenRoute(),
+          predicate: (route) => false);
     });
   }
 

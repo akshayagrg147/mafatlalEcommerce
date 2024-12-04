@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
@@ -5,41 +8,56 @@ import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/constants/app_strings.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
-import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
-import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/searchmodel.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/ProductSearchTile.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
+import 'package:mafatlal_ecommerce/features/search/bloc/search_cubit.dart';
+import 'package:mafatlal_ecommerce/features/search/bloc/search_state.dart';
 
-class SearchScreen extends StatefulWidget {
+@RoutePage()
+class SearchScreen extends StatelessWidget {
   static const String route = "/searchScreen";
-  final List<ProductSearch>? products;
-
-  const SearchScreen({super.key, this.products});
+  const SearchScreen({super.key, @queryParam this.searchText});
+  final String? searchText;
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider<SearchCubit>(
+      create: (_) => SearchCubit(),
+      child: SearchWidget(
+        searchText: searchText,
+      ),
+    );
+  }
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class SearchWidget extends StatefulWidget {
+  final String? searchText;
+  const SearchWidget({super.key, this.searchText});
+
+  @override
+  State<SearchWidget> createState() => _SearchWidgetState();
+}
+
+class _SearchWidgetState extends State<SearchWidget> {
   final List<ProductSearch> productlist = [];
   final searchController = TextEditingController();
-  late HomeCubit homeCubit;
+  late SearchCubit searchCubit;
+
+  Timer? searchDebouncer;
 
   @override
   void dispose() {
-    CubitsInjector.homeCubit.disposeSearch();
     searchController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
-    homeCubit = BlocProvider.of<HomeCubit>(context);
-    if (widget.products != null) {
-      productlist.addAll(widget.products!);
+    searchCubit = BlocProvider.of<SearchCubit>(context);
+    if (widget.searchText != null) {
+      searchCubit.searchOrganisation(widget.searchText!);
     }
     super.initState();
   }
@@ -54,9 +72,16 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget largeScreen() {
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(150),
-        child: Header(),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(150),
+        child: Header(
+          onSearchChanged: (value) {
+            searchDebouncer?.cancel();
+            searchDebouncer = Timer(const Duration(milliseconds: 500), () {
+              searchCubit.searchOrganisation(value);
+            });
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -75,7 +100,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       children: [
                         IconButton(
                             onPressed: () {
-                              Navigator.pop(context);
+                              context.router.maybePop();
                             },
                             icon: const Icon(Icons.arrow_back)),
                         const SizedBox(
@@ -90,7 +115,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    BlocConsumer<HomeCubit, HomeState>(
+                    BlocConsumer<SearchCubit, SearchState>(
                       listener: (context, state) {
                         if (state is SearchSuccessState) {
                           productlist.clear();
@@ -158,7 +183,11 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               child: TextField(
                 onChanged: (value) {
-                  homeCubit.searchOrganisationsmall(value);
+                  searchDebouncer?.cancel();
+                  searchDebouncer =
+                      Timer(const Duration(milliseconds: 500), () {
+                    searchCubit.searchOrganisation(value);
+                  });
                 },
                 controller: searchController,
                 decoration: InputDecoration(
@@ -198,7 +227,7 @@ class _SearchScreenState extends State<SearchScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              BlocBuilder<HomeCubit, HomeState>(
+              BlocBuilder<SearchCubit, SearchState>(
                 buildWhen: (previous, current) => current is SearchSuccessState,
                 builder: (context, state) {
                   if (state is SearchSuccessState) {
@@ -219,7 +248,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               const SizedBox(height: 20),
               Expanded(
-                child: BlocConsumer<HomeCubit, HomeState>(
+                child: BlocConsumer<SearchCubit, SearchState>(
                   listener: (context, state) {
                     if (state is SearchSuccessState) {
                       productlist.clear();

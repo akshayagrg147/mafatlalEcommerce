@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker_web/image_picker_web.dart';
@@ -75,7 +76,7 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
           errMsg = (state as dynamic).message;
         }
         if (state is AddOrganisationSuccessState) {
-          Navigator.pop(context);
+          context.router.maybePop();
           ToastUtils.showSuccessToast("Organisation Added Successfully");
         }
         if (state is FetchStatesSuccessState) {
@@ -141,7 +142,7 @@ class _AddUpdateorganisationState extends State<AddUpdateorganisation> {
                       ),
                       IconButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            context.router.maybePop();
                           },
                           icon: const Icon(Icons.close))
                     ],

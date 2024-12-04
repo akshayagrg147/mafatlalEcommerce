@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
@@ -10,7 +12,9 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/order_details_scree
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/delivery_status.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/rounded_shoppingbag.dart';
 import 'package:mafatlal_ecommerce/helper/utils.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
+@RoutePage()
 class OrdersHistory extends StatefulWidget {
   static const String route = "/ordersHistory";
   const OrdersHistory({super.key});
@@ -109,9 +113,18 @@ class _OrdersHistoryState extends State<OrdersHistory> {
                                 const Spacer(),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).pushNamed(
-                                        OrderDetailsScreen.route,
-                                        arguments: order.orderId);
+                                    if (ResponsiveWidget.isLargeScreen(
+                                        context)) {
+                                      showDialog(
+                                          context: context,
+                                          barrierColor: Colors.transparent,
+                                          builder: (_) => OrderDetailsScreen(
+                                              orderId: order.orderId));
+                                    } else {
+                                      context.router.push(
+                                          OrderDetailsScreenRoute(
+                                              orderId: order.orderId));
+                                    }
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(

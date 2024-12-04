@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,7 @@ import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/model/productdetial_model.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/size_selection_widget.dart';
-import 'package:mafatlal_ecommerce/features/product_details/presentaion/product_details.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
 class RelatedProductTile extends StatelessWidget {
   final RelatedProduct product;
@@ -30,9 +31,8 @@ class RelatedProductTile extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(
-              context, "${ProductDetailsScreen.route}product_id=${product.id}",
-              arguments: int.parse(product.id));
+          context.router
+              .push(ProductDetailsRoute(productId: int.parse(product.id)));
         },
         child: Container(
           width: 150,

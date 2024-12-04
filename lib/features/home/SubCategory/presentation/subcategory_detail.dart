@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,14 +21,18 @@ import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widg
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/home_appbar.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/product_grid_tile.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
+@RoutePage()
 class SubCategoryDetail extends StatefulWidget {
   static const String route = "/SubCategoryDetail";
   final List<SubCategory_new> subcategories;
-  final String selectedname;
+  final String selectedName;
 
   const SubCategoryDetail(
-      {super.key, required this.subcategories, required this.selectedname});
+      {super.key,
+      required this.subcategories,
+      @PathParam() required this.selectedName});
 
   @override
   State<SubCategoryDetail> createState() => _SubCategoryDetailState();
@@ -42,7 +47,7 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
     super.initState();
     subcategoryCubit = BlocProvider.of<SubcategoryCubit>(context);
     subcategoryCubit.getsubcategorydetails(
-        widget.subcategories, widget.selectedname);
+        widget.subcategories, widget.selectedName);
   }
 
   @override
@@ -90,9 +95,13 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
       AssetPath.banner3,
     ];
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(150),
-        child: Header(),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(150),
+        child: Header(
+          onSearchSubmitted: (value) {
+            context.router.push(SearchScreenRoute(searchText: value));
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,18 +11,21 @@ import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/admin_orders/bloc/admin_orders_cubit.dart';
 import 'package:mafatlal_ecommerce/features/admin_orders/bloc/admin_orders_state.dart';
 import 'package:mafatlal_ecommerce/features/admin_orders/model/order_model.dart';
-import 'package:mafatlal_ecommerce/features/admin_orders/presentation/order_details_screen.dart';
 import 'package:mafatlal_ecommerce/helper/enums.dart';
 import 'package:mafatlal_ecommerce/helper/utils.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
-class AdminOrdersScreen extends StatefulWidget {
-  const AdminOrdersScreen({super.key});
+@RoutePage()
+class AdminOrdersHistoryScreen extends StatefulWidget {
+  static const String route = "";
+  const AdminOrdersHistoryScreen({super.key});
 
   @override
-  State<AdminOrdersScreen> createState() => _AdminOrdersScreenState();
+  State<AdminOrdersHistoryScreen> createState() =>
+      _AdminOrdersHistoryScreenState();
 }
 
-class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
+class _AdminOrdersHistoryScreenState extends State<AdminOrdersHistoryScreen> {
   final List<OrderModel> orders = [];
   int page = 1;
   int totalPage = 1;
@@ -269,11 +273,8 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
             orders.length,
             (index) => DataRow2(
                     onTap: () async {
-                      await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => OrderDetailsScreen(
-                                  orderId: orders[index].orderId)));
+                      await context.router.push(AdminOrderDetailsScreenRoute(
+                          orderId: orders[index].orderId));
 
                       fetchOrders();
                     },

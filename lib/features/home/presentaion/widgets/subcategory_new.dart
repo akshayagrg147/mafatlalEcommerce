@@ -1,9 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mafatlal_ecommerce/components/responsive_screen.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
-import 'package:mafatlal_ecommerce/features/home/SubCategory/presentation/subcategory_detail.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SubCategoryList extends StatelessWidget {
@@ -70,10 +71,8 @@ class _SubCategoryItemState extends State<SubCategoryItem> {
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, SubCategoryDetail.route, arguments: {
-            "subcategories": widget.subcategories,
-            "name": widget.name
-          });
+          context.router.push(SubCategoryDetailRoute(
+              subcategories: widget.subcategories, selectedName: widget.name));
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 18),

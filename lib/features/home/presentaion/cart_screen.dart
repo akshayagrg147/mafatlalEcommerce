@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/custom_btn.dart';
@@ -7,14 +8,14 @@ import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
-import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
-import 'package:mafatlal_ecommerce/features/checkout/presentation/checkout_screen.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_cubit.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/home_state.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/product_list_tile.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
+@RoutePage()
 class CartScreen extends StatefulWidget {
   static const String route = "/cartScreen";
 
@@ -53,9 +54,14 @@ class _CartScreenState extends State<CartScreen> {
       AssetPath.banner3,
     ];
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(150),
-        child: Header(),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(150),
+        child: Header(
+          showCartIcon: false,
+          onSearchSubmitted: (value) {
+            context.router.push(SearchScreenRoute(searchText: value));
+          },
+        ),
       ),
       body: BlocBuilder<HomeCubit, HomeState>(
         buildWhen: (previous, current) =>
@@ -146,14 +152,14 @@ class _CartScreenState extends State<CartScreen> {
               borderRadius: 24,
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               onPressed: () {
-                Navigator.pushNamed(context, CheckoutScreen.route);
+                context.router.push(const CheckoutScreenRoute());
               },
             )
           : CustomElevatedButton(
               width: 250,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
               onPressed: () {
-                Navigator.pushNamed(context, LoginScreen.route);
+                context.router.push(const LoginScreenRoute());
               },
               backgroundColor: AppColors.kBlack,
               textColor: AppColors.kWhite,

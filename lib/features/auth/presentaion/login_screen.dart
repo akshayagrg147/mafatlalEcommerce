@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 right: 0,
                 child: InkWell(
                     onTap: () {
-                      context.router.pushAndPopUntil(const HomeRoute(),
+                      context.router.pushAndPopUntil(const HomeScreenRoute(),
                           predicate: (_) => false);
                     },
                     child: const Icon(Icons.close)),
@@ -184,8 +184,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (state is LoginSuccessState) {
                   if (CubitsInjector.authCubit.currentUser?.userType ==
                       UserType.admin) {
+                    context.router.pushAndPopUntil(const AdminHomeRoute(),
+                        predicate: (_) => false);
                   } else {
-                    context.router.pushAndPopUntil(const HomeRoute(),
+                    context.router.pushAndPopUntil(const HomeScreenRoute(),
                         predicate: (_) => false);
                   }
                 }
@@ -228,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextSpan(
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      context.router.push(const RegistrationRoute());
+                      context.router.push(const RegistrationScreenRoute());
                       // Navigator.pushNamed(context, RegistrationScreen.route);
                     },
                   text: "\t${AppStrings.signUp}",

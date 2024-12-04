@@ -131,20 +131,19 @@ class ProductListTile extends StatelessWidget {
                 children: [
                   if (product.variant != null)
                     Container(
-                      height: isSmallScreen ? 35 : 48,
-                      width: isSmallScreen ? 35 : 48,
+                      // height: isSmallScreen ? 35 : 48,
+                      // width: isSmallScreen ? 35 : 48,
+                      padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: AppColors.kRed,
                       ),
-                      child: Center(
-                        child: Text(
-                          product.variant!.selectedVariant.name,
-                          style: isSmallScreen
-                              ? AppTextStyle.f18PoppinsWhitew600
-                                  .copyWith(fontSize: 12)
-                              : AppTextStyle.f18PoppinsWhitew600,
-                        ),
+                      child: Text(
+                        product.variant!.selectedVariant.name,
+                        style: isSmallScreen
+                            ? AppTextStyle.f18PoppinsWhitew600
+                                .copyWith(fontSize: 12)
+                            : AppTextStyle.f18PoppinsWhitew600,
                       ),
                     ),
                   const Spacer(),
