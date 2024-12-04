@@ -73,7 +73,7 @@ class AddToCartWidget extends StatelessWidget {
               minusBtn: quantityBtn(Icons.remove),
             ),
             onQtyChanged: (val) {
-              quant = val;
+              quant = val.toInt();
             },
           ),
           const SizedBox(

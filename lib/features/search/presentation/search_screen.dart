@@ -10,6 +10,7 @@ import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/home/model/searchmodel.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/ProductSearchTile.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/cart_btn.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
 import 'package:mafatlal_ecommerce/features/search/bloc/search_cubit.dart';
@@ -165,124 +166,134 @@ class _SearchWidgetState extends State<SearchWidget> {
   }
 
   Widget smallscreen() {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(65.0),
-        child: AppBar(
-          titleSpacing: 0.0, // No unnecessary padding
-          backgroundColor: Colors.transparent, // Transparent AppBar
-          elevation: 0, // Remove AppBar shadow
-          flexibleSpace: Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 60.0, vertical: 8.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                // Light grey background for the search bar
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              child: TextField(
-                onChanged: (value) {
-                  searchDebouncer?.cancel();
-                  searchDebouncer =
-                      Timer(const Duration(milliseconds: 500), () {
-                    searchCubit.searchOrganisation(value);
-                  });
-                },
-                controller: searchController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey.shade200,
-                  // Light grey fill
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 10,
-                  ),
-                  suffixIcon: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    child: Icon(
-                      Icons.search_sharp,
-                      color: AppColors.kGrey, // Use your app's grey color
-                      size: 25, // Adjust size for better alignment
+    return SafeArea(
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(65.0),
+          child: AppBar(
+            titleSpacing: 0.0, // No unnecessary padding
+            backgroundColor: Colors.transparent, // Transparent AppBar
+            elevation: 0, // Remove AppBar shadow
+            flexibleSpace: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 60.0, vertical: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  // Light grey background for the search bar
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: TextField(
+                  autofocus: true,
+                  onChanged: (value) {
+                    searchDebouncer?.cancel();
+                    searchDebouncer =
+                        Timer(const Duration(milliseconds: 500), () {
+                      searchCubit.searchOrganisation(value);
+                    });
+                  },
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey.shade200,
+                    // Light grey fill
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 10,
                     ),
+                    suffixIcon: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: Icon(
+                        Icons.search_sharp,
+                        color: AppColors.kGrey, // Use your app's grey color
+                        size: 25, // Adjust size for better alignment
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    hintStyle: AppTextStyle.f16GreyW500,
+                    hintText: AppStrings.searchHint, // Your search hint text
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  hintStyle: AppTextStyle.f16GreyW500,
-                  hintText: AppStrings.searchHint, // Your search hint text
                 ),
               ),
             ),
+            actions: [
+              CartBtn(),
+              SizedBox(
+                width: 10,
+              )
+            ],
           ),
         ),
-      ),
-      body: Align(
-        alignment: Alignment.topCenter,
-        child: SizedBox(
-          width: 1280, // Ensures it is responsive
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              BlocBuilder<SearchCubit, SearchState>(
-                buildWhen: (previous, current) => current is SearchSuccessState,
-                builder: (context, state) {
-                  if (state is SearchSuccessState) {
-                    return const Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Text(
-                            "Search Results",
-                            style: AppTextStyle.f20GreyW600,
-                          ),
-                        )
-                      ],
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: BlocConsumer<SearchCubit, SearchState>(
-                  listener: (context, state) {
-                    if (state is SearchSuccessState) {
-                      productlist.clear();
-                      productlist.addAll(state.organisations);
-                    }
-                    if (state is SearchFailedState) {
-                      productlist.clear();
-                    }
-                  },
+        body: Align(
+          alignment: Alignment.topCenter,
+          child: SizedBox(
+            width: 1280, // Ensures it is responsive
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                BlocBuilder<SearchCubit, SearchState>(
                   buildWhen: (previous, current) =>
-                      current is SearchSuccessState ||
-                      current is SearchFailedState ||
-                      current is SearchLoadingState,
+                      current is SearchSuccessState,
                   builder: (context, state) {
-                    if (state is SearchLoadingState) {
-                      return const LoadingAnimation();
+                    if (state is SearchSuccessState) {
+                      return const Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                              "Search Results",
+                              style: AppTextStyle.f20GreyW600,
+                            ),
+                          )
+                        ],
+                      );
                     }
-                    return GridView.count(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      crossAxisCount: ResponsiveWidget.getGridCount(context),
-                      childAspectRatio: 0.5,
-                      mainAxisSpacing: 15,
-                      crossAxisSpacing: 15,
-                      children: List.generate(productlist.length, (index) {
-                        return ProductSearchTile(
-                          product: productlist[index],
-                        );
-                      }),
-                    );
+                    return const SizedBox.shrink();
                   },
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                Expanded(
+                  child: BlocConsumer<SearchCubit, SearchState>(
+                    listener: (context, state) {
+                      if (state is SearchSuccessState) {
+                        productlist.clear();
+                        productlist.addAll(state.organisations);
+                      }
+                      if (state is SearchFailedState) {
+                        productlist.clear();
+                      }
+                    },
+                    buildWhen: (previous, current) =>
+                        current is SearchSuccessState ||
+                        current is SearchFailedState ||
+                        current is SearchLoadingState,
+                    builder: (context, state) {
+                      if (state is SearchLoadingState) {
+                        return const LoadingAnimation();
+                      }
+                      return GridView.count(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        crossAxisCount: ResponsiveWidget.getGridCount(context),
+                        childAspectRatio: 0.5,
+                        mainAxisSpacing: 15,
+                        crossAxisSpacing: 15,
+                        children: List.generate(productlist.length, (index) {
+                          return ProductSearchTile(
+                            product: productlist[index],
+                          );
+                        }),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

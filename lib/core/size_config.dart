@@ -9,10 +9,10 @@ class SizeConfig {
   // ignore: unused_field
   static double _blockSizeVertical = 0;
 
-  static double textMultiplier = 0;
-  static double imageSizeMultiplier = 0;
-  static double heightMultiplier = 0;
-  static double widthMultiplier = 0;
+  static double textMultiplier = 1;
+  static double imageSizeMultiplier = 1;
+  static double heightMultiplier = 1;
+  static double widthMultiplier = 1;
   static bool isPortrait = true;
   static bool isMobilePortrait = false;
 

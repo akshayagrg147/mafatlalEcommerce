@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mafatlal_ecommerce/constants/app_strings.dart';
@@ -18,6 +19,9 @@ class _FooterState extends State<Footer> {
 
   @override
   Widget build(BuildContext context) {
+    if (!kIsWeb) {
+      return const SizedBox.shrink();
+    }
     return Padding(
       padding: const EdgeInsets.only(top: 100),
       child: LayoutBuilder(

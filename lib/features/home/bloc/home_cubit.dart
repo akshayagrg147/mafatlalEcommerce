@@ -31,6 +31,8 @@ class HomeCubit extends Cubit<HomeState> {
 
   // Timer? _timer;
 
+  Category_new? selectedCategory;
+
   bool isSearchScreenShown = false;
 
   final homeNavigatorKey = GlobalKey<NavigatorState>();
@@ -39,10 +41,13 @@ class HomeCubit extends Cubit<HomeState> {
     emit(GetSubCategoryLoadingState());
   }
 
-  void UpdateSubCategory(
-      List<SubCategory_new> subCategories, String selectedCategoryName) {
-    emit(UpdateLabelSuccessState(selectedCategoryName: selectedCategoryName));
-    emit(UpdateSubCategorySuccessState(subcategoy: subCategories));
+  void updateSelectedCategory({
+    required Category_new category,
+  }) {
+    selectedCategory = category;
+    UpdateproductAccordingtoCategory(category.id);
+    emit(UpdateLabelSuccessState(selectedCategoryName: category.name));
+    emit(UpdateSubCategorySuccessState(subcategoy: category.subCategories));
   }
 
   Future<void> UpdateproductAccordingtoCategory(int catid) async {
@@ -86,6 +91,9 @@ class HomeCubit extends Cubit<HomeState> {
           await HomeRepo.getStoreData(CubitsInjector.authCubit.currentUser?.id);
       if (response.data != null) {
         _storeData = response.data;
+        if (_storeData!.categories.isNotEmpty) {
+          selectedCategory = _storeData!.categories.first;
+        }
         // UpdateproductAccordingtoCategory(storeData!.categories.first.id);
         emit(FetchStoreDataSuccessState());
       } else {

@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:mafatlal_ecommerce/components/custom_btn.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/core/dependency_injection.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/select_category_expantion_widget.dart';
 import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
 class HomeDrawer extends StatelessWidget {
@@ -11,11 +13,12 @@ class HomeDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: AppColors.kWhite,
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           UserAccountsDrawerHeader(
-            decoration: BoxDecoration(color: AppColors.kOrange),
+            decoration: BoxDecoration(color: AppColors.kRed),
             accountName: Padding(
               padding: EdgeInsets.only(top: 8.0),
               child: Text(
@@ -35,35 +38,55 @@ class HomeDrawer extends StatelessWidget {
               ),
             ),
           ),
-          ListTile(
-            leading: const Icon(
-              Icons.history,
-              color: AppColors.kBlack,
-              size: 30,
+          if (CubitsInjector.authCubit.currentUser == null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: CustomElevatedButton(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
+                onPressed: () {
+                  context.router.maybePop();
+                  context.router.push(const LoginScreenRoute());
+                },
+                textColor: AppColors.kWhite,
+                label: "Login",
+              ),
             ),
-            title: Text(
-              'Order History',
-              style: AppTextStyle.f14BlackW500,
-            ),
-            onTap: () {
-              context.router.maybePop();
-              context.router.push(const OrdersHistoryRoute());
-            },
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: ExpandableCategoryDropdown(),
           ),
-          ListTile(
-            leading: Icon(
-              Icons.logout,
-              color: AppColors.kRed,
-              size: 30,
+          if (CubitsInjector.authCubit.currentUser != null)
+            ListTile(
+              leading: const Icon(
+                Icons.history,
+                color: AppColors.kBlack,
+                size: 30,
+              ),
+              title: Text(
+                'Order History',
+                style: AppTextStyle.f14BlackW500,
+              ),
+              onTap: () {
+                context.router.maybePop();
+                context.router.push(const OrdersHistoryRoute());
+              },
             ),
-            title: Text(
-              'Logout',
-              style: AppTextStyle.f14RedW500,
+          if (CubitsInjector.authCubit.currentUser != null)
+            ListTile(
+              leading: Icon(
+                Icons.logout,
+                color: AppColors.kRed,
+                size: 30,
+              ),
+              title: Text(
+                'Logout',
+                style: AppTextStyle.f14RedW500,
+              ),
+              onTap: () {
+                _showLogoutConfirmationDialog(context);
+              },
             ),
-            onTap: () {
-              _showLogoutConfirmationDialog(context);
-            },
-          ),
         ],
       ),
     );

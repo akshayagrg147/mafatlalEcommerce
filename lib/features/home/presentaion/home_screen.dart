@@ -89,9 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
         onMenuTap: () {
           if (CubitsInjector.authCubit.currentUser != null) {
             _homeKey.currentState?.openDrawer();
-          } else {
-            context.router.pushAndPopUntil(const LoginScreenRoute(),
-                predicate: (route) => false);
           }
         },
       ),

@@ -31,6 +31,7 @@ class CustomDropDown<T> extends StatelessWidget {
           validator: validator,
           isDense: true,
           style: AppTextStyle.f16BlackW600,
+          dropdownColor: AppColors.kWhite,
           decoration: InputDecoration(
             focusColor: AppColors.kWhite,
             hoverColor: AppColors.kGrey,

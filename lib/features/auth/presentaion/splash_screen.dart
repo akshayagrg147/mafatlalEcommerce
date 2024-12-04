@@ -3,12 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafatlal_ecommerce/components/loading_animation.dart';
+import 'package:mafatlal_ecommerce/constants/asset_path.dart';
 import 'package:mafatlal_ecommerce/constants/colors.dart';
-import 'package:mafatlal_ecommerce/core/size_config.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_cubit.dart';
 import 'package:mafatlal_ecommerce/features/auth/bloc/auth_state.dart';
-import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
-import 'package:mafatlal_ecommerce/features/home/presentaion/home_screen.dart';
 import 'package:mafatlal_ecommerce/helper/enums.dart';
 import 'package:mafatlal_ecommerce/helper/shared_preference_helper.dart';
 import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
@@ -33,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (authCubit.currentUser?.userType == UserType.admin) {
         // context.router.replace(AdminHom)
       } else {
-        context.router.replace(const HomeScreenRoute());
+        context.router.popAndPush(const HomeScreenRoute());
       }
     }
   }
@@ -51,22 +49,17 @@ class _SplashScreenState extends State<SplashScreen> {
       return const Scaffold(body: LoadingAnimation());
     }
     return Scaffold(
-      backgroundColor: AppColors.kOrange,
+      backgroundColor: AppColors.kWhite,
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is GetCurrentUserSuccessState) {
-            Navigator.pushNamed(context, HomeScreen.route);
+            context.router.popAndPush(const HomeScreenRoute());
           }
           if (state is GetCurrentUserFailedState) {
-            Navigator.pushNamed(context, LoginScreen.route);
+            context.router.popAndPush(const LoginScreenRoute());
           }
         },
-        child: Center(
-          child: Icon(
-            Icons.flutter_dash,
-            size: 60 * SizeConfig.imageSizeMultiplier,
-          ),
-        ),
+        child: Center(child: Image.asset(AssetPath.logo)),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,6 +17,7 @@ import 'package:mafatlal_ecommerce/features/home/SubCategory/model/district_mode
 import 'package:mafatlal_ecommerce/features/home/SubCategory/model/organization_model.dart';
 import 'package:mafatlal_ecommerce/features/home/SubCategory/model/state_model.dart';
 import 'package:mafatlal_ecommerce/features/home/model/store_new_model.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/cart_btn.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/drawer.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
@@ -67,15 +69,33 @@ class _SubCategoryDetailState extends State<SubCategoryDetail> {
     return SafeArea(
         child: Scaffold(
             key: _homeKey,
-            appBar: HomeAppBar(
-              onMenuTap: () {
-                if (CubitsInjector.authCubit.currentUser != null) {
-                  _homeKey.currentState?.openDrawer();
-                } else {
-                  Navigator.pushNamed(context, LoginScreen.route);
-                }
-              },
-            ),
+            appBar: kIsWeb
+                ? HomeAppBar(
+                    onMenuTap: () {
+                      if (CubitsInjector.authCubit.currentUser != null) {
+                        _homeKey.currentState?.openDrawer();
+                      } else {
+                        Navigator.pushNamed(context, LoginScreen.route);
+                      }
+                    },
+                  )
+                : AppBar(
+                    elevation: 5,
+                    backgroundColor: AppColors.kWhite,
+                    surfaceTintColor: AppColors.kWhite,
+                    leading: BackButton(),
+                    title: Text(
+                      "SubCategory Detail",
+                      style: AppTextStyle.f24PoppinsBluew400
+                          .copyWith(fontSize: 18),
+                    ),
+                    actions: [
+                      CartBtn(),
+                      SizedBox(
+                        width: 10,
+                      )
+                    ],
+                  ),
             drawer: const HomeDrawer(),
             body: ListView(
               children: [

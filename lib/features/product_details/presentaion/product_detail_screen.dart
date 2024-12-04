@@ -9,6 +9,7 @@ import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/add_to_cart_btn.dart';
+import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/cart_btn.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/footer_widget.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/header.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/widgets/relatedproduct_tile.dart';
@@ -62,6 +63,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             "Product Details",
             style: AppTextStyle.f18OutfitBlackW500,
           ),
+          actions: [
+            CartBtn(),
+            SizedBox(
+              width: 10,
+            )
+          ],
         ),
         body: BlocBuilder<ProductDetailsCubit, ProductDetailState>(
             buildWhen: (previous, current) =>

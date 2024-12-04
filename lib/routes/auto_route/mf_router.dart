@@ -1,13 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:mafatlal_ecommerce/features/admin_category/presentation/admin_category_details.dart';
-import 'package:mafatlal_ecommerce/features/admin_category/presentation/admin_category_screen.dart';
-import 'package:mafatlal_ecommerce/features/admin_category/presentation/admin_organisation_screen.dart';
-import 'package:mafatlal_ecommerce/features/admin_home/presentation/admin_home.dart';
-import 'package:mafatlal_ecommerce/features/admin_orders/presentation/order_details_screen.dart';
-import 'package:mafatlal_ecommerce/features/admin_orders/presentation/orders_route.dart';
-import 'package:mafatlal_ecommerce/features/admin_products/presentation/product_add_update_screen.dart';
-import 'package:mafatlal_ecommerce/features/admin_products/presentation/products_home.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/login_screen.dart';
 import 'package:mafatlal_ecommerce/features/auth/presentaion/sign_up_screen.dart';
 import 'package:mafatlal_ecommerce/features/checkout/presentation/checkout_screen.dart';
@@ -56,43 +48,43 @@ class MfRouter extends $MfRouter {
           page: OrderDetailsScreenRoute.page,
         ),
 
-        //admin
-        AutoRoute(path: AdminHome.route, page: AdminHomeRoute.page, children: [
-          AutoRoute(path: '', page: AdminDashboardRoute.page),
-          AutoRoute(
-              path: OrdersPage.route,
-              page: OrdersPageRoute.page,
-              children: [
-                AutoRoute(path: '', page: AdminOrdersHistoryScreenRoute.page),
-                AutoRoute(
-                    path: "${AdminOrderDetailsScreen.route}/:orderId",
-                    page: AdminOrderDetailsScreenRoute.page),
-              ]),
-          AutoRoute(
-              path: AdminProductsPage.route,
-              page: AdminProductsPageRoute.page,
-              children: [
-                AutoRoute(path: '', page: ProductListScreenRoute.page),
-                AutoRoute(
-                    path: ProductAddUpdateScreen.route,
-                    page: ProductAddUpdateScreenRoute.page),
-              ]),
-          AutoRoute(
-              path: AdminCategoryPage.route,
-              page: AdminCategoryPageRoute.page,
-              children: [
-                AutoRoute(path: '', page: AdminCategoryListScreenRoute.page),
-                AutoRoute(
-                    path: AdminCategoryDetailPage.route,
-                    page: AdminCategoryDetailPageRoute.page),
-              ]),
-          AutoRoute(
-              path: AdminOrganisationScreen.route,
-              page: AdminOrganisationScreenRoute.page,
-              children: [
-                AutoRoute(path: '', page: OrganisationListScreenRoute.page),
-              ]),
-        ]),
+        // //admin
+        // AutoRoute(path: AdminHome.route, page: AdminHomeRoute.page, children: [
+        //   AutoRoute(path: '', page: AdminDashboardRoute.page),
+        //   AutoRoute(
+        //       path: OrdersPage.route,
+        //       page: OrdersPageRoute.page,
+        //       children: [
+        //         AutoRoute(path: '', page: AdminOrdersHistoryScreenRoute.page),
+        //         AutoRoute(
+        //             path: "${AdminOrderDetailsScreen.route}/:orderId",
+        //             page: AdminOrderDetailsScreenRoute.page),
+        //       ]),
+        //   AutoRoute(
+        //       path: AdminProductsPage.route,
+        //       page: AdminProductsPageRoute.page,
+        //       children: [
+        //         AutoRoute(path: '', page: ProductListScreenRoute.page),
+        //         AutoRoute(
+        //             path: ProductAddUpdateScreen.route,
+        //             page: ProductAddUpdateScreenRoute.page),
+        //       ]),
+        //   AutoRoute(
+        //       path: AdminCategoryPage.route,
+        //       page: AdminCategoryPageRoute.page,
+        //       children: [
+        //         AutoRoute(path: '', page: AdminCategoryListScreenRoute.page),
+        //         AutoRoute(
+        //             path: AdminCategoryDetailPage.route,
+        //             page: AdminCategoryDetailPageRoute.page),
+        //       ]),
+        //   AutoRoute(
+        //       path: AdminOrganisationScreen.route,
+        //       page: AdminOrganisationScreenRoute.page,
+        //       children: [
+        //         AutoRoute(path: '', page: OrganisationListScreenRoute.page),
+        //       ]),
+        // ]),
       ];
 }
 

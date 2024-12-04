@@ -279,7 +279,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///Users/soumya/fvm/versions/3.16.2/packages/flutter",
+      "rootUri": "file:///Users/soumya/Documents/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -321,13 +321,13 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///Users/soumya/fvm/versions/3.16.2/packages/flutter_test",
+      "rootUri": "file:///Users/soumya/Documents/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///Users/soumya/fvm/versions/3.16.2/packages/flutter_web_plugins",
+      "rootUri": "file:///Users/soumya/Documents/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -442,12 +442,6 @@
     {
       "name": "image_picker_platform_interface",
       "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/image_picker_platform_interface-2.9.3",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
-      "name": "image_picker_web",
-      "rootUri": "file:///Users/soumya/.pub-cache/hosted/pub.dev/image_picker_web-4.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -759,7 +753,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///Users/soumya/fvm/versions/3.16.2/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/soumya/Documents/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -980,7 +974,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-11-29T06:01:15.257663Z",
+  "generated": "2024-12-04T10:08:49.675019Z",
   "generator": "pub",
-  "generatorVersion": "3.2.2"
+  "generatorVersion": "3.2.6"
 }

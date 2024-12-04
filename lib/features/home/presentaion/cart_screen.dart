@@ -231,80 +231,82 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget smallScreen() {
-    return Scaffold(
-        appBar: AppBar(
-          elevation: 5,
-          backgroundColor: AppColors.kWhite,
-          surfaceTintColor: AppColors.kWhite,
-          title: Text(
-            "Cart / Checkout",
-            style: AppTextStyle.f24PoppinsBluew400.copyWith(fontSize: 18),
+    return SafeArea(
+      child: Scaffold(
+          appBar: AppBar(
+            elevation: 5,
+            backgroundColor: AppColors.kWhite,
+            surfaceTintColor: AppColors.kWhite,
+            title: Text(
+              "Cart",
+              style: AppTextStyle.f24PoppinsBluew400.copyWith(fontSize: 18),
+            ),
           ),
-        ),
-        body: BlocBuilder<HomeCubit, HomeState>(
-          buildWhen: (previous, current) =>
-              current is FetchCartLoadingState ||
-              current is FetchCartSuccessState ||
-              current is FetchCartFailedState,
-          builder: (context, state) {
-            if (state is FetchCartFailedState) {
-              return Center(
-                child: Text(
-                  state.message,
-                  style: AppTextStyle.f16BlackW600,
-                ),
-              );
-            }
-            if (state is FetchCartLoadingState) {
-              return const LoadingAnimation();
-            }
-            if (CubitsInjector.homeCubit.cartProducts.isEmpty) {
-              return const Center(
-                child: Text(
-                  "No Products added Yet",
-                  style: AppTextStyle.f16BlackW600,
-                ),
-              );
-            }
+          body: BlocBuilder<HomeCubit, HomeState>(
+            buildWhen: (previous, current) =>
+                current is FetchCartLoadingState ||
+                current is FetchCartSuccessState ||
+                current is FetchCartFailedState,
+            builder: (context, state) {
+              if (state is FetchCartFailedState) {
+                return Center(
+                  child: Text(
+                    state.message,
+                    style: AppTextStyle.f16BlackW600,
+                  ),
+                );
+              }
+              if (state is FetchCartLoadingState) {
+                return const LoadingAnimation();
+              }
+              if (CubitsInjector.homeCubit.cartProducts.isEmpty) {
+                return const Center(
+                  child: Text(
+                    "No Products added Yet",
+                    style: AppTextStyle.f16BlackW600,
+                  ),
+                );
+              }
 
-            return ListView(
-              children: [
-                const SizedBox(height: 15),
-                ListView.separated(
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.separated(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 18, vertical: 16),
+                        // shrinkWrap: true,
+                        // physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return ProductListTile(
+                            isSmallScreen: true,
+                            product:
+                                CubitsInjector.homeCubit.cartProducts[index],
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const Divider(
+                            height: 40,
+                            color: AppColors.paleGray,
+                          );
+                        },
+                        itemCount:
+                            CubitsInjector.homeCubit.cartProducts.length),
+                  ),
+                  if (CubitsInjector.homeCubit.cartProducts.isNotEmpty)
+                    buildTotal(
+                      horizontalPadding: 18,
+                      isSmallScreen: true,
+                    ),
+                  Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 18, vertical: 16),
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return ProductListTile(
-                        isSmallScreen: true,
-                        product: CubitsInjector.homeCubit.cartProducts[index],
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return const Divider(
-                        height: 40,
-                        color: AppColors.paleGray,
-                      );
-                    },
-                    itemCount: CubitsInjector.homeCubit.cartProducts.length),
-                if (CubitsInjector.homeCubit.cartProducts.isNotEmpty)
-                  buildTotal(
-                    horizontalPadding: 18,
-                    isSmallScreen: true,
+                    child: buildCheckout(),
                   ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-                  child: buildCheckout(),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Footer()
-              ],
-            );
-          },
-        ));
+                  const Footer()
+                ],
+              );
+            },
+          )),
+    );
   }
 }

@@ -256,8 +256,7 @@ class _HeaderState extends State<Header> {
             orElse: () =>
                 Category_new(id: 0, name: "", img: "", subCategories: []),
           );
-          homeCubit.UpdateSubCategory(
-              category.subCategories, selectedCategoryName);
+          homeCubit.updateSelectedCategory(category: category);
           homeCubit.UpdateproductAccordingtoCategory(category.id);
         },
         itemBuilder: (BuildContext context) {

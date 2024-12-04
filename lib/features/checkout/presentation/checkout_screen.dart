@@ -168,41 +168,46 @@ class _CheckoutFormState extends State<CheckoutForm> {
           ToastUtils.showErrorToast(state.message);
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 5,
-          toolbarHeight: 60,
-          shadowColor: AppColors.kBlack.withOpacity(.3),
-          backgroundColor: AppColors.kWhite,
-          surfaceTintColor: AppColors.kWhite,
-          centerTitle: true,
-          title: Text(
-            "Mafatlal Store",
-            style: AppTextStyle.f24PoppinsBlueGreyw600,
-          ),
-          actions: [
-            GestureDetector(
-              onTap: () {
-                context.router.maybePop();
-              },
-              child: const Icon(
-                Icons.shopping_cart,
-                size: 24,
-                color: AppColors.kGrey,
+      child: BlocBuilder<HomeCubit, HomeState>(
+        buildWhen: (previous, current) => current is FetchCartSuccessState,
+        builder: (context, state) {
+          return Scaffold(
+            appBar: AppBar(
+              elevation: 5,
+              toolbarHeight: 60,
+              shadowColor: AppColors.kBlack.withOpacity(.3),
+              backgroundColor: AppColors.kWhite,
+              surfaceTintColor: AppColors.kWhite,
+              centerTitle: true,
+              title: Text(
+                "Mafatlal Store",
+                style: AppTextStyle.f24PoppinsBlueGreyw600,
+              ),
+              actions: [
+                GestureDetector(
+                  onTap: () {
+                    context.router.maybePop();
+                  },
+                  child: const Icon(
+                    Icons.shopping_cart,
+                    size: 24,
+                    color: AppColors.kGrey,
+                  ),
+                ),
+                const SizedBox(
+                  width: 48,
+                ),
+              ],
+            ),
+            body: Form(
+              key: _formKey,
+              child: ResponsiveWidget(
+                largeScreen: largsScreen(),
+                smallScreen: smallScreen(),
               ),
             ),
-            const SizedBox(
-              width: 48,
-            ),
-          ],
-        ),
-        body: Form(
-          key: _formKey,
-          child: ResponsiveWidget(
-            largeScreen: largsScreen(),
-            smallScreen: smallScreen(),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

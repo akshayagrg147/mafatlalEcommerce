@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -6,6 +7,7 @@ import 'package:mafatlal_ecommerce/constants/colors.dart';
 import 'package:mafatlal_ecommerce/constants/textstyles.dart';
 import 'package:mafatlal_ecommerce/features/home/bloc/cart_helper.dart';
 import 'package:mafatlal_ecommerce/features/home/presentaion/cart_screen.dart';
+import 'package:mafatlal_ecommerce/routes/auto_route/mf_router.gr.dart';
 
 class CartBtn extends StatelessWidget {
   const CartBtn({super.key});
@@ -19,12 +21,12 @@ class CartBtn extends StatelessWidget {
           Center(
             child: IconButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, CartScreen.route);
+                  context.router.push(const CartScreenRoute());
                 },
                 icon: Icon(
                   Icons.shopping_cart,
-                  color: AppColors.kRed,
-                  size: 35,
+                  color: AppColors.kGrey,
+                  size: 30,
                 )),
           ),
           Positioned(
@@ -38,12 +40,14 @@ class CartBtn extends StatelessWidget {
                     return const SizedBox.shrink();
                   }
                   return Container(
-                    padding: const EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         color: AppColors.kRed, shape: BoxShape.circle),
-                    child: Text(
-                      quantity.toString(),
-                      style: AppTextStyle.f8WhiteW600,
+                    child: Center(
+                      child: Text(
+                        quantity.toString(),
+                        style: AppTextStyle.f10WhiteW600,
+                      ),
                     ),
                   );
                 }),

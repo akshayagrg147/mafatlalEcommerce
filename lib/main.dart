@@ -17,10 +17,9 @@ import 'package:mafatlal_ecommerce/services/navigation_service.dart';
 void main() async {
   CubitsInjector();
   WidgetsFlutterBinding.ensureInitialized();
+  await CartHelper.init();
+  await SharedPreferencesHelper.instance.init();
   if (kIsWeb) {
-    await SharedPreferencesHelper.instance.init();
-
-    await CartHelper.init();
     CubitsInjector.authCubit.getCurrentUser();
   }
   runApp(MyApp());

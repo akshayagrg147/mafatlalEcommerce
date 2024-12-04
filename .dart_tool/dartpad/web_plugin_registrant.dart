@@ -8,7 +8,6 @@
 
 import 'package:fluttertoast/fluttertoast_web.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
-import 'package:image_picker_web/image_picker_web.dart';
 import 'package:package_info_plus/src/package_info_plus_web.dart';
 import 'package:permission_handler_html/permission_handler_html.dart';
 import 'package:razorpay_web/razorpay_flutter_web.dart';
@@ -20,7 +19,6 @@ void registerPlugins([final Registrar? pluginRegistrar]) {
   final Registrar registrar = pluginRegistrar ?? webPluginRegistrar;
   FluttertoastWebPlugin.registerWith(registrar);
   ImagePickerPlugin.registerWith(registrar);
-  ImagePickerWeb.registerWith(registrar);
   PackageInfoPlusWebPlugin.registerWith(registrar);
   WebPermissionHandler.registerWith(registrar);
   RazorpayFlutterPlugin.registerWith(registrar);

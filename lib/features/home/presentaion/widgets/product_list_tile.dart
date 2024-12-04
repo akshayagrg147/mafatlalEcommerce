@@ -24,7 +24,7 @@ class ProductListTile extends StatelessWidget {
         children: [
           buildImage(),
           SizedBox(
-            width: isSmallScreen ? 20 : 40,
+            width: isSmallScreen ? 15 : 40,
           ),
           Expanded(flex: isSmallScreen ? 6 : 7, child: buildProductDetails())
         ],
@@ -83,17 +83,17 @@ class ProductListTile extends StatelessWidget {
               Text(
                 product.productName,
                 style: isSmallScreen
-                    ? AppTextStyle.f24PoppinsBlackw600.copyWith(fontSize: 20)
+                    ? AppTextStyle.f24PoppinsBlackw600.copyWith(fontSize: 15)
                     : AppTextStyle.f24PoppinsBlackw600,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Text(
                     'Organization:',
                     style: isSmallScreen
                         ? AppTextStyle.f18PoppinsDarkGreyw400
-                            .copyWith(fontSize: 14)
+                            .copyWith(fontSize: 12)
                         : AppTextStyle.f18PoppinsDarkGreyw400,
                   ),
                   SizedBox(width: isSmallScreen ? 15 : 39),
@@ -101,39 +101,39 @@ class ProductListTile extends StatelessWidget {
                     product.productOrganisation,
                     style: isSmallScreen
                         ? AppTextStyle.f18PoppinsDarkGreyw600
-                            .copyWith(fontSize: 14)
+                            .copyWith(fontSize: 12)
                         : AppTextStyle.f18PoppinsDarkGreyw600,
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Text(
                     'Product Type:',
                     style: isSmallScreen
                         ? AppTextStyle.f18PoppinsDarkGreyw400
-                            .copyWith(fontSize: 14)
+                            .copyWith(fontSize: 12)
                         : AppTextStyle.f18PoppinsDarkGreyw400,
                   ),
-                  const SizedBox(width: 31),
+                  SizedBox(width: isSmallScreen ? 15 : 39),
                   Text(
                     product.productCategory,
                     style: isSmallScreen
                         ? AppTextStyle.f18PoppinsDarkGreyw600
-                            .copyWith(fontSize: 14)
+                            .copyWith(fontSize: 12)
                         : AppTextStyle.f18PoppinsDarkGreyw600,
                   ),
                 ],
               ),
-              const SizedBox(height: 18),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   if (product.variant != null)
                     Container(
                       // height: isSmallScreen ? 35 : 48,
                       // width: isSmallScreen ? 35 : 48,
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: AppColors.kRed,
@@ -151,12 +151,12 @@ class ProductListTile extends StatelessWidget {
                     product.getPriceWithTax().toStringAsFixed(2),
                     style: isSmallScreen
                         ? AppTextStyle.f24PoppinsBlackw600
-                            .copyWith(fontSize: 18)
+                            .copyWith(fontSize: 16)
                         : AppTextStyle.f24PoppinsBlueGreyw600,
                   )
                 ],
               ),
-              const SizedBox(height: 18),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Text(
@@ -171,7 +171,7 @@ class ProductListTile extends StatelessWidget {
                     "X\t${product.quantity}",
                     style: isSmallScreen
                         ? AppTextStyle.f24PoppinsBlackw600
-                            .copyWith(fontSize: 18)
+                            .copyWith(fontSize: 15)
                         : AppTextStyle.f24PoppinsBlueGreyw600,
                   )
                 ],
